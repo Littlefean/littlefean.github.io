@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>康威生命游戏java+python实现 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">康威生命游戏java+python实现</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">七月 23, 2020&nbsp;&nbsp;12:32:12</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Java-Python-康威生命游戏-命令行版（2020年7月23日）"><a href="#Java-Python-康威生命游戏-命令行版（2020年7月23日）" class="headerlink" title="Java &amp; Python 康威生命游戏 - 命令行版（2020年7月23日）"></a>Java &amp; Python 康威生命游戏 - 命令行版（2020年7月23日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>高二的时候看霍金的《大设计》最后几页的时候看到里面提到了康威生命游戏，介绍了它的规则，感觉很有意思，但是在草稿纸上一点一点画，推演，实在是太麻烦了，于是我便想是否可以通过编程的方式实现康威生命游戏？我当时高二，感觉自己很难做出来。到了大一下学期，自学了python和java，学校的课程里也学习了C语言，自己也经常写一些有意思的小程序，可以说是有一定的编程基础了，于是就又会想起了一年多前的康威生命游戏。</p>
+<p>其实在 2020年2月24号，大一上学期结束的寒假里，我已经把一维版的康威宇宙做出了来了，但是那终究是一维的，没有二维的丰富，开发难度肯定没有二维的高。所以这次我打算真正的试一试二维的，原版的、正经的康威宇宙。</p>
+<p>在 2020年4月11日的时候，生命游戏的作者 约翰·何顿·康威 已经因为新冠肺炎去世了。感觉突然挺遗憾的。之前了解这个人完全是因为生命游戏，但是其实他是一个数学家。他还有其他很多更大的贡献和发现，不只是生命游戏。</p>
+<p>2020年7月23日，我把用python实现了，随后一天我又做了一份Java版本的。</p>
+<h2 id="相关介绍"><a href="#相关介绍" class="headerlink" title="相关介绍"></a>相关介绍</h2><p>百度介绍：</p>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F">https://baike.baidu.com/item/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F</a></p>
+<p>知乎介绍：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45026142">https://zhuanlan.zhihu.com/p/45026142</a></p>
+<h2 id="效果截图"><a href="#效果截图" class="headerlink" title="效果截图"></a>效果截图</h2><p><img src="/2020/07/23/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8Fjava-python%E5%AE%9E%E7%8E%B0/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F%E5%8A%A8%E6%80%81%E5%9B%BE.gif" alt="康威生命游戏动态图"></p>
+<p><img src="/2020/07/23/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8Fjava-python%E5%AE%9E%E7%8E%B0/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8F%E9%9D%99%E6%80%81%E5%9B%BE.png" alt="康威生命游戏静态图"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 生命游戏</span></span><br><span class="line"><span class="comment"> * 设计作者：康威</span></span><br><span class="line"><span class="comment"> * 代码作者：littlefean</span></span><br><span class="line"><span class="comment"> * 代码时间：2020年7月24日</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GameOfLife</span> &#123;</span><br><span class="line">    <span class="comment">//场地的宽度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">CELLS_WIDTH</span> <span class="operator">=</span> <span class="number">85</span>;</span><br><span class="line">    <span class="comment">//场地的高度</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">CELLS_HEIGHT</span> <span class="operator">=</span> <span class="number">45</span>;</span><br><span class="line">    <span class="comment">//活细胞显示</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">LIVE_CELL</span> <span class="operator">=</span> <span class="string">&quot;█&quot;</span>;</span><br><span class="line">    <span class="comment">//死细胞显示</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEATH_CELL</span> <span class="operator">=</span> <span class="string">&quot;  &quot;</span>;</span><br><span class="line">    <span class="comment">//检测半径（以自身为中心，R为半径的圆形的外接正方形）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">R</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//检测范围内，使活细胞存活的 邻胞数量的最小值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">LIVE_NUM_MIN</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">    <span class="comment">//检测范围内，使活细胞存活的 邻胞数量的最大值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">LIVE_NUM_MAX</span> <span class="operator">=</span> <span class="number">3</span>;</span><br><span class="line">    <span class="comment">//检测范围内，使死细胞复活的 邻胞数量的最小值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BIRTH_NUM_MIN</span> <span class="operator">=</span> <span class="number">3</span>;</span><br><span class="line">    <span class="comment">//检测范围内，使死细胞复活的 邻胞数量的最大值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BIRTH_NUM_MAX</span> <span class="operator">=</span> <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//创建矩形全死细胞集</span></span><br><span class="line">        <span class="type">byte</span>[][] cells = newCells(CELLS_WIDTH, CELLS_HEIGHT);</span><br><span class="line">        System.out.println(str(cells));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//随机复活其中的细胞</span></span><br><span class="line">        randPoint(cells);</span><br><span class="line">        System.out.println(str(cells));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//开始迭代演示</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            cells = iterative(cells);</span><br><span class="line">            System.out.println(str(cells));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生成一个空的全是0的二维数组并返回</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> width 宽度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> height 高度</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 二维数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">byte</span>[][] newCells(<span class="type">int</span> width, <span class="type">int</span> height)&#123;</span><br><span class="line">        <span class="type">byte</span>[][] cellsArray = <span class="keyword">new</span> <span class="title class_">byte</span>[height][width];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; height; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; width; j++) &#123;</span><br><span class="line">                cellsArray[i][j] = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cellsArray;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将二维数组随机化，该函数直接改传入数组的状态</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cellsArray 二维数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">randPoint</span><span class="params">(<span class="type">byte</span>[][] cellsArray)</span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cellsArray.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; cellsArray[i].length; j++) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">rd</span> <span class="operator">=</span> Math.random()&gt;<span class="number">0.5</span> ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span>(rd == <span class="number">1</span>) &#123;</span><br><span class="line">                    cellsArray[i][j] = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 传入二维数组并使其按照生命游戏规则迭代一次，迭代完成后返回一个新的迭代后的二维数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cellsArray 迭代前的二维数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 迭代后的二维数组</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">byte</span>[][] iterative(<span class="type">byte</span>[][] cellsArray)&#123;</span><br><span class="line">        <span class="type">byte</span>[][] afterCells = newCells(cellsArray[<span class="number">0</span>].length, cellsArray.length);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cellsArray.length; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; cellsArray[i].length; j++) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">neighborNum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">                <span class="type">int</span> <span class="variable">top</span> <span class="operator">=</span> Math.max(i - R, <span class="number">0</span>);</span><br><span class="line">                <span class="type">int</span> <span class="variable">button</span> <span class="operator">=</span> Math.min(cellsArray.length-<span class="number">1</span>, i + R);</span><br><span class="line">                <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> Math.max(j - R, <span class="number">0</span>);</span><br><span class="line">                <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> Math.min(j + R, cellsArray[i].length-<span class="number">1</span>);</span><br><span class="line">                <span class="keyword">for</span>( <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> top; y &lt;= button; y++)&#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> left; x &lt;= right; x++)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(cellsArray[y][x] == <span class="number">1</span>)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(j != x || i != y)&#123;</span><br><span class="line">                                neighborNum++;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(cellsArray[i][j] == <span class="number">1</span>)&#123;</span><br><span class="line">                    <span class="comment">//存活</span></span><br><span class="line">                    <span class="keyword">if</span>(LIVE_NUM_MIN &lt;= neighborNum &amp;&amp; neighborNum &lt;= LIVE_NUM_MAX)&#123;</span><br><span class="line">                        afterCells[i][j] = <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(cellsArray[i][j] == <span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="comment">//诞生</span></span><br><span class="line">                    <span class="keyword">if</span>(BIRTH_NUM_MIN &lt;= neighborNum &amp;&amp; neighborNum &lt;= BIRTH_NUM_MAX)&#123;</span><br><span class="line">                        afterCells[i][j] = <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> afterCells;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 传入二维数组并返回打印在屏幕上的字符串形式</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cellsArray 二维数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 打印在屏幕上的字符串形式</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">str</span><span class="params">(<span class="type">byte</span>[][] cellsArray)</span>&#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">cellsString</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">byte</span>[] bytes : cellsArray) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">byte</span> aByte : bytes) &#123;</span><br><span class="line">                <span class="keyword">if</span> (aByte == <span class="number">0</span>) &#123;</span><br><span class="line">                    cellsString.append(DEATH_CELL);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    cellsString.append(LIVE_CELL);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            cellsString.append(<span class="string">&quot;/n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> cellsString.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 传入二维数组和两个位置参数，在二维数组的特定位置上做修改</span></span><br><span class="line"><span class="comment">     * 注意：该函数直接改传入数组的状态</span></span><br><span class="line"><span class="comment">     *     此函数是在二维数组的xy下标位置上放了一个向右下飞行的 滑翔机</span></span><br><span class="line"><span class="comment">     * 右下方向滑翔机示意图：</span></span><br><span class="line"><span class="comment">     * □□■</span></span><br><span class="line"><span class="comment">     * ■□■</span></span><br><span class="line"><span class="comment">     * □■■</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cellsArray 修改前（还未放置滑翔机）的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> x 滑翔机的左上角顶点在数组里的x位置</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> y 滑翔机的左上角顶点在数组里的y位置</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">putGlider</span><span class="params">(<span class="type">byte</span>[][] cellsArray, <span class="type">int</span> x, <span class="type">int</span> y)</span>&#123;</span><br><span class="line">        cellsArray[y][x+<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">        cellsArray[y+<span class="number">1</span>][x] = <span class="number">1</span>;</span><br><span class="line">        cellsArray[y+<span class="number">1</span>][x+<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">        cellsArray[y+<span class="number">2</span>][x+<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        cellsArray[y+<span class="number">2</span>][x+<span class="number">2</span>] = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="python"><a href="#python" class="headerlink" title="python"></a>python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">生命游戏-命令行版</span></span><br><span class="line"><span class="string">设计作者：康威</span></span><br><span class="line"><span class="string">代码作者：littlefean</span></span><br><span class="line"><span class="string">代码时间：2020年7月23日</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">newCells</span>(<span class="params">width, height</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    生成一个空的全是0的二维数组并返回</span></span><br><span class="line"><span class="string">    :param width: 宽度</span></span><br><span class="line"><span class="string">    :param height: 高度</span></span><br><span class="line"><span class="string">    :return: 二元数组</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cellsArray = np.zeros([height, width], dtype=<span class="built_in">int</span>)</span><br><span class="line">    <span class="keyword">return</span> cellsArray</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">randPoint</span>(<span class="params">cellsArray</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    将二维数组随机化，该函数直接改参数的状态</span></span><br><span class="line"><span class="string">    :param cellsArray:二维数组</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray[i])):</span><br><span class="line">            cellsArray[i][j] = randint(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">iterative</span>(<span class="params">cellsArray</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    传入二维数组并使其按照生命游戏规则迭代一次，迭代完成后返回一个新的迭代后的二维数组</span></span><br><span class="line"><span class="string">    :param cellsArray:迭代前的二维数组</span></span><br><span class="line"><span class="string">    :return:迭代后的二维数组</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    afterCells = newCells(<span class="built_in">len</span>(cellsArray[<span class="number">0</span>]), <span class="built_in">len</span>(cellsArray))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray)):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray[y])):</span><br><span class="line">            neighborNum = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> y_border <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">max</span>(y - R, <span class="number">0</span>), <span class="built_in">min</span>(y + R, <span class="built_in">len</span>(cellsArray) - <span class="number">1</span>) + <span class="number">1</span>):</span><br><span class="line">                <span class="keyword">for</span> x_border <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">max</span>(x - R, <span class="number">0</span>), <span class="built_in">min</span>(x + R, <span class="built_in">len</span>(cellsArray[y]) - <span class="number">1</span>) + <span class="number">1</span>):</span><br><span class="line">                    <span class="keyword">if</span> cellsArray[y_border][x_border] == <span class="number">1</span>:</span><br><span class="line">                        <span class="comment"># 判断不是自己：</span></span><br><span class="line">                        <span class="keyword">if</span> x != x_border <span class="keyword">or</span> y != y_border:  <span class="comment"># 最后一个bug，应该是或的关系，而不是且的关系</span></span><br><span class="line">                            neighborNum += <span class="number">1</span></span><br><span class="line">            <span class="comment"># 存活：周围数量 == 3 or == 2</span></span><br><span class="line">            <span class="keyword">if</span> cellsArray[y][x] == <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">if</span> neighborNum <span class="keyword">in</span> <span class="built_in">range</span>(LIVE_NUM_MIN, LIVE_NUM_MAX + <span class="number">1</span>):</span><br><span class="line">                    afterCells[y][x] = <span class="number">1</span></span><br><span class="line">            <span class="comment"># 诞生：周围数量 == 3</span></span><br><span class="line">            <span class="keyword">elif</span> cellsArray[y][x] == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">if</span> neighborNum <span class="keyword">in</span> <span class="built_in">range</span>(BIRTH_NUM_MIN, BIRTH_NUM_MAX + <span class="number">1</span>):</span><br><span class="line">                    afterCells[y][x] = <span class="number">1</span></span><br><span class="line">            <span class="comment"># 死于拥挤：周围数量&gt;=4</span></span><br><span class="line">            <span class="comment"># 死于孤独：周围数量&lt;=1</span></span><br><span class="line">    <span class="keyword">return</span> afterCells</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">string</span>(<span class="params">cellsArray</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    返回cellsArray的字符串表示形式</span></span><br><span class="line"><span class="string">    :param cellsArray: 二维数组</span></span><br><span class="line"><span class="string">    :return: cellsArray的字符串表示形式</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cellsString = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray)):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cellsArray[y])):</span><br><span class="line">            <span class="keyword">if</span> cellsArray[y][x] == <span class="number">0</span>:</span><br><span class="line">                cellsString += DEATH_CELL</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cellsString += LIVE_CELL</span><br><span class="line">        cellsString += <span class="string">&quot;/n&quot;</span></span><br><span class="line">    <span class="keyword">return</span> cellsString</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">putGlider</span>(<span class="params">cellsArray, x, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    传入二维数组和两个位置参数，在二维数组的特定位置上做修改，并返回修改后的二维数组</span></span><br><span class="line"><span class="string">    此函数是在二维数组的xy下标位置上放了一个向右下飞行的 滑翔机</span></span><br><span class="line"><span class="string">    xy对应滑翔机的左上角顶点</span></span><br><span class="line"><span class="string">    □□■</span></span><br><span class="line"><span class="string">    ■□■</span></span><br><span class="line"><span class="string">    □■■</span></span><br><span class="line"><span class="string">    :param cellsArray:修改前（还未放置滑翔机）的数组</span></span><br><span class="line"><span class="string">    :param x:滑翔机的左上角顶点在数组里的x位置</span></span><br><span class="line"><span class="string">    :param y:滑翔机的左上角顶点在数组里的y位置</span></span><br><span class="line"><span class="string">    :return:修改后（放置了一个滑翔机）的二维数组</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    cellsArray[y][x + <span class="number">2</span>] = <span class="number">1</span></span><br><span class="line">    cellsArray[y + <span class="number">1</span>][x] = <span class="number">1</span></span><br><span class="line">    cellsArray[y + <span class="number">1</span>][x + <span class="number">2</span>] = <span class="number">1</span></span><br><span class="line">    cellsArray[y + <span class="number">2</span>][x + <span class="number">1</span>] = <span class="number">1</span></span><br><span class="line">    cellsArray[y + <span class="number">2</span>][x + <span class="number">2</span>] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> cellsArray</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    CELLS_WIDTH = <span class="number">85</span></span><br><span class="line">    CELLS_HEIGHT = <span class="number">45</span></span><br><span class="line">    LIVE_CELL = <span class="string">&quot;█&quot;</span></span><br><span class="line">    DEATH_CELL = <span class="string">&quot;  &quot;</span></span><br><span class="line">    R = <span class="number">1</span></span><br><span class="line">    LIVE_NUM_MIN = <span class="number">2</span></span><br><span class="line">    LIVE_NUM_MAX = <span class="number">3</span></span><br><span class="line">    BIRTH_NUM_MIN = <span class="number">3</span></span><br><span class="line">    BIRTH_NUM_MAX = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">    cells = newCells(<span class="number">85</span>, <span class="number">45</span>)</span><br><span class="line">    <span class="built_in">print</span>(string(cells))</span><br><span class="line">    randPoint(cells)</span><br><span class="line">    putGlider(cells, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">print</span>(string(cells))</span><br><span class="line">    step = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">24</span> == <span class="number">0</span>:</span><br><span class="line">            putGlider(cells, randint(<span class="number">0</span>, <span class="number">5</span>), randint(<span class="number">0</span>, <span class="number">5</span>))</span><br><span class="line">        cells = iterative(cells)</span><br><span class="line">        <span class="built_in">print</span>(string(cells))</span><br><span class="line">        step += <span class="number">1</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="回顾反思"><a href="#回顾反思" class="headerlink" title="回顾反思"></a>回顾反思</h2><ol>
+<li>直接给调用者暴露了数组，但是调用者并不知道是用<code>[y][x]</code>的方式还是<code>[x][y]</code>的方式，你这个没有说明，会导致一些不方便</li>
+<li>如果能把cellsArray封装成一个类那就好了，因为它已经很像类了。</li>
+</ol>
+<p>不知道怎么结尾了，康威生命游戏的评价里有一句话说的不错，就以它结尾吧：“ 孤独和拥挤都不适合生命的繁衍和发展 ”。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/07/23/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8Fjava-python%E5%AE%9E%E7%8E%B0/">http://example.com/2020/07/23/%E5%BA%B7%E5%A8%81%E7%94%9F%E5%91%BD%E6%B8%B8%E6%88%8Fjava-python%E5%AE%9E%E7%8E%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/java/"># java</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/08/03/python%E7%94%9F%E6%88%90%E5%A4%84%E5%A4%84%E9%80%9A%E8%BE%BE%E7%9A%84%E5%9C%B0%E5%BD%A2/">python生成处处通达的地形</a>
+            
+            
+            <a class="next" rel="next" href="/2020/07/18/Python%E7%A0%B4%E8%A7%A3%E6%95%B0%E7%8B%AC/">Python破解数独</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

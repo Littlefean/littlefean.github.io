@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Python制作一个一维的迷宫 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Python制作一个一维的迷宫</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 30, 2020&nbsp;&nbsp;13:14:36</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Python-制作一维的迷宫游戏（2020年5月30日）"><a href="#Python-制作一维的迷宫游戏（2020年5月30日）" class="headerlink" title="Python 制作一维的迷宫游戏（2020年5月30日）"></a>Python 制作一维的迷宫游戏（2020年5月30日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>一天在脑海中想到的，现在普遍都开始流行3D游戏了，2D游戏越来越少了，我就在想，应该没有一维游戏了吧？但是一维是最好做的，也是最简单的，我就想是否能设计出一个一维游戏来，所以就顺手写了一个。</p>
+<p>大一下学期，疫情时代，在家做的。</p>
+<p><img src="/2020/05/30/Python%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E4%B8%80%E7%BB%B4%E7%9A%84%E8%BF%B7%E5%AE%AB/TIM%E6%88%AA%E5%9B%BE20210314000925.png" alt="TIM截图20210314000925"></p>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><p>Jump Game本质上是一个在一串格子上跳跃的游戏，游戏地图就是有限个方块排成一排</p>
+<p>你出生在一个位置，每次只能向左或者向右移动一格，到了重点方块上，就过关了</p>
+<p>你会看到很多格子，当你看到 {WIN_BLOCK} 的时候，那个方块就是终点方块</p>
+<p>写着 &#x2F;“{YOUR_PLACE_BLOCK}&#x2F;“的方块是你现在的位置，输入4向左走，输入6向右走，输入0退出游戏</p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">一维游戏JumpGame</span></span><br><span class="line"><span class="string">2020年5月27日 设计</span></span><br><span class="line"><span class="string">2020年5月30日 增添第一关，本质上像是一个迷宫</span></span><br><span class="line"><span class="string">by littlefean</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">YOUR_PLACE_BLOCK = <span class="string">&quot;你&quot;</span></span><br><span class="line">AIR_BLOCK = <span class="string">&quot;__&quot;</span></span><br><span class="line">HOME_BLOCK = <span class="string">&quot;初&quot;</span></span><br><span class="line">WIN_BLOCK = <span class="string">&quot;赢&quot;</span></span><br><span class="line">GOTO_BLOCK = <span class="string">&quot;跳&quot;</span></span><br><span class="line">DEATH_BLOCK = <span class="string">&quot;死&quot;</span></span><br><span class="line">SWITCH_BLOCK = <span class="string">&quot;阱&quot;</span></span><br><span class="line">INDEX_ERROR_BLOCK = <span class="string">&quot;  &quot;</span></span><br><span class="line">CAN_NOT_SEE_BLOCK = <span class="string">&quot;__&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">level_1</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    生成关卡1</span></span><br><span class="line"><span class="string">    :return: 一个列表，是地图信息,和一个起始位置信息</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    INDEX = <span class="number">36</span></span><br><span class="line">    START = <span class="number">5</span></span><br><span class="line">    END = <span class="number">33</span></span><br><span class="line">    g = []</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(INDEX):</span><br><span class="line">        g.append([<span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line">    g[START] = [<span class="number">1</span>]</span><br><span class="line">    g[END] = [<span class="number">2</span>]</span><br><span class="line">    g[<span class="number">0</span>] = [<span class="number">4</span>, <span class="number">24</span>]</span><br><span class="line">    g[<span class="number">3</span>] = [<span class="number">4</span>, <span class="number">11</span>]</span><br><span class="line">    g[<span class="number">4</span>] = [<span class="number">4</span>, <span class="number">17</span>]</span><br><span class="line">    g[<span class="number">7</span>] = [<span class="number">4</span>, <span class="number">2</span>]</span><br><span class="line">    g[<span class="number">9</span>] = [<span class="number">4</span>, <span class="number">28</span>]</span><br><span class="line">    g[<span class="number">12</span>] = [<span class="number">4</span>, <span class="number">6</span>]</span><br><span class="line">    g[<span class="number">14</span>] = [<span class="number">4</span>, <span class="number">20</span>]</span><br><span class="line">    g[<span class="number">16</span>] = [<span class="number">4</span>, <span class="number">11</span>]</span><br><span class="line">    g[<span class="number">18</span>] = [<span class="number">4</span>, <span class="number">27</span>]</span><br><span class="line">    g[<span class="number">19</span>] = [<span class="number">4</span>, <span class="number">30</span>]</span><br><span class="line">    g[<span class="number">22</span>] = [<span class="number">4</span>, <span class="number">15</span>]</span><br><span class="line">    g[<span class="number">25</span>] = [<span class="number">4</span>, <span class="number">28</span>]</span><br><span class="line">    g[<span class="number">26</span>] = [<span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">    g[<span class="number">29</span>] = [<span class="number">4</span>, <span class="number">17</span>]</span><br><span class="line">    g[<span class="number">31</span>] = [<span class="number">4</span>, <span class="number">34</span>]</span><br><span class="line">    <span class="keyword">return</span> g, START</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">introduce</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Jump Game本质上是一个在一串格子上跳跃的游戏，游戏地图就是有限个方块排成一排&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;你出生在一个位置，每次只能向左或者向右移动一格，到了重点方块上，就过关了&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;你会看到很多格子，当你看到 <span class="subst">&#123;WIN_BLOCK&#125;</span> 的时候，那个方块就是终点方块&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;写着 /&quot;</span>&#123;YOUR_PLACE_BLOCK&#125;/<span class="string">&quot;的方块是你现在的位置，输入4向左走，输入6向右走，输入0退出游戏&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">show</span>(<span class="params">M, v, u</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    展示玩家所能看到的当前地图情况</span></span><br><span class="line"><span class="string">    :param M: 地图</span></span><br><span class="line"><span class="string">    :param v: 视野</span></span><br><span class="line"><span class="string">    :param u: 玩家所处的位置</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(M)):</span><br><span class="line">        <span class="keyword">if</span> u - v &lt;= j &lt;= u + v:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">if</span> j == u:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;YOUR_PLACE_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> M[j][<span class="number">0</span>] == <span class="number">0</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;AIR_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    <span class="keyword">elif</span> M[j][<span class="number">0</span>] == <span class="number">1</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;HOME_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    <span class="keyword">elif</span> M[j][<span class="number">0</span>] == <span class="number">2</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;WIN_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    <span class="keyword">elif</span> M[j][<span class="number">0</span>] == <span class="number">3</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;DEATH_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    <span class="keyword">elif</span> M[j][<span class="number">0</span>] == <span class="number">4</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;GOTO_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">                    <span class="keyword">elif</span> M[j][<span class="number">0</span>] == <span class="number">6</span>:</span><br><span class="line">                        <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;SWITCH_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> IndexError:</span><br><span class="line">                <span class="comment"># 地图边界以外但又在视野内的方块</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;INDEX_ERROR_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 不在视野内的地图方块</span></span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;CAN_NOT_SEE_BLOCK&#125;</span>&quot;</span>, end=<span class="string">&quot; &quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    view = <span class="number">1</span></span><br><span class="line">    step = <span class="number">0</span></span><br><span class="line">    <span class="comment"># 初始化游戏地图</span></span><br><span class="line">    (gameMap, place) = level_1()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 介绍游戏规则</span></span><br><span class="line">    introduce()</span><br><span class="line">    show(gameMap, view, place)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 游戏阶段</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 玩家输入移动方向</span></span><br><span class="line">        choice = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                choice = <span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;输入：&quot;</span>))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">except</span> ValueError:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> (choice == <span class="number">4</span>) <span class="keyword">and</span> (place &gt; <span class="number">0</span>):</span><br><span class="line">            place -= <span class="number">1</span></span><br><span class="line">            step += <span class="number">1</span></span><br><span class="line">        <span class="keyword">elif</span> (choice == <span class="number">6</span>) <span class="keyword">and</span> (place &lt; <span class="built_in">len</span>(gameMap) - <span class="number">1</span>):</span><br><span class="line">            place += <span class="number">1</span></span><br><span class="line">            step += <span class="number">1</span></span><br><span class="line">        <span class="keyword">elif</span> choice == <span class="number">0</span>:</span><br><span class="line">            exit(<span class="string">&quot;您退出了游戏&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;错误指令&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 判断脚下方块并响应</span></span><br><span class="line">        <span class="keyword">if</span> gameMap[place][<span class="number">0</span>] == <span class="number">2</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;你赢了，用了<span class="subst">&#123;step&#125;</span>步&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">elif</span> gameMap[place][<span class="number">0</span>] == <span class="number">3</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;你炸了，用了<span class="subst">&#123;step&#125;</span>步&quot;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">elif</span> gameMap[place][<span class="number">0</span>] == <span class="number">4</span>:</span><br><span class="line">            place = gameMap[place][<span class="number">1</span>]</span><br><span class="line">        show(gameMap, view, place)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>一维还是很难做到生动有趣，至少目前来说是，这个一维跳来跳去的游戏其实试了一两下之后就会发现比较枯燥。并且甚至还有点难度。可能二维的话还好一些。这个现在看来只能说是个热身了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/05/30/Python%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E4%B8%80%E7%BB%B4%E7%9A%84%E8%BF%B7%E5%AE%AB/">http://example.com/2020/05/30/Python%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E4%B8%80%E7%BB%B4%E7%9A%84%E8%BF%B7%E5%AE%AB/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/07/18/Python%E7%A0%B4%E8%A7%A3%E6%95%B0%E7%8B%AC/">Python破解数独</a>
+            
+            
+            <a class="next" rel="next" href="/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/">python自动图像描边</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

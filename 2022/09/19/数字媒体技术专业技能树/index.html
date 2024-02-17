@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>数字媒体技术专业技能树 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数字媒体技术专业技能树</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">九月 19, 2022&nbsp;&nbsp;13:46:22</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数字媒体技术专业技能树总结"><a href="#数字媒体技术专业技能树总结" class="headerlink" title="数字媒体技术专业技能树总结"></a>数字媒体技术专业技能树总结</h1><hr>
+<p>就要结束了，给乱七八糟的大学课程做个总结。有些帮助大，有些帮助小。</p>
+<h2 id="方向总结"><a href="#方向总结" class="headerlink" title="方向总结"></a>方向总结</h2><ol>
+<li>平面设计</li>
+<li>前端编程</li>
+<li>建模方向</li>
+<li>新媒体方向</li>
+</ol>
+<h2 id="大学计算机基础"><a href="#大学计算机基础" class="headerlink" title="大学计算机基础"></a>大学计算机基础</h2><p>word、excl、二进制怎么算？冯诺依曼体系结构，一些计算机的理论知识（对于考研来说有点幼稚了，对于二级来说可能还不够）练习打字</p>
+<h2 id="艺术设计基础（PS入门）"><a href="#艺术设计基础（PS入门）" class="headerlink" title="艺术设计基础（PS入门）"></a>艺术设计基础（PS入门）</h2><p>PS：遮罩、图层效果、做海报、钢笔工具、做三折页宣传单并彩色打印、</p>
+<p>实用的：图片去水印、做海报、做简历</p>
+<h2 id="数字媒体技术导引"><a href="#数字媒体技术导引" class="headerlink" title="数字媒体技术导引"></a>数字媒体技术导引</h2><p>组队然后用H5做个小应用。涉及到抠图、文字排版，页面跳转、有点像个ppt，但是是手机app一样的页面。最后能形成一个二维码在手机上打开。</p>
+<p>现在感觉没啥用。只是锻炼了一下分工协调能力。</p>
+<h2 id="设计概论"><a href="#设计概论" class="headerlink" title="设计概论"></a>设计概论</h2><p>全是理论，背背背，对设计学的历史有了一定的了解。工艺美术运动、洛可可风格啥的，可能对设计方向有帮助</p>
+<p>因为走了编程方向，目前感觉一点用没有</p>
+<h2 id="数字媒体导论"><a href="#数字媒体导论" class="headerlink" title="数字媒体导论"></a>数字媒体导论</h2><p>学习了解电脑配置</p>
+<p>期末用html、css做了一个网站，组了个队，顺便锻炼了一下协调能力。队员作图。前端切图。</p>
+<h2 id="图像处理技术（PS进阶-Ai矢量图入门）"><a href="#图像处理技术（PS进阶-Ai矢量图入门）" class="headerlink" title="图像处理技术（PS进阶+Ai矢量图入门）"></a>图像处理技术（PS进阶+Ai矢量图入门）</h2><p>PS：抠图、叠加图片、图片组合、照片去痘痘、美容、瘦脸、做拟态风格按钮、海报</p>
+<p>AI：做大海报、渐变线条效果、做几何图案、logo制作、按钮图表制作</p>
+<h2 id="C语言程序设计"><a href="#C语言程序设计" class="headerlink" title="C语言程序设计"></a>C语言程序设计</h2><p>用的codeblocks，根本没教malloc。栈内存和堆内存也没讲。比较肤浅且仓促，期末作业：经典学生管理系统。</p>
+<p>不过如果没有这门课我可能根本不会去想着学习C语言。</p>
+<h2 id="数字色彩"><a href="#数字色彩" class="headerlink" title="数字色彩"></a>数字色彩</h2><p>了解各种色彩搭配原理，运用。运用在网页设计上、设计海报。做商业宣传单。</p>
+<h2 id="UI设计"><a href="#UI设计" class="headerlink" title="UI设计"></a>UI设计</h2><p>能够分析软件UI结构、手绘UI按钮、制作UI设计图。</p>
+<p>最大的收获是发现并了解了“新拟态风格”。发现了CSS也能做出这个效果</p>
+<h2 id="媒体传播概论"><a href="#媒体传播概论" class="headerlink" title="媒体传播概论"></a>媒体传播概论</h2><p>了解很多的传播学理论：知识鸿沟、拟态环境、议程设置等等……对传播学考研有帮助。</p>
+<p>可能对想明白现在社会上的一些事情有帮助，但目前我还没感觉。</p>
+<h2 id="摄影摄像"><a href="#摄影摄像" class="headerlink" title="摄影摄像"></a>摄影摄像</h2><p>学会使用相机调各种参数，学会拍摄视频，学会编剧、学会了广告摄影的重点是挖掘人们的痛点。学会了仿拍。</p>
+<p>最大的收获是体会到了导演的艰辛</p>
+<h2 id="网页设计"><a href="#网页设计" class="headerlink" title="网页设计"></a>网页设计</h2><p>html、css、js、ps、（顺便吐槽：教的是DW，太古老了。不如vscode）</p>
+<p>上课主要是知道都有什么东西，主要还是自学。</p>
+<h2 id="H5新媒体编辑"><a href="#H5新媒体编辑" class="headerlink" title="H5新媒体编辑"></a>H5新媒体编辑</h2><p>一个叫“木疙瘩”的东西，专门用来做H5手机上的链接小交互。感觉实际上用不到。体验非常差。做商业宣传小游戏广告啥的可以用。原理和小学微机课上学的Flash一样，梦回小学。</p>
+<h2 id="影视剪辑"><a href="#影视剪辑" class="headerlink" title="影视剪辑"></a>影视剪辑</h2><p>学会剪视频（其实很早就会了），学会了平剪、串剪、视频调色、特殊字体变幻动效、期末作业：剪辑电影预告片</p>
+<p>又一次熟悉了仿拍的流程。</p>
+<p>学会了AE动态捕捉（不是课上学的，上党课的时候有个人朗读拍视频忘了带团徽，AE动态捕捉p上去的233）</p>
+<h2 id="Python脚本编程"><a href="#Python脚本编程" class="headerlink" title="Python脚本编程"></a>Python脚本编程</h2><p>课上的内容讲的是基础、面向对象、以及一个额外的processing（一个用jython 的东西）上课用这个东西做了动画。还讲了turtle库做随机漫步。没有讲什么技巧性质的东西，最后期末考试居然是纸质的试卷。</p>
+<h2 id="媒体创意策划"><a href="#媒体创意策划" class="headerlink" title="媒体创意策划"></a>媒体创意策划</h2><p>理论课。期末和一个同学合作了一个冷兵器网站，熟悉了Vue.js和媒体查询。但是现在好长时间又不用感觉又要忘了</p>
+<h2 id="web前端开发-网页脚本编程（前端的深入学习）"><a href="#web前端开发-网页脚本编程（前端的深入学习）" class="headerlink" title="web前端开发&amp;网页脚本编程（前端的深入学习）"></a>web前端开发&amp;网页脚本编程（前端的深入学习）</h2><p>其实感觉还是不深入，感觉学校课程太慢了。 canvas、css立体效果、css Animation动画、等等</p>
+<h2 id="媒体采访与写作"><a href="#媒体采访与写作" class="headerlink" title="媒体采访与写作"></a>媒体采访与写作</h2><p>熟悉了采访视频的录制和剪辑。</p>
+<p>对我的帮助是更加深入地了解了健身。</p>
+<h2 id="数字音频技术"><a href="#数字音频技术" class="headerlink" title="数字音频技术"></a>数字音频技术</h2><p>学会了使用Cubase做音频、UATU+Melody做鬼畜，期末做了一个pvz的鬼畜视频发到b站大号上了。（这里是小号）</p>
+<p>以后做视频整活可能能用得上。</p>
+<h2 id="媒体营销管理"><a href="#媒体营销管理" class="headerlink" title="媒体营销管理"></a>媒体营销管理</h2><p>就是运营自媒体账号，很多小组是抖音。我们小组选的是b站，没错，你看到的这个“阿岳同学”就是因为这个课程开始，运营的。期末还要看作品发布数据播放量给分。</p>
+<h2 id="虚拟现实技术"><a href="#虚拟现实技术" class="headerlink" title="虚拟现实技术"></a>虚拟现实技术</h2><p>maya，做飞船建模、桌布、贴图、光、大气体积雾</p>
+<p>以后做海报不好做的东西可以用建模来渲染一个，做一些3D立体的东西的讲解可以用这个maya软件。</p>
+<h2 id="移动应用编程（其实还是前端）"><a href="#移动应用编程（其实还是前端）" class="headerlink" title="移动应用编程（其实还是前端）"></a>移动应用编程（其实还是前端）</h2><p>还是js。多安装了一个Hbuilder用来链接手机、音乐播放器制作、Ajax、Nodejs 你画我猜。cookie、H5自带的本地存储。</p>
+<p>期末做了一个数学APP。其实就是照着手机的样式做css最后打包了一下。</p>
+<h2 id="课外比赛"><a href="#课外比赛" class="headerlink" title="课外比赛"></a>课外比赛</h2><p>视频类比赛：</p>
+<p>学会了写剧本（一个数字媒体艺术的同学教我的）。体会了做微电影的流程。（借相机、地点选取、镜头语言）</p>
+<p>加字幕神器：Arctime。压缩视频神器：小丸。</p>
+<p>程序类比赛：</p>
+<p>前端网站，多人合作，做媒体查询，图片做好文件管理，命名规范，Less是个好东西。win10电脑的屏幕显示比例会影响界面实际的宽度px。笔记本显示色域45% ，在别人电脑上看会特别鲜艳。</p>
+<p>蓝桥杯、ACM校赛</p>
+<p>数学竞赛：</p>
+<p>数学建模（可）、数学竞赛校赛（水）、全国数学竞赛（寄）</p>
+<h2 id="课程总结"><a href="#课程总结" class="headerlink" title="课程总结"></a>课程总结</h2><p>思想理论：计算机概论、数字媒体导论、设计概论、媒体传播概论、色彩搭配理论</p>
+<p>思维头脑：审美、创新创意思维、平面设计思维、算法思维、面向对象封装思维、从简单到复杂的建模思维、</p>
+<p>课程硬性要求安装的软件：Office三件套、PS、Ai、Pr、Codeblocks、DW、vscode、Webstome、Pycharm、Maya、Cubase、Melody、UATU</p>
+<p>辅助支线软件：Lr、Au、格式工厂、小丸、AE、Typora、An、Hbuilder、CLion、</p>
+<p>在线软件：木疙瘩（给个面子写在这里）</p>
+<p>语言：C、Html、css、js &amp; Node、Python</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/09/19/%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93%E6%8A%80%E6%9C%AF%E4%B8%93%E4%B8%9A%E6%8A%80%E8%83%BD%E6%A0%91/">http://example.com/2022/09/19/%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93%E6%8A%80%E6%9C%AF%E4%B8%93%E4%B8%9A%E6%8A%80%E8%83%BD%E6%A0%91/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%A4%A7%E5%AD%A6/"># 大学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/09/21/%E5%86%85%E5%AD%98%E8%A7%86%E5%9B%BE%E6%AF%94%E4%BE%8B/">内存视图比例</a>
+            
+            
+            <a class="next" rel="next" href="/2022/09/02/app%E5%BC%80%E5%8F%91%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">app开发踩坑记录</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

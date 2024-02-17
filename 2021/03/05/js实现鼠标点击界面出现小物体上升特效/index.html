@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>js实现鼠标点击界面出现小物体上升特效 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">js实现鼠标点击界面出现小物体上升特效</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 5, 2021&nbsp;&nbsp;12:36:51</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="js-实现鼠标点击出现小物体上升特效（2020年12月5日）"><a href="#js-实现鼠标点击出现小物体上升特效（2020年12月5日）" class="headerlink" title="js 实现鼠标点击出现小物体上升特效（2020年12月5日）"></a>js 实现鼠标点击出现小物体上升特效（2020年12月5日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>大二上，网页设计第三次作业，让做一个花卉的网页，我想在网页中添加一些特殊的特效，以前在有的博客网站见到过点击屏幕就会有一堆颗粒掉落下来的效果，今天我就想挑战一下，我就做一个点击屏幕有一个小花飘上去的效果，就像看直播点赞，有一个大拇指飘上去的效果一样。</p>
+<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/flower.gif" alt="flower"></p>
+<p><img src="/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/TIM%E6%88%AA%E5%9B%BE20201211172945.png" alt="TIM截图20201211172945"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 鼠标按下屏幕上飞出一个花朵的特效</span></span><br><span class="line"><span class="comment"> * 日期：2020年12月5日</span></span><br><span class="line"><span class="comment"> * littlefean</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//生成从minNum到maxNum的随机数</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">randomNum</span>(<span class="params">minNum, maxNum</span>) &#123;</span><br><span class="line">	<span class="keyword">switch</span> (<span class="variable language_">arguments</span>.<span class="property">length</span>) &#123;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="built_in">parseInt</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * minNum + <span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="built_in">parseInt</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (maxNum - minNum + <span class="number">1</span>) + minNum, <span class="number">10</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="attr">default</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//存放鼠标位置的全局变量</span></span><br><span class="line"><span class="keyword">var</span> <span class="variable constant_">MOUSE_LOC</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> body = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&#x27;body&#x27;</span>);</span><br><span class="line"><span class="comment">//鼠标移动，实时获取位置并保存到 MOUSE_LOC 中</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">onmousemove</span> = <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">	<span class="variable constant_">MOUSE_LOC</span> = &#123; <span class="string">&#x27;x&#x27;</span>: e.<span class="property">pageX</span>, <span class="string">&#x27;y&#x27;</span>: e.<span class="property">pageY</span> &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//鼠标在屏幕中按下事件</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">onmousedown</span> = <span class="keyword">function</span> (<span class="params">e</span>) &#123;</span><br><span class="line">	<span class="keyword">let</span> a = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;div&#x27;</span>);</span><br><span class="line">	a.<span class="title function_">setAttribute</span>(<span class="string">&#x27;class&#x27;</span>, <span class="string">&#x27;flower&#x27;</span>);</span><br><span class="line">	<span class="comment">//设置初始css属性</span></span><br><span class="line">	a.<span class="property">style</span>.<span class="property">zIndex</span> = <span class="number">500</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">width</span> = <span class="number">100</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">height</span> = <span class="number">100</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">position</span> = <span class="string">&#x27;absolute&#x27;</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">backgroundImage</span> = <span class="string">&quot;url(&#x27;img/ani/i.png&#x27;)&quot;</span>; <span class="comment">/* 花朵图片的地址 */</span></span><br><span class="line">	a.<span class="property">style</span>.<span class="property">backgroundRepeat</span> = <span class="string">&#x27;no-repeat&#x27;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* 花朵位置必须要在鼠标点击位置上面一些，不能遮挡鼠标点击位置，否则按钮点击无效 */</span></span><br><span class="line">	a.<span class="property">style</span>.<span class="property">top</span> = <span class="variable constant_">MOUSE_LOC</span>.<span class="property">y</span> - <span class="number">100</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">left</span> = <span class="variable constant_">MOUSE_LOC</span>.<span class="property">x</span> - <span class="number">40</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">	a.<span class="property">style</span>.<span class="property">backgroundSize</span> = <span class="string">&#x27;100%&#x27;</span>;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;asssssd&#x27;</span>);</span><br><span class="line"></span><br><span class="line">	body.<span class="title function_">appendChild</span>(a);</span><br><span class="line">	<span class="keyword">var</span> t = <span class="number">0</span>;	<span class="comment">/* 表示当前动画时间 */</span></span><br><span class="line">	<span class="keyword">var</span> ro = <span class="number">1</span>;  <span class="comment">/* 表示当前动画中花朵的角度 */</span></span><br><span class="line">	<span class="keyword">var</span> roAdd = <span class="title function_">randomNum</span>(-<span class="number">5</span>, <span class="number">5</span>);  <span class="comment">/* 表示当前动画中花朵的旋转方向速度 */</span></span><br><span class="line">	<span class="keyword">var</span> size = <span class="number">100</span>;  <span class="comment">/* 表示当前动画中花朵的大小 */</span></span><br><span class="line">	<span class="keyword">var</span> op = <span class="number">0.99</span>;  <span class="comment">/* 表示当前动画中花朵的透明度 */</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//开启花朵上升动画，开启定时器</span></span><br><span class="line">	<span class="keyword">var</span> boomAni = <span class="built_in">setInterval</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">		<span class="comment">//时间增加</span></span><br><span class="line">		t++;</span><br><span class="line">		<span class="comment">//位置上升</span></span><br><span class="line">		a.<span class="property">style</span>.<span class="property">top</span> = a.<span class="property">offsetTop</span> - <span class="number">2</span> + <span class="string">&#x27;px&#x27;</span>;</span><br><span class="line">		<span class="comment">//角度旋转</span></span><br><span class="line">		ro += roAdd;</span><br><span class="line">		<span class="comment">//css属性更新</span></span><br><span class="line">		a.<span class="property">style</span>.<span class="property">transform</span> = <span class="string">&quot;rotate(&quot;</span> + ro + <span class="string">&quot;deg)&quot;</span>;</span><br><span class="line">		a.<span class="property">style</span>.<span class="property">backgroundSize</span> = size + <span class="string">&#x27;%&#x27;</span>;</span><br><span class="line">		a.<span class="property">style</span>.<span class="property">opacity</span> = op;</span><br><span class="line">		<span class="comment">// 体积逐渐减小</span></span><br><span class="line">		<span class="keyword">if</span> (size &gt;= <span class="number">30</span>) &#123;</span><br><span class="line">			size -= <span class="number">0.5</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 透明度逐渐降低</span></span><br><span class="line">		<span class="keyword">if</span> (op &gt; <span class="number">0</span>) &#123;</span><br><span class="line">			op -= <span class="number">0.01</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 时间超时结束动画</span></span><br><span class="line">		<span class="keyword">if</span> (t &gt;= <span class="number">100</span>) &#123;</span><br><span class="line">			a.<span class="title function_">remove</span>();</span><br><span class="line">			<span class="built_in">clearInterval</span>(boomAni);</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="花朵图片："><a href="#花朵图片：" class="headerlink" title="花朵图片："></a>花朵图片：</h4><h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><ol>
+<li>保存花朵图片到自己的网站项目文件夹下</li>
+<li>修改其中一行代码 <code>a.style.backgroundImage = &quot;url(&#39;img/ani/i.png&#39;)&quot;; /* 花朵图片的地址 */</code> 修改图片路径</li>
+<li>将这段代码放入js文件中并引入到html文件中。</li>
+</ol>
+<h2 id="反思与总结"><a href="#反思与总结" class="headerlink" title="反思与总结"></a>反思与总结</h2><p>最开始的制作遇到了各种奇葩的诡异现象，点击花朵之后花朵飞的特别特别快，嗖的一下比子弹还快，甚至方向反了。旋转角度增量调过大会看起来像龙卷风。</p>
+<p>经过一段时间的调整，动画做出来了，使用到了一些随机方法使得花朵的行为更加生动自然。但其实这种特效在正式的网站开发中不能太过于滥用，同时老师也提到：</p>
+<blockquote>
+<p>一般大型网站很少使用，影响鼠标指针点击位置视觉上判断，有时用户体验相反不好，复杂计算也影响鼠标灵敏度</p>
+</blockquote>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/">http://example.com/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/js/"># js</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/">Python制作代码缩略图</a>
+            
+            
+            <a class="next" rel="next" href="/2021/01/02/%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%AF%94%E8%BE%83/">js、java、c、python变量作用域比较</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

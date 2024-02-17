@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>python自动图像描边 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">python自动图像描边</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 2, 2020&nbsp;&nbsp;13:16:22</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="python-自动图像描边（2020年5月2日）"><a href="#python-自动图像描边（2020年5月2日）" class="headerlink" title="python 自动图像描边（2020年5月2日）"></a>python 自动图像描边（2020年5月2日）</h1><hr>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>利用python第三方库PIL实现，大一下学期疫情时代宅家所作。未查阅借鉴其他编程博客，全部为原创内容，程序结构还有待提升，描边算法还有待继续优化（还需过滤掉单独的颗粒状像素点）</p>
+<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/24975120-682ca6215bb526ea.jpg" alt="24975120-682ca6215bb526ea"></p>
+<p><img src="/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/24975120-e6483c2991033552.png" alt="24975120-e6483c2991033552"></p>
+<p><img src="/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/24975120-09eb280a5cbfceb5.png" alt="24975120-09eb280a5cbfceb5"></p>
+<p><img src="/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/24975120-99a211aa4a396383.png" alt="24975120-99a211aa4a396383"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">图片自动描边</span></span><br><span class="line"><span class="string">输入一张图片，返回一张图片的差值，根据相邻像素的颜色差异来涂色</span></span><br><span class="line"><span class="string">2020年5月2日</span></span><br><span class="line"><span class="string">by littlefean</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> sqrt</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">distance</span>(<span class="params">color1, color2</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    输入两个颜色数据，返回它们的差值</span></span><br><span class="line"><span class="string">    此差值是rgb构成的三维空间中的欧氏距离</span></span><br><span class="line"><span class="string">    :param color1: 颜色1 如：(20, 34, 67)</span></span><br><span class="line"><span class="string">    :param color2: 颜色2</span></span><br><span class="line"><span class="string">    :return: 差值</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    d = sqrt((color1[<span class="number">0</span>] - color2[<span class="number">0</span>]) ** <span class="number">2</span> + (color1[<span class="number">1</span>] - color2[<span class="number">1</span>]) ** <span class="number">2</span> + (color1[<span class="number">2</span>] - color2[<span class="number">2</span>]) ** <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">right</span>(<span class="params">im, d</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    传入一个图片路径和颜色差值参数d，在此py文件目录下保存一张图片</span></span><br><span class="line"><span class="string">    此函数将传入图片的每个像素对比其右边一个像素，</span></span><br><span class="line"><span class="string">    颜色差异距离超过d的像素位置对应输出图片中的白色，其余是黑色</span></span><br><span class="line"><span class="string">    :param im: 图片路径</span></span><br><span class="line"><span class="string">    :param d: 差值</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    putColor = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)  <span class="comment"># 差异过大时候涂的白色</span></span><br><span class="line">    img = Image.<span class="built_in">open</span>(im)</span><br><span class="line">    w1 = img.width  <span class="comment"># 图片的宽</span></span><br><span class="line">    h1 = img.height  <span class="comment"># 图片的高</span></span><br><span class="line">    im3 = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (w1, h1), <span class="string">&#x27;black&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(h1):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(w1):</span><br><span class="line">            src_str_list = img.load()  <span class="comment"># 当前图片的所有像素信息列表</span></span><br><span class="line">            <span class="keyword">if</span> x &lt; (w1 - <span class="number">2</span>):</span><br><span class="line">                <span class="keyword">if</span> distance(src_str_list[x, y], src_str_list[x + <span class="number">1</span>, y]) &gt;= d:</span><br><span class="line">                    im3.putpixel((x, y), putColor)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                im3.putpixel((x, y), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    im3.save(<span class="string">f&#x27;DSr_<span class="subst">&#123;d&#125;</span>_<span class="subst">&#123;time()&#125;</span>.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">right_down</span>(<span class="params">im, d, black=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    同right函数，对比差异过大条件为右侧一个像素或下方一个像素与原位置颜色差值超过d</span></span><br><span class="line"><span class="string">    参考 right函数</span></span><br><span class="line"><span class="string">    black可选参数：若为True则输出黑底白边的图片，默认白底黑边</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    img = Image.<span class="built_in">open</span>(im)</span><br><span class="line">    w1, h1 = img.width, img.height  <span class="comment"># 图片的宽高</span></span><br><span class="line">    <span class="keyword">if</span> black:</span><br><span class="line">        putColor = (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>)  <span class="comment"># 差异过大时候涂的白色</span></span><br><span class="line">        im3 = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (w1, h1), <span class="string">&#x27;black&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        putColor = (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        im3 = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (w1, h1), (<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(h1):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(w1):</span><br><span class="line">            src_str_list = img.load()  <span class="comment"># 当前图片的所有像素信息列表</span></span><br><span class="line">            <span class="keyword">if</span> (x &lt; (w1 - <span class="number">2</span>)) <span class="keyword">and</span> (y &lt; (h1 - <span class="number">2</span>)):</span><br><span class="line">                <span class="keyword">if</span> (distance(src_str_list[x, y], src_str_list[x + <span class="number">1</span>, y]) &gt;= d) /</span><br><span class="line">                        <span class="keyword">or</span> (distance(src_str_list[x, y], src_str_list[x, y + <span class="number">1</span>]) &gt;= d):</span><br><span class="line">                    im3.putpixel((x, y), putColor)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                im3.putpixel((x, y), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    im3.save(<span class="string">f&#x27;DSrd_<span class="subst">&#123;d&#125;</span>_<span class="subst">&#123;time()&#125;</span>.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">right_down_stage</span>(<span class="params">im, d</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    参考right_down函数</span></span><br><span class="line"><span class="string">    每个像素对比自己右边和下面的一个像素并输出一张图片，</span></span><br><span class="line"><span class="string">    这张图片上越白的地方表示差异程度越大的地方</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    img = Image.<span class="built_in">open</span>(im)</span><br><span class="line">    w1 = img.width  <span class="comment"># 图片的宽</span></span><br><span class="line">    h1 = img.height  <span class="comment"># 图片的高</span></span><br><span class="line">    im3 = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (w1, h1), <span class="string">&#x27;black&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(h1):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(w1):</span><br><span class="line">            <span class="keyword">if</span> (x &lt; (w1 - <span class="number">2</span>)) <span class="keyword">and</span> (y &lt; (h1 - <span class="number">2</span>)):</span><br><span class="line">                src_str_list = img.load()  <span class="comment"># 当前图片的所有像素信息列表</span></span><br><span class="line">                d1 = distance(src_str_list[x, y], src_str_list[x + <span class="number">1</span>, y])</span><br><span class="line">                d2 = distance(src_str_list[x, y], src_str_list[x, y + <span class="number">1</span>])</span><br><span class="line">                <span class="keyword">if</span> d1 &gt; d2:</span><br><span class="line">                    d = d1</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    d = d2</span><br><span class="line">                pc = <span class="built_in">int</span>(<span class="number">255</span> * d / sqrt(<span class="number">255</span> ** <span class="number">2</span> + <span class="number">255</span> ** <span class="number">2</span> + <span class="number">255</span> ** <span class="number">2</span>))</span><br><span class="line">                im3.putpixel((x, y), (pc, pc, pc))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                im3.putpixel((x, y), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    im3.save(<span class="string">f&#x27;DSrds_<span class="subst">&#123;d&#125;</span>_<span class="subst">&#123;time()&#125;</span>.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    right_down(<span class="string">&#x27;屏幕截图(451).png&#x27;</span>, <span class="number">25</span>, black=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/">http://example.com/2020/05/02/python%E8%87%AA%E5%8A%A8%E5%9B%BE%E5%83%8F%E6%8F%8F%E8%BE%B9/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/%E5%9B%BE%E5%83%8F/"># 图像</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/05/30/Python%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E4%B8%80%E7%BB%B4%E7%9A%84%E8%BF%B7%E5%AE%AB/">Python制作一个一维的迷宫</a>
+            
+            
+            <a class="next" rel="next" href="/2020/03/14/python%E7%94%9F%E6%88%90%E9%9A%8F%E6%9C%BA%E4%BA%91%E5%9B%BE/">python生成随机云图</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

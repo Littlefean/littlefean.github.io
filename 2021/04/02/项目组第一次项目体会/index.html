@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>项目组第一次项目体会 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">项目组第一次项目体会</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 2, 2021&nbsp;&nbsp;13:25:23</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="项目组第一次项目心得体会"><a href="#项目组第一次项目心得体会" class="headerlink" title="项目组第一次项目心得体会"></a>项目组第一次项目心得体会</h1><hr>
+<p>第一次做项目，我们做的是美团外面的移动端web项目</p>
+<p>但是我做的是不是web端，是微信小程序端。在刚做完项目组寒假作业的不久再继续做这个微信小程序还是比较熟悉的。但是其实小程序我懂得还不够多，在今后还需要继续看更多的案例和API。</p>
+<p>这次是我第一次比较完整的做了一个微信小程序项目，也是我第一次做的一个前端项目，有很多很多可以总结的经验。我想在此总结一番，我觉得这些都是非常可贵的东西。</p>
+<p>我所做的整个前端项目大概可以分成这么几个阶段：</p>
+<ol>
+<li>等待出原型图的同学做好原型图，出一张原型图就写一个页面。</li>
+<li>等待写好每个页面之后开始做页面跳转和一些页面逻辑，比如：<ol>
+<li>点击某个按钮会弹出某个消息框</li>
+<li>点击某个按钮会让页面里的一部分内容发生变化</li>
+<li>点击某个按钮会发生页面跳转</li>
+</ol>
+</li>
+<li>做交互，就是把每个盒子里的具体的数据通过网络请求的方式从后端获取到js这里，然后再渲染到页面上。</li>
+</ol>
+<p>同时在每个阶段都有不同的感受：</p>
+<ol>
+<li>在第一阶段就是感觉：很无聊，写到后面甚至开始感觉恶心了。三四天写出20个页面，一个页面平均50<del>100行wxml代码，和150</del>350行less代码。一个盒子一个盒子的加，一个边距一个边距的调整，我在想，如果要是能够有一个图片识别，通过优秀的算法识别出来图片里盒子嵌套关系，距离颜色以及文字识别，自动生成前端代码的程序该多好……可能是因为自己的切图基础没太大问题，所以没有遇到什么特别大的困难。只是微信小程序的弹窗和成功图标显示的组件是新的东西，我查了一会才会做。感觉微信小程序的前端好像比普通web前端更加方便，有条件渲染和循环渲染。配合js可以很方便的做到<code>“点击某个按钮会让页面里的一部分内容发生变化”</code> 这种效果。</li>
+<li>第一个阶段做的差不多的时候便开始了第二个阶段，第二个阶段进项的过程中也在逐渐完善第一阶段。在这里由于我是第一次用“摹客”这个团队合作平台，并不是很熟悉里面的操作，在分析跳转的时候我在一张一张的设计图里一个一个的对比。感觉非常的麻烦，20多页内容，我尝试在草稿本上画草稿，然后用箭头连接起来，但是还是页面太多了，我放弃这样做了，后来凭着感觉走了。但是身边的同学过来看的是后让我打开了“原型稿–开始演示” ，我才知道原来还可以有点击跳转效果的图稿。可能我今后做项目遇到麻烦的地方要多多和其他同学交流一下吧。没准只是一个非常小的问题，就解决了很大的麻烦。</li>
+<li>同样，在进行第三阶段的时候也在完善第二阶段。第三阶段相比前两个阶段还有点意思，同时也是第一次做。这一步需要修改html代码，把原有的假数据全部挖空成一个一个的 <code>&#123;&#123;  &#125;&#125;</code> 空位置，然后在js里写数组的数据，把它传送到空位置里的字段里，循环渲染。大部分交互还不复杂，只是总会出现这样那样的问题，网络请求拿不到数据，结果发现经常是后端人员写的接口有问题。还有就是微信小程序的openid的获取有一点复杂，需要和后端服务器连续发送不止一次请求。其实在写的时候我终于意识到this指向问题是多么重要了，外侧Page是一个对象，在Page内写代码总比可避免再写一个新的对象的。这里就必然涉及到this的指向问题。我还记得我为了获取到data数据，还用了一些比较冗余的方法……我觉得比较复杂的可能还是消息页面的数据交互，需要根据拿过来的数据仔细观察，对比界面上的内容一点点分析是怎么回事，需要分开不同的人发来的消息，还要把不同人的对话中的最后发消息的那一方发的消息拿过来渲染到消息列表的标题里，还有其他很多很多这里就不细说了，由于最后也没多少时间了，项目也快截止了，再加上课多作业也多，精力也消耗的不少了，我也就只能做成这样了，可能还有一些bug以及未实现的功能存在。但也就到这里了。</li>
+</ol>
+<p>这是我第一次和很多人一起做一个比较完整的项目，我在前端的感觉总体还行，只是有点累。我觉得主要是因为没有向后考虑那么多，导致我做的时候从局部到整体开始做，一开始没有形成一个统一的观念，也没有为做交互做考虑。其实应该一开始就搞好页面之间的跳转关系，在写代码的时候也同时为交互做考虑，这样也许会更好吧。无论怎样，这第一这做项目对我来说可以算是一次宝贵的经验了。</p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/room.jpg" alt="room"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-19-16.png" alt="Snipaste_2021-04-02_16-19-16"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-21-00.png" alt="Snipaste_2021-04-02_16-21-00"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-23-28.png" alt="Snipaste_2021-04-02_16-23-28"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-25-41.png" alt="Snipaste_2021-04-02_16-25-41"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-26-12.png" alt="Snipaste_2021-04-02_16-26-12"></p>
+<p><img src="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/Snipaste_2021-04-02_16-28-27.png" alt="Snipaste_2021-04-02_16-28-27"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/">http://example.com/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/%E5%A4%A7%E5%AD%A6/"># 大学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/">位运算结果矩阵转成图像的小发现</a>
+            
+            
+            <a class="next" rel="next" href="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/">Python制作代码缩略图</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

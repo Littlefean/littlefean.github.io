@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>python代码模板-算法竞赛用 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">python代码模板-算法竞赛用</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 10, 2022&nbsp;&nbsp;13:18:03</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="python代码模板-算法竞赛用"><a href="#python代码模板-算法竞赛用" class="headerlink" title="python代码模板-算法竞赛用"></a>python代码模板-算法竞赛用</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">getBin</span>(<span class="params">n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取一个数字的二进制&quot;&quot;&quot;</span></span><br><span class="line">    b = <span class="built_in">str</span>(<span class="built_in">bin</span>(n))</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> b[<span class="number">3</span>:]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> b[<span class="number">2</span>:]</span><br></pre></td></tr></table></figure>
+
+<p>全排列</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> permutations</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(permutations([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])))  <span class="comment"># [(1, 2, 3), (1, 3, 2), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1)]</span></span><br></pre></td></tr></table></figure>
+
+<p>回文数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">isPalindrome</span>(<span class="params">x: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;判断是否是回文数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> x &gt; -<span class="number">1</span> <span class="keyword">and</span> <span class="built_in">str</span>(x)[::-<span class="number">1</span>] == <span class="built_in">str</span>(x)</span><br></pre></td></tr></table></figure>
+
+<p>图</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, number: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="comment"># 0~ number</span></span><br><span class="line">        self.dicChild = &#123;&#125;  <span class="comment"># 节点：孩子节点集合</span></span><br><span class="line">        self.dicFather = &#123;&#125;  <span class="comment"># 节点：祖先节点集合</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(number):</span><br><span class="line">            self.dicChild[i] = <span class="built_in">set</span>()</span><br><span class="line">            self.dicFather[i] = <span class="built_in">set</span>()</span><br><span class="line">        self.childCountDic = &#123;&#125;  <span class="comment"># 节点编号 : 子节点的数量</span></span><br><span class="line">        self.zeroChildNode = <span class="built_in">set</span>()  <span class="comment"># 存放没有孩子节点的集合</span></span><br><span class="line">        self.nextZero = <span class="built_in">set</span>()  <span class="comment"># 删除节点方法的时候会用到这个变量</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">initSet</span>(<span class="params">self, childList: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]</span>):</span><br><span class="line">        <span class="keyword">for</span> i, childArr <span class="keyword">in</span> <span class="built_in">enumerate</span>(childList):</span><br><span class="line">            <span class="keyword">for</span> child <span class="keyword">in</span> childArr:</span><br><span class="line">                self.dicFather[child].add(i)</span><br><span class="line">                self.dicChild[i].add(child)</span><br><span class="line">            self.childCountDic[i] = <span class="built_in">len</span>(childArr)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(childArr) == <span class="number">0</span>:</span><br><span class="line">                self.zeroChildNode.add(i)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">delZeroChild</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 执行一次删除所有没有子节点的节点的操作</span></span><br><span class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.zeroChildNode:</span><br><span class="line">            self.delNode(node)</span><br><span class="line">        self.zeroChildNode = self.nextZero</span><br><span class="line">        self.nextZero = <span class="built_in">set</span>()</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">delNode</span>(<span class="params">self, node: <span class="built_in">int</span></span>):</span><br><span class="line">        <span class="comment"># 删除一个节点</span></span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> self.dicFather[node]:</span><br><span class="line">            self.dicChild[n].remove(node)</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(self.dicChild[n]) == <span class="number">0</span>:</span><br><span class="line">                self.nextZero.add(n)</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> self.dicChild[node]:</span><br><span class="line">            self.dicFather[n].remove(node)</span><br><span class="line">        self.dicChild.pop(node)  <span class="comment"># 子孩子字典中直接删除这个节点</span></span><br><span class="line">        self.dicFather.pop(node)  <span class="comment"># 父字典中直接删除这个节点</span></span><br></pre></td></tr></table></figure>
+
+<p>给字典排序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"></span><br><span class="line">d = <span class="built_in">dict</span>(collections.Counter(<span class="string">&#x27;Hello World&#x27;</span>))</span><br><span class="line"><span class="comment">#  d.items() 是  [(k, v), (k, v),(k, v)...] 组成的列表</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(d.items(), key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>], reverse=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<p>字典计数器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> collections</span><br><span class="line"></span><br><span class="line"><span class="comment"># 一共有三种初始方法</span></span><br><span class="line"><span class="comment"># 1. 传入一个序列</span></span><br><span class="line"><span class="built_in">print</span>(collections.Counter([<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]))</span><br><span class="line"><span class="comment"># 2.传入一个字典</span></span><br><span class="line"><span class="built_in">print</span>(collections.Counter(&#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">2</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">3</span>, <span class="string">&#x27;c&#x27;</span>: <span class="number">1</span>&#125;))</span><br><span class="line"><span class="comment"># 3.直接利用=传参</span></span><br><span class="line"><span class="built_in">print</span>(collections.Counter(a=<span class="number">2</span>, b=<span class="number">3</span>, c=<span class="number">1</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>日期</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime, timedelta</span><br><span class="line"></span><br><span class="line">d = datetime(<span class="number">2001</span>, <span class="number">5</span>, <span class="number">15</span>, <span class="number">13</span>, <span class="number">59</span>, <span class="number">59</span>)</span><br><span class="line">dt = timedelta(days=<span class="number">1</span>, seconds=<span class="number">1</span>, microseconds=<span class="number">1</span>, milliseconds=<span class="number">1</span>, minutes=<span class="number">1</span>, hours=<span class="number">1</span>, weeks=<span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最大公约数（其实math里面有）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gcd</span>(<span class="params">n1, n2</span>):</span><br><span class="line">    <span class="keyword">return</span> gcd(n2, n1 % n2) <span class="keyword">if</span> n2 &gt; <span class="number">0</span> <span class="keyword">else</span> n1</span><br></pre></td></tr></table></figure>
+
+<p>最小公倍数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gcd</span>(<span class="params">n1, n2</span>):</span><br><span class="line">    <span class="keyword">return</span> gcd(n2, n1 % n2) <span class="keyword">if</span> n2 &gt; <span class="number">0</span> <span class="keyword">else</span> n1</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcm</span>(<span class="params">n1, n2</span>):</span><br><span class="line">    <span class="keyword">return</span> n1 * n2 // gcd(n1, n2)</span><br></pre></td></tr></table></figure>
+
+<p>序列组合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> combinations</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(combinations([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="number">2</span>)))  <span class="comment"># [(1, 2), (1, 3), (2, 3)]</span></span><br></pre></td></tr></table></figure>
+
+<p>组合数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">c</span>(<span class="params">m, n</span>):</span><br><span class="line">    <span class="keyword">import</span> math</span><br><span class="line">    <span class="keyword">return</span> math.factorial(n) // (math.factorial(m) * math.factorial(n - m))</span><br></pre></td></tr></table></figure>
+
+<p>自定义排序</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr = [<span class="number">23</span>, <span class="number">131</span>, <span class="number">5</span>, <span class="number">124</span>, <span class="number">35</span>]</span><br><span class="line">arr = <span class="built_in">sorted</span>(arr, key=<span class="keyword">lambda</span> item: item, reverse=<span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(arr)</span><br></pre></td></tr></table></figure>
+
+<p>质数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">isPrim</span>(<span class="params">n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;判断是否是质数  O(✓n)&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">int</span>(n ** <span class="number">0.5</span>) + <span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> n % i == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">countPrim</span>(<span class="params">n: <span class="built_in">int</span></span>) -&gt; <span class="built_in">int</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;[0, n) 内有多少个质数 厄拉多塞筛法 O(n*(?n))&quot;&quot;&quot;</span></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    signs = [<span class="literal">True</span>] * n</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>, n):</span><br><span class="line">        <span class="keyword">if</span> signs[i]:</span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i + i, n, i):</span><br><span class="line">                signs[j] = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+
+<p>队列</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化一个最大长度为3的队列</span></span><br><span class="line">d = deque([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], maxlen=<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 因为初始化队列最大长度为3，再添加元素会把队头元素挤出</span></span><br><span class="line">d.append(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化一个不限制长度的队列</span></span><br><span class="line">d = deque()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加元素到队尾部</span></span><br><span class="line">d.append(<span class="number">1</span>)</span><br><span class="line">d.append(<span class="number">2</span>)</span><br><span class="line">d.append(<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将队首的元素弹出返回</span></span><br><span class="line"><span class="built_in">print</span>(d.popleft())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 弹出队尾元素并返回值</span></span><br><span class="line"><span class="built_in">print</span>(d.pop())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在队首插入元素</span></span><br><span class="line">d.appendleft(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>阶乘</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line">math.factorial(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/05/10/python%E4%BB%A3%E7%A0%81%E6%A8%A1%E6%9D%BF-%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B%E7%94%A8/">http://example.com/2022/05/10/python%E4%BB%A3%E7%A0%81%E6%A8%A1%E6%9D%BF-%E7%AE%97%E6%B3%95%E7%AB%9E%E8%B5%9B%E7%94%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/05/20/%E5%89%91%E6%8C%87Offer2%E5%88%B7%E5%AE%8C/">剑指Offer2刷完</a>
+            
+            
+            <a class="next" rel="next" href="/2022/03/16/%E6%B5%AE%E7%82%B9%E5%B0%8F%E6%95%B0%E7%9A%84%E6%8E%A2%E7%A9%B6/">浮点小数的探究</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

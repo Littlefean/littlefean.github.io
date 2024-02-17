@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>数学建模比赛心得 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">数学建模比赛心得</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">九月 13, 2021&nbsp;&nbsp;13:42:52</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数学建模比赛心得"><a href="#数学建模比赛心得" class="headerlink" title="数学建模比赛心得"></a>数学建模比赛心得</h1><p>数学建模是从2021年9月9日周四的下午六点一直持续到9月12日晚上八点。</p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/Snipaste_2021-09-16_14-26-42.png" alt="Snipaste_2021-09-16_14-26-42"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/Snipaste_2021-09-16_14-27-35.png" alt="Snipaste_2021-09-16_14-27-35"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E8%8D%89%E7%A8%BF.jpg" alt="草稿"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E4%BB%A3%E7%A0%81%E6%88%AA%E5%9B%BE.png" alt="代码截图"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E5%9B%9E%E5%AF%9D%E5%AE%A4.jpg" alt="回寝室"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E9%9B%B6%E9%A3%9F.jpg" alt="零食"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E8%AE%BA%E6%96%87%E6%88%AA%E5%9B%BE.png" alt="论文截图"></p>
+<p><img src="/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/%E4%B8%8A%E4%BC%A0%E6%88%90%E5%8A%9F.png" alt="上传成功"></p>
+<p>经过一番思索，我们组选择了C题。</p>
+<p>这几天我有很多很多的以前从来没有体会到的感觉，有压力、紧张、也有兴奋、有成就感、也有感觉大家都团结在一起的那种能聚感、也有三天三夜什么问题都没有想，只在想数学题的十分纯粹的感觉、同时在身体上，我居然感觉我好像一点事都没有。</p>
+<p>首先说说<strong>压力感和紧张感</strong>吧，从开始比赛前开始的十分钟我就已经感觉到了，我当时很难想象我们拿到题是什么样的题，会不会突然把我们都吓傻了，我们啥也看不懂，导致我们比赛赶本没法打了，这是我最担心的。往往越是不确定的东西，就越会给人一种不安的紧张感。当时我还记得我的队员刘旺，在狂点下载题目，即使还没到时间，因为我们都想第一时间获得题。我故作镇定，说没关系，即使我们没有拿奖，甚至我们都没做出来，我们至少在以后的简历里面写我们参加过数学建模。我们有着个经历和收获。我其实也是很紧张的，我之所以故作镇定，不想体现出很大的紧张感，是因为我知道我是组长，我是负责编程的同学，问题的结果数据需要依赖我的程序结果数据，填excl表需要我的程序来填，生成一些数据图还需要我的程序来运行。我不能崩溃，我崩溃了，整个团队向前行进就变得更加困难了。</p>
+<p><strong>兴奋和成就感</strong>主要来源于通过不停的想办法，总是能够得到解决问题的结果，而且结果似乎也能说得过去。尤其是当你的团队，为了一小问而卡了整整一下午的时候，难免会感觉到烦躁，难免会感觉到时间带来的压迫感。但是当我们之中的一个人突然有了灵感，突然有了思路，当前这个问题突然迎刃而解，有了希望，那种感觉是真的从绝望中看到希望的感觉，会让人十分兴奋。尤其是当我们得到问题的结果的时候，结果看起来也合情合理，那种成就感，是没有参加过的人难以体会到的，也是难以用文字来表达的。我们互相讨论，得到思路，再用程序做出来，看到结果和答案不符合，受到打击，再修改修改得到比较合理的结果，那比较合理的结果就是我们所需要和苦苦追求的。我还记得当时星期六的下午我们到了工作室来做题，Lingo得到的数据结果总是感觉很小，我们找了似乎两个多小时的问题还没找到，我当时都开始怀疑Lingo软件内部有问题了，建模手刘旺都开始怀疑自己建模的公式和思路有问题了，然而我们最后发现其实结果就是对的，只是我们忘了运输前的原材料体积本身就是比成品的体积小的，那一刻我们直接站起来喊了出来。因为其实我们的压力真的都很大。</p>
+<p>最让我感觉到温暖和特别的是我们三个人之间的<strong>凝聚力</strong>，我们三个人，建模手刘旺负责简历数学模型，写手周亭亭负责论文书写，我负责编程得到结果。我能明显感觉到我们三个人都有着同样的目标：把题做出来。我能明显感觉到我们都在为这同样的目标做着自己最大的努力，我们一起吃饭，晚上一起回寝室，早上一起起床出发，一起在教室做题，我们这几天几乎都没有做和数学建模没有关系的事情。一方面是因为题目难度本身就很大了，另一方面是因为时间真的很紧张，并且任务量很大，整个题目的小题目也非常多。我们甚至在吃饭的时候都在讨论题目的新思路，回了寝室也没有放弃对题目的思考和尝试，当时周五晚上回了寝室我在用一种新的思路在做题、写代码，刘旺和周亭亭在网上搜资料搜信息和思路。在我写代码卡住的时候建模手刘旺会来问我哪里卡住了，对我详细的解释模型的细节。在我和刘旺讨论的时候写手周亭亭也在听我们讨论的内容并同时推进论文内容的进度。这让我感觉很默契也很踏实。我们配合的都很好，也没有出现像老师说的非常强烈的争吵，遇到意见不统一的时候我们几乎都通过解释和说明的方式得到了彼此之间的认可和同意了。在周六晚上的时候我们甚至直接在工作室通宵了，虽然工作室有两张折叠支架床，虽然现在是夏天，但是我们早上还是被冻醒了，晚上四点睡觉，早上八点起来，当时我感觉整个世界都在摇晃。我后来得知我的两个好长时间都没联系的初中同学也在搞数学建模比赛，他们一个做了A题，一个做了B题，他们也都通宵了，其中做A题的那个学霸说是人生中第一次通宵。我们的建模手刘旺也说他也是在学校里通过宵的人了。我似乎感觉到了整个中国的数学建模大赛里的所有队伍都不容易。</p>
+<p>还有一点让我感觉很特别的就是一种<strong>纯粹感</strong>，这是我上大学以来从来都没有的感觉。一般来说，大学里往往事情都很多，杂念也会很多，比如中午吃饭的时候可能会看着手机上的一些事情想到别的东西，晚上可能突然还会想到自己需要买什么什么东西，还有什么作业要做。但是这几天不一样，这几天我是完全没有想到别的东西，全程都在想数学题，在想怎么用编程的方法来实现题目里给出的要求。在想哪里出了问题，哪里出了bug。这是我有史以来感觉自己精力最集中，最全神贯注时间最长，投入到一件事情上来的一次经历。后来我发现自己电脑里的软件时间记录软件里显示这三天72小时里，我只睡了9个小时，启用编写Python代码的时间总共就已经有累计至少24小时了。在这之外，还有我们讨论的时间，还有我们找bug的时间，还有写Lingo的时间，以及我们最后完善论文的时间。总之这是很稀有的感觉。这次是我有史以来写代码时间最长的一天，虽然我一日三餐都吃饱了，但是我还是经常会感觉到饥饿。让我很感动的一点是老师们不仅在我们建模教室所在的教学楼大门的上方挂了大大的、对我们鼓励的横幅，还给我们每天都补给一大箱子的零食。由于数学建模的时间和上课的时间有所重叠，所以必须要请假，但是我当时的请假出了点问题，我还记得当时我突然就有点慌了，正在我和数学建模的老师反应完了之后，老师直接说她来解决，随后很快请假的问题就被解决了。这让我感觉真的很心安。我感觉不仅我们每一个参赛的学生队伍都在全力付出，老师也在为我们全力付出，老师们在精神上和物质上给我们提供了很多的帮助，让我很感动。</p>
+<p>在<strong>身体上</strong>，我居然感觉我好像一点事都没有。但其实不能说完全一点事儿也没有，因为我发现在刚比赛完回寝室洗澡的时候我一缕头发发现我直接拿捏了一把，毕竟我通宵了，毕竟这几天我都没洗澡。这几天感觉比较亢奋，精神也高度集中，所以可能也没有感觉到太强烈的困意。</p>
+<p>最后做个总结吧，这是我有史以来感觉合作最默契的一次比赛，也是最辛苦，精力耗费量、耗费速率最高的一次比赛，无论我们能不能拿奖，无论我们结果做的对不对，至少我们都全力以赴了，我们尽力了。这真的是一次宝贵的经历。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/">http://example.com/2021/09/13/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E6%AF%94%E8%B5%9B%E5%BF%83%E5%BE%97/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%95%B0%E5%AD%A6/"># 数学</a>
+                    
+                        <a href="/tags/%E5%A4%A7%E5%AD%A6/"># 大学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/12/04/%E5%92%8C%E6%95%B0%E5%AD%A6%E6%9C%89%E5%85%B3%E7%9A%84%E7%AE%97%E6%B3%95%E7%A7%AF%E7%B4%AF/">和数学有关的算法积累</a>
+            
+            
+            <a class="next" rel="next" href="/2021/07/15/%E7%BA%AFcss%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%B5%B0%E8%B7%AF%E5%8A%A8%E7%94%BB/">纯css实现机器人走路动画</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

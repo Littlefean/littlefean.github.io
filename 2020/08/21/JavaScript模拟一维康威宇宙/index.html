@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>JavaScript模拟一维康威宇宙 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">JavaScript模拟一维康威宇宙</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 21, 2020&nbsp;&nbsp;12:34:44</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="JavaScript-模拟一维康威宇宙（2020年8月21日）"><a href="#JavaScript-模拟一维康威宇宙（2020年8月21日）" class="headerlink" title="JavaScript 模拟一维康威宇宙（2020年8月21日）"></a>JavaScript 模拟一维康威宇宙（2020年8月21日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>大一结束了，疫情还没有结束，暑假在家里呆着，学习了html，css，还有一点点的JavaScript，以前写过一个python版本的一维康威宇宙的程序，现在想到既然js这么方便，可视化渲染很轻松就能做到，为什么不用js来写一个呢？已经有了python基础的我感觉直接用js来写应该也不会太难，先用python的思路做，js对应不会的就直接从网上搜就可以，于是我就做了一个。（未参考任何其他相关康威宇宙的程序代码，纯自己写的）</p>
+<h2 id="相关介绍"><a href="#相关介绍" class="headerlink" title="相关介绍"></a>相关介绍</h2><p>康威宇宙其实是二维的，我简化成了一维。对于原版康威宇宙，可以看 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45026142">https://zhuanlan.zhihu.com/p/45026142</a></p>
+<p>这个一维的康威宇宙就是：在一个一维的宇宙中，有一堆细胞排列在这个宇宙所在的直线上，有点细胞是活细胞，有的细胞是死细胞。每过一个时刻，整个宇宙就会变化一次。怎么变化呢？规则是这样的：</p>
+<p>就是遍历判断每一个细胞，每个细胞会根据周围四个细胞的状态来改变自己接下来的状态，（周围四个细胞是指：自己左边的左边，左边，右边，右边的右边，一共四个邻居细胞），这样下来，宇宙中的每一个死细胞可能会变成活细胞，每一个活细胞也可能会变成死细胞。具体判断规则是这样的：</p>
+<p>对于活细胞：如果周围四个细胞的活细胞数量在 [1, 2] 内，那么该活细胞在下一时刻继续存活，否则因为拥挤或者孤独而死亡。</p>
+<p>对于死细胞：如果周围四个细胞的活细胞数量在 [2, 3] 内，那么该死细胞在下一时刻复活，否则继续保持死亡状态。</p>
+<p>遍历的顺序不影响结果</p>
+<h2 id="效果截图"><a href="#效果截图" class="headerlink" title="效果截图"></a>效果截图</h2><p><img src="/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%991111.png" alt="康威宇宙1111"></p>
+<p><img src="/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%991223.png" alt="康威宇宙1223"></p>
+<p><img src="/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%993211.png" alt="康威宇宙3211"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">康威宇宙一维版 js网页版</span></span><br><span class="line"><span class="comment">2020年8月21日</span></span><br><span class="line"><span class="comment">by littlefean</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>一维版康威宇宙<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-tag">body</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">23</span>, <span class="number">27</span>, <span class="number">44</span>, <span class="number">1.00</span>);</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-tag">a</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">color</span>: azure;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-tag">p</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">font-size</span>: <span class="number">20px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">color</span>: aliceblue;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-id">#BLOCK_LIVE</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">width</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">height</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">float</span>: left;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">214</span>, <span class="number">158</span>, <span class="number">158</span>, <span class="number">1.00</span>);</span></span><br><span class="line"><span class="language-css">			<span class="attribute">margin</span>: <span class="number">0px</span>;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-id">#BLOCK_DEATH</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">width</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">height</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">float</span>: left;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">95</span>, <span class="number">6</span>, <span class="number">8</span>, <span class="number">1.00</span>);</span></span><br><span class="line"><span class="language-css">			<span class="attribute">margin</span>: <span class="number">0px</span>;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-id">#LINE</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">height</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">margin</span>: <span class="number">0px</span>;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">float</span>: top;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">		<span class="selector-tag">h1</span> &#123;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">color</span>: aliceblue;</span></span><br><span class="line"><span class="language-css">			<span class="attribute">text-align</span>: center;</span></span><br><span class="line"><span class="language-css">		&#125;</span></span><br><span class="line"><span class="language-css">	</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span>&gt;</span>一维版康威生命游戏<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span>规则介绍：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span>相关链接：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://zhuanlan.zhihu.com/p/45026142&quot;</span>&gt;</span>康威生命游戏——孤独会致命，拥挤也一样<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span>图片展示：<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;BLOCK&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//定义常量</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> <span class="variable constant_">AIR</span> = <span class="string">&quot;&lt;div id=/&quot;</span><span class="variable constant_">BLOCK_LIVE</span>/<span class="string">&quot;&gt;&lt;/div&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> <span class="variable constant_">WIDTH</span> = <span class="number">60</span>;</span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> <span class="variable constant_">CELL</span> = <span class="string">&quot;&lt;div id=/&quot;</span><span class="variable constant_">BLOCK_DEATH</span>/<span class="string">&quot;&gt;&lt;/div&gt;&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//宇宙规则</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> live_min = <span class="number">1</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> live_max = <span class="number">2</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> birth_min = <span class="number">2</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> birth_max = <span class="number">3</span></span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//数组，表示一行</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> line = <span class="keyword">new</span> <span class="title class_">Array</span>();</span></span><br><span class="line"><span class="language-javascript">		<span class="comment">/**</span></span></span><br><span class="line"><span class="comment"><span class="language-javascript">		 * 输入整数a，b，返回[a, b]范围内的随机整数</span></span></span><br><span class="line"><span class="comment"><span class="language-javascript">		 */</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">function</span> <span class="title function_">randint</span>(<span class="params">a, b</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">var</span> rand = <span class="built_in">parseInt</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * (b + <span class="number">1</span> - a) + a);</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">return</span> rand;</span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//输入一个数组array和整数length，此函数在array内添加length个[0, 1]之间的随机整数</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">function</span> <span class="title function_">randLine</span>(<span class="params">array, length</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">				array.<span class="title function_">push</span>(<span class="title function_">randint</span>(<span class="number">0</span>, <span class="number">1</span>))</span></span><br><span class="line"><span class="language-javascript">			&#125;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">return</span> array;</span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//传入一个数组array，根据宇宙规则进行迭代，并返回迭代后的数组，宇宙的规则详见开头注释</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">function</span> <span class="title function_">nextArray</span>(<span class="params">array</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">var</span> <span class="variable constant_">VIEW_R</span> = <span class="number">2</span>;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">var</span> afterArray = <span class="keyword">new</span> <span class="title class_">Array</span>();</span></span><br><span class="line"><span class="language-javascript">			<span class="comment">//遍历每一个位置</span></span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; array.<span class="property">length</span>; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">var</span> leftIndex = <span class="title class_">Math</span>.<span class="title function_">max</span>(<span class="number">0</span>, i - <span class="variable constant_">VIEW_R</span>);</span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">var</span> rightIndex = <span class="title class_">Math</span>.<span class="title function_">min</span>(array.<span class="property">length</span> - <span class="number">1</span>, i + <span class="variable constant_">VIEW_R</span>);</span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">var</span> neighborCount = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">for</span> (<span class="keyword">var</span> j = leftIndex; j &lt;= rightIndex; j++) &#123;</span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">if</span> (array[j] == <span class="number">1</span> &amp;&amp; j != i) &#123;</span></span><br><span class="line"><span class="language-javascript">						neighborCount++;</span></span><br><span class="line"><span class="language-javascript">					&#125;</span></span><br><span class="line"><span class="language-javascript">				&#125;</span></span><br><span class="line"><span class="language-javascript">				<span class="comment">//如果这段本身是死的</span></span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">if</span> (array[i] == <span class="number">0</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">					<span class="comment">//判定是否需要诞生</span></span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">if</span> (birth_min &lt;= neighborCount &amp;&amp; neighborCount &lt;= birth_max) &#123;</span></span><br><span class="line"><span class="language-javascript">						afterArray.<span class="title function_">push</span>(<span class="number">1</span>)</span></span><br><span class="line"><span class="language-javascript">					&#125;</span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">						afterArray.<span class="title function_">push</span>(<span class="number">0</span>)</span></span><br><span class="line"><span class="language-javascript">					&#125;</span></span><br><span class="line"><span class="language-javascript">				&#125;</span></span><br><span class="line"><span class="language-javascript">				<span class="comment">//如果这个细胞本身是活着的</span></span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">else</span> <span class="keyword">if</span> (array[i] == <span class="number">1</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">					<span class="comment">//判定是否存活</span></span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">if</span> (live_min &lt;= neighborCount &amp;&amp; neighborCount &lt;= live_max) &#123;</span></span><br><span class="line"><span class="language-javascript">						afterArray.<span class="title function_">push</span>(<span class="number">1</span>)</span></span><br><span class="line"><span class="language-javascript">					&#125;</span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">						afterArray.<span class="title function_">push</span>(<span class="number">0</span>)</span></span><br><span class="line"><span class="language-javascript">					&#125;</span></span><br><span class="line"><span class="language-javascript">				&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">			&#125;</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">return</span> afterArray;</span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//传入数组array，该函数将数组渲染到浏览器界面上</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">function</span> <span class="title function_">printLine</span>(<span class="params">array</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">			<span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;div id=/&quot;</span><span class="variable constant_">LINE</span>/<span class="string">&quot;&gt;&quot;</span>)</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; array.<span class="property">length</span>; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">				<span class="keyword">switch</span> (array[i]) &#123;</span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">case</span> <span class="number">0</span>:</span></span><br><span class="line"><span class="language-javascript">						<span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="variable constant_">AIR</span>);</span></span><br><span class="line"><span class="language-javascript">						<span class="keyword">break</span>;</span></span><br><span class="line"><span class="language-javascript">					<span class="keyword">case</span> <span class="number">1</span>:</span></span><br><span class="line"><span class="language-javascript">						<span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="variable constant_">CELL</span>);</span></span><br><span class="line"><span class="language-javascript">						<span class="keyword">break</span>;</span></span><br><span class="line"><span class="language-javascript">				&#125;</span></span><br><span class="line"><span class="language-javascript">			&#125;</span></span><br><span class="line"><span class="language-javascript">			<span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="string">&quot;&lt;/div&gt;&quot;</span>);</span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//传入数组array，整数step，根据相关规则迭代tep次array数组。</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">function</span> <span class="title function_">iterateArray</span>(<span class="params">array, step</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">			arrayA = array;</span></span><br><span class="line"><span class="language-javascript">			<span class="title function_">printLine</span>(arrayA)</span></span><br><span class="line"><span class="language-javascript">			<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; step; i++) &#123;</span></span><br><span class="line"><span class="language-javascript">				arrayB = <span class="title function_">nextArray</span>(arrayA);</span></span><br><span class="line"><span class="language-javascript">				<span class="title function_">printLine</span>(arrayB);</span></span><br><span class="line"><span class="language-javascript">				arrayA = arrayB;</span></span><br><span class="line"><span class="language-javascript">			&#125;</span></span><br><span class="line"><span class="language-javascript">		&#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">		<span class="comment">//执行代码：</span></span></span><br><span class="line"><span class="language-javascript">		<span class="keyword">var</span> cellArray = <span class="title function_">randLine</span>(line, <span class="variable constant_">WIDTH</span>);</span></span><br><span class="line"><span class="language-javascript">		<span class="title function_">iterateArray</span>(cellArray, <span class="number">300</span>);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">	</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="额外发现"><a href="#额外发现" class="headerlink" title="额外发现"></a>额外发现</h2><p>修改上面程序中的这四个数据，会改变宇宙的规则。下面的发现是 2020年2月25日 做python的对应的程序的时候发现的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> live_min = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> live_max = <span class="number">2</span></span><br><span class="line"><span class="keyword">var</span> birth_min = <span class="number">2</span></span><br><span class="line"><span class="keyword">var</span> birth_max = <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>当前宇宙的规则是 1223 把每一时刻的状态从上到下打印在屏幕上，就会呈现大片大片的谢尔宾斯基三角形的样子，但是如果把四个变量依次修改成以下四个数，就会有不同的呈现效果。（初始状态是随机的，死细胞和活细胞出现的概率均为50%）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">1223：谢尔宾斯基三角形</span><br><span class="line">1111：稀碎的谢尔宾斯基三角 + 大块竖向条</span><br><span class="line">1212：内部穿插竖向条的谢尔宾斯基三角 + 大块竖向条</span><br><span class="line">1314：压扁的谢尔宾斯基三角</span><br><span class="line">1313：像履带一样整齐的纹理</span><br><span class="line">2323：车印子</span><br><span class="line">0000：被竖线切断的横线</span><br><span class="line">0101：横向线</span><br><span class="line">0202：横向线穿插像网</span><br><span class="line">1413：几条黑竖线</span><br><span class="line">1414：全白</span><br><span class="line">2424：全白</span><br><span class="line">1234：几条白竖线</span><br><span class="line">1211：含有细微动态的二维码</span><br><span class="line">1222：含有锯齿状动态的二维码</span><br><span class="line">2311：二维码 + 花式轮胎印</span><br><span class="line">2322：二维码 + 自行车印</span><br><span class="line">1233：若干白竖线</span><br><span class="line">1244：含有细微动态的很多白竖线</span><br><span class="line">2222：白色各种自行车印</span><br><span class="line">3434：顶端流下来一点白油，剩下全黑</span><br><span class="line">3333：顶端流下来一点点白油，剩下全黑</span><br><span class="line">4444：顶端流下来一点点点白油，剩下全黑</span><br></pre></td></tr></table></figure>
+
+<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p>今天已经是 2020年11月1日了，发现 相关在屏幕上打印的操作可以用appendChild来实现。展示的效果其实还是可以再改进的。还有程序的结构。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/">http://example.com/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/js/"># js</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/">Python随机山脉算法</a>
+            
+            
+            <a class="next" rel="next" href="/2020/08/03/python%E7%94%9F%E6%88%90%E5%A4%84%E5%A4%84%E9%80%9A%E8%BE%BE%E7%9A%84%E5%9C%B0%E5%BD%A2/">python生成处处通达的地形</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

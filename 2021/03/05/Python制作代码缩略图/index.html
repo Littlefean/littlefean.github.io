@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Python制作代码缩略图 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Python制作代码缩略图</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 5, 2021&nbsp;&nbsp;13:12:53</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Python-制作代码缩略图展示（2020年12月5日）"><a href="#Python-制作代码缩略图展示（2020年12月5日）" class="headerlink" title="Python 制作代码缩略图展示（2020年12月5日）"></a>Python 制作代码缩略图展示（2020年12月5日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>一天晚上，看着代码编辑工具VScode右上角的缩略图，sublime也有，忽然就想到：可以用python做一个代码文件读取功能，然后批量输出他们的缩略图，顺便看看不同语言缩略图上样子的不同。</p>
+<h2 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h2><p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/htmls.png" alt="htmls"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/java.png" alt="java"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/js.png" alt="js"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/python.png" alt="python"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/css.png" alt="css"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/C%E8%AF%AD%E8%A8%80.png" alt="C语言"></p>
+<p><img src="/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/html+css.png" alt="html+css"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">代码文件转图片</span></span><br><span class="line"><span class="string">2020年12月5日</span></span><br><span class="line"><span class="string">by littlefean</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    fileTypeArray = [<span class="string">&#x27;.html&#x27;</span>, <span class="string">&#x27;.css&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.java&#x27;</span>, <span class="string">&#x27;.c&#x27;</span>, <span class="string">&#x27;.py&#x27;</span>]</span><br><span class="line">    fr = get_file(os.getcwd(), fileTypeArray)</span><br><span class="line">    <span class="built_in">print</span>(fr)</span><br><span class="line">    j = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> fr:</span><br><span class="line">        j += <span class="number">1</span></span><br><span class="line">        codeToImg(i).save(<span class="string">f&quot;<span class="subst">&#123;j&#125;</span>.png&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_file</span>(<span class="params">path, fileTypeArr</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    根据路径来获得某一个文件夹下所有的 fileTypeArr 类型文件，并将所有 对应文件放到列表中返回</span></span><br><span class="line"><span class="string">    :param fileTypeArr: 一个列表，存放文件后缀名，加点儿</span></span><br><span class="line"><span class="string">    :param path: 文件目录</span></span><br><span class="line"><span class="string">    :return: html 文件的列表，每个文件用路径字符串表示</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    L = []</span><br><span class="line">    <span class="keyword">for</span> root, dirs, files <span class="keyword">in</span> os.walk(path):</span><br><span class="line">        <span class="keyword">for</span> file <span class="keyword">in</span> files:</span><br><span class="line">            <span class="keyword">if</span> os.path.splitext(file)[<span class="number">1</span>] <span class="keyword">in</span> fileTypeArr:</span><br><span class="line">                <span class="keyword">if</span> os.path.splitext(file)[<span class="number">0</span>] != <span class="string">&#x27;__init__&#x27;</span>:</span><br><span class="line">                    L.append(os.path.join(root, file))</span><br><span class="line">    <span class="keyword">return</span> L</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">codeToImg</span>(<span class="params">codePath</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    输入一个代码文件的路径字符串，返回图片</span></span><br><span class="line"><span class="string">    :param codePath: 代码文件路径</span></span><br><span class="line"><span class="string">    :return: 图片</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    charColor = &#123;</span><br><span class="line">        <span class="string">&#x27; &#x27;</span>: (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;/n&#x27;</span>: (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;/r&#x27;</span>: (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;[&#x27;</span>: (<span class="number">0</span>, <span class="number">200</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;]&#x27;</span>: (<span class="number">0</span>, <span class="number">200</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;&#123;&#x27;</span>: (<span class="number">0</span>, <span class="number">50</span>, <span class="number">200</span>),</span><br><span class="line">        <span class="string">&#x27;&#125;&#x27;</span>: (<span class="number">0</span>, <span class="number">50</span>, <span class="number">200</span>),</span><br><span class="line">        <span class="string">&#x27;(&#x27;</span>: (<span class="number">200</span>, <span class="number">220</span>, <span class="number">10</span>),</span><br><span class="line">        <span class="string">&#x27;)&#x27;</span>: (<span class="number">200</span>, <span class="number">220</span>, <span class="number">10</span>),</span><br><span class="line">        <span class="string">&#x27;&lt;&#x27;</span>: (<span class="number">200</span>, <span class="number">100</span>, <span class="number">50</span>),</span><br><span class="line">        <span class="string">&#x27;&gt;&#x27;</span>: (<span class="number">200</span>, <span class="number">100</span>, <span class="number">50</span>),</span><br><span class="line">        <span class="string">&#x27;englishChar&#x27;</span>: (<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>),</span><br><span class="line">        <span class="string">&#x27;numberChar&#x27;</span>: (<span class="number">0</span>, <span class="number">255</span>, <span class="number">100</span>),</span><br><span class="line">        <span class="string">&#x27;normalChar&#x27;</span>: (<span class="number">10</span>, <span class="number">255</span>, <span class="number">10</span>),</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        f = <span class="built_in">open</span>(codePath, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">        fArr = f.readlines()</span><br><span class="line">    <span class="keyword">except</span> UnicodeDecodeError:</span><br><span class="line">        f = <span class="built_in">open</span>(codePath)</span><br><span class="line">        fArr = f.readlines()</span><br><span class="line">    array = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(fArr)):</span><br><span class="line">        array.append([])</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(fArr)):</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> fArr[y]:</span><br><span class="line">            <span class="keyword">if</span> char == <span class="string">&#x27;/n&#x27;</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">elif</span> char == <span class="string">&#x27; &#x27;</span>:</span><br><span class="line">                array[y].append(charColor[<span class="string">&#x27; &#x27;</span>])</span><br><span class="line">            <span class="keyword">elif</span> char == <span class="string">&#x27;/t&#x27;</span>:</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">4</span>):</span><br><span class="line">                    array[y].append(charColor[<span class="string">&#x27; &#x27;</span>])</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">if</span> char.isdigit():</span><br><span class="line">                    array[y].append(charColor[<span class="string">&#x27;numberChar&#x27;</span>])</span><br><span class="line">                <span class="keyword">elif</span> char.isalpha():</span><br><span class="line">                    array[y].append(charColor[<span class="string">&#x27;englishChar&#x27;</span>])</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">if</span> char <span class="keyword">in</span> charColor:</span><br><span class="line">                        array[y].append(charColor[char])</span><br><span class="line">                    <span class="keyword">else</span>:</span><br><span class="line">                        array[y].append(charColor[<span class="string">&#x27;normalChar&#x27;</span>])</span><br><span class="line">    im = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (getMaxLength(array) + <span class="number">10</span>, <span class="built_in">len</span>(array) + <span class="number">1</span>), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(array)):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(array[y])):</span><br><span class="line">            im.putpixel((x + <span class="number">1</span>, y + <span class="number">1</span>), array[y][x])</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;<span class="subst">&#123;codePath&#125;</span>, 已经图片化&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> im</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">showImg</span>(<span class="params">array</span>):</span><br><span class="line">    im = Image.new(<span class="string">&#x27;RGB&#x27;</span>, (getMaxLength(array) + <span class="number">10</span>, <span class="built_in">len</span>(array)+<span class="number">1</span>), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(array)):</span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(array[y])):</span><br><span class="line">            <span class="keyword">if</span> array[y][x] == <span class="number">0</span>:</span><br><span class="line">                im.putpixel((x+<span class="number">1</span>, y+<span class="number">1</span>), (<span class="number">25</span>, <span class="number">100</span>, <span class="number">25</span>))</span><br><span class="line">            <span class="keyword">elif</span> array[y][x] == <span class="number">1</span>:</span><br><span class="line">                im.putpixel((x+<span class="number">1</span>, y+<span class="number">1</span>), (<span class="number">0</span>, <span class="number">255</span>, <span class="number">0</span>))</span><br><span class="line">    im.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getMaxLength</span>(<span class="params">array</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取一个列表中子元素数量最多的那个子元素的子元素数量&quot;&quot;&quot;</span></span><br><span class="line">    numArr = []</span><br><span class="line">    maxNum = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> array:</span><br><span class="line">        numArr.append(<span class="built_in">len</span>(item))</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(numArr) != <span class="number">0</span>:</span><br><span class="line">        maxNum = <span class="built_in">max</span>(numArr)</span><br><span class="line">    <span class="keyword">return</span> maxNum</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>让该脚本放到一新建文件夹里，然后让所有的代码文件全部放到该文件夹下，不用一个一个摘出来，直接把整个项目文件夹放到该新建的文件夹内部即可。运行程序会在该文件夹下输出。</p>
+<p>修改main函数里的 <code>fileTypeArray</code> 里的内容，可以对更多不同种类的代码进行缩略图转化。</p>
+<h2 id="发现与总结"><a href="#发现与总结" class="headerlink" title="发现与总结"></a>发现与总结</h2><p>我把所有学过的代码风格全部列举以下：</p>
+<p>c语言的风格是这样的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">xxxxxx</span><br><span class="line">&#123;</span><br><span class="line">	xxxxxx</span><br><span class="line">	&#123;</span><br><span class="line">		xxxx</span><br><span class="line">		&#123;</span><br><span class="line">			xxxx</span><br><span class="line">		&#125;</span><br><span class="line">		xxxx</span><br><span class="line">		&#123;</span><br><span class="line">			xxxx</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	xxxxxx</span><br><span class="line">	&#123;</span><br><span class="line">		xxxx</span><br><span class="line">		&#123;</span><br><span class="line">			xxxx</span><br><span class="line">		&#125;</span><br><span class="line">		xxxx</span><br><span class="line">		&#123;</span><br><span class="line">			xxxx</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>java和js的风格是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">xxxxxx xx&#123;</span><br><span class="line">	xxxxxxx xxx&#123;</span><br><span class="line">		xxxx xxxxx xxxx&#123;</span><br><span class="line">			xxxxxxxxxx xxxxxxxxx&#123;</span><br><span class="line">				xxxxxxxx&#123;</span><br><span class="line">					xxxxxx</span><br><span class="line">				&#125;</span><br><span class="line">				xxxxxxxx&#123;</span><br><span class="line">					xxxxxx</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			xxxxxxxxxx xxxxxxxxx&#123;</span><br><span class="line">				xxxxxxxx&#123;</span><br><span class="line">					xxxxxx</span><br><span class="line">				&#125;</span><br><span class="line">				xxxxxxxx&#123;</span><br><span class="line">					xxxxxx</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>python的风格是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">xxx xxx:</span><br><span class="line">	xxxxxxxxxxx:</span><br><span class="line">		xxxxxxxxxx:</span><br><span class="line">			xxxxxxxxxxx:</span><br><span class="line">				xxxxxxxxxxx</span><br><span class="line">			xxxxxxxxxxx:</span><br><span class="line">				xxxxxxxxxxx</span><br><span class="line">		xxxxxxxxxx:</span><br><span class="line">			xxxxxxxxxxx:</span><br><span class="line">				xxxxxxxxxxx</span><br><span class="line">			xxxxxxxxxxx:</span><br><span class="line">				xxxxxxxxxxx</span><br><span class="line">				</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>css的风格是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">xxxxx &#123;</span><br><span class="line">	xxxxxxxxxx</span><br><span class="line">	xxxxxxx</span><br><span class="line">	xxxxxxxxxx</span><br><span class="line">	xxxx</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">xxx xx &#123;</span><br><span class="line">	xxxxxxxxxx</span><br><span class="line">	xxxxxxx</span><br><span class="line">	xxxxxxxxxx</span><br><span class="line">	xxxx</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>html风格是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;xxx&gt;</span><br><span class="line">	&lt;xxx&gt;</span><br><span class="line">		&lt;xxx&gt;</span><br><span class="line">			&lt;xxx&gt; xxxxxxxx &lt;/xxxx&gt;</span><br><span class="line">		&lt;/xxxx&gt;</span><br><span class="line">		&lt;xxx&gt;</span><br><span class="line">			&lt;xxx&gt; xxxxxxxx &lt;/xxxx&gt;</span><br><span class="line">		&lt;/xxxx&gt;</span><br><span class="line">	&lt;/xxxx&gt;</span><br><span class="line">	&lt;xxx&gt;</span><br><span class="line">		&lt;xxx&gt;</span><br><span class="line">			&lt;xxx&gt; xxxxxxxx &lt;/xxxx&gt;</span><br><span class="line">		&lt;/xxxx&gt;</span><br><span class="line">		&lt;xxx&gt;</span><br><span class="line">			&lt;xxx&gt; xxxxxxxx &lt;/xxxx&gt;</span><br><span class="line">		&lt;/xxxx&gt;</span><br><span class="line">	&lt;/xxxx&gt;</span><br><span class="line">&lt;/xxxx&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我个人最喜欢python的紧凑和缩进风格。</p>
+<p>其次是java的风格，喜欢java这样比C语言紧凑，但是它的大括号和这种写法导致了最下面要有一长长的括号链条，看着感觉很占空间的样子。</p>
+<p>最不习惯的是C语言的风格，因为它实在是太零散了，但是这样设计的原因是能够结构化阅读和对齐，一块一块的更有逻辑性。</p>
+<p>当然这些都只是个人看法。每一种语言都有它本身的习惯。我们应该尽量遵守不同语言的默认习惯。</p>
+<p>程序待改进：生成的图片都太小了，每个像素点表示一个字符，只有放大看才能看清楚，因此需要增加可以设置缩放倍率的功能。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/">http://example.com/2021/03/05/Python%E5%88%B6%E4%BD%9C%E4%BB%A3%E7%A0%81%E7%BC%A9%E7%95%A5%E5%9B%BE/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/">项目组第一次项目体会</a>
+            
+            
+            <a class="next" rel="next" href="/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/">js实现鼠标点击界面出现小物体上升特效</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

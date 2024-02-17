@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>对编程语言的看法总结 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">对编程语言的看法总结</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 21, 2022&nbsp;&nbsp;5:09:04</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="我对学习编程语言的看法"><a href="#我对学习编程语言的看法" class="headerlink" title="我对学习编程语言的看法"></a>我对学习编程语言的看法</h1><hr>
+<h2 id="我的编程学习历程"><a href="#我的编程学习历程" class="headerlink" title="我的编程学习历程"></a>我的编程学习历程</h2><ul>
+<li>高二，Java学到函数签名就没学了。</li>
+<li>大一开始学习了前端，学了一点点js忘了。</li>
+<li>大一上期末开始学习python，</li>
+<li>大一下开始学C语言，同时python开始用各种第三方库做小东西，js</li>
+<li>大一结束开始继续学习Java，到了多线程。同时理解了python面向对象</li>
+<li>后面大二到大三逐渐学习了算法和数据结构，go、ts、cpp、rust</li>
+</ul>
+<p>目前最熟悉的还是Python、其次是js、c，学go和rust时间非常短，也几乎只是图个新鲜。</p>
+<h2 id="我对python的看法"><a href="#我对python的看法" class="headerlink" title="我对python的看法"></a>我对python的看法</h2><h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><p>python优点：语法简单，代码量少，内置类库和第三方类库太丰富了。</p>
+<p>python缺点：执行效率低，不适合CPU密集多线程。</p>
+<h3 id="我觉得他对我的目的在于"><a href="#我觉得他对我的目的在于" class="headerlink" title="我觉得他对我的目的在于"></a>我觉得他对我的目的在于</h3><h4 id="寻找生活中的bug（骚操作）"><a href="#寻找生活中的bug（骚操作）" class="headerlink" title="寻找生活中的bug（骚操作）"></a>寻找生活中的bug（骚操作）</h4><p>平时自动化处理一些事情，做点鼠标自动刷黄石战争（自动刷了一个星期之后退游了，发现没意思了），微信某平台自动签到，定定自动签到，定定上选修课自动复制别人的回答问题加分，利用屏幕像素点检测和鼠标操作在浏览器里自动刷网课，爬点粉丝数，暴力破解简单密码wifi（中文wifi名不太行），爬点想关注的网站，自动发邮件。</p>
+<p>能找到生活中的bug那真是一件美事。太坏了，在危险的边缘疯狂试探。</p>
+<h4 id="方便以后学习辅助工作"><a href="#方便以后学习辅助工作" class="headerlink" title="方便以后学习辅助工作"></a>方便以后学习辅助工作</h4><ul>
+<li>自动制作ppt，甚至自动剪视频，自动切割音频。（其实没怎么用过，只是试过）其实Pr里有插件，可以提高效率。</li>
+<li>自动读写Excel。</li>
+<li>处理字符串相关的东西。因为python处理字符串相关的语法支持很多。</li>
+</ul>
+<h4 id="学术相关"><a href="#学术相关" class="headerlink" title="学术相关"></a>学术相关</h4><ul>
+<li>数学建模比赛生成散点图，各种各样好看的图，非常方便，以后写论文可以用上。（matplotlib，主要是matlab太大了）</li>
+<li>在算法比赛中比别人更快AC简单题（像leetcode这种会对python时间宽松处理的平台那就是有点开外挂的感觉），或者调库弯道超车一下。</li>
+<li>做一些数据分析（有很多相关的库很不错，这里只是曾经了解过，但没深入学习）</li>
+</ul>
+<p>python执行效率的坑注定了我不应该以找工作的目的学习他。他也不能给我带来工作，这可能是一种遗憾。</p>
+<p>python简单的语法会吸引很多非专业人员和少儿来学习。这可能也会成为其他语言的程序员“歧视”python程序员的原因。我觉得仅从基础的语法上来看确实简单，但一涉及Cpython底层细节、面向对象等一些问题可能就不能说“它看上去挺简单”的了。甚至学到面向对象的时候还可能会突然劝退一些人。所以我觉得并不能仅从“语法看起来简单”就产生歧视心理，因为这些简单的背后隐藏了大量的细节（一行代码实现二维数组的引用坑），简单后的抽象也变得更加抽象（元类）。</p>
+<p>可能歧视的第二点原因是算法实现的类库多，调用变得太方便了。面试官说：“你们写算法题的怎么都用的是python”。这就印证了这一点，毕竟操作字符串，列表，字典的手段和方法很多。从内置库和一些内置方法中可以找到排序、堆、队列、最大公因数、阶乘、平均数、几何平均数、众数、随机数、随机选择、正态分布、随机打乱、优先队列、前缀和等等操作。当然C++里也有排序，但python里排序直接begin和end都不用写。python的类库确实很多，确实能起到方便调用的效果。但作为学习算法来说，应该先学习基础的方法，库中对应的方法写熟练之后再来调库可能更好一些。</p>
+<h2 id="我对学习编程的看法"><a href="#我对学习编程的看法" class="headerlink" title="我对学习编程的看法"></a>我对学习编程的看法</h2><p>我觉得大多数编程语言都是类C语言。学了一门之后，再学第二门就可以类比着来，再学第三门之后就可以以前面学过的两门来继续类比。</p>
+<p>人工智能真的会一直火热吗？实现人工智能相关的最火的框架真的只会是python吗？这些是不一定的。当我们觉得一个东西火的时候，它可能已经内卷严重了。</p>
+<p>我们不能抱着一个铁饭碗的心态去只钻进一个语言里。因为时代会逐渐变化。一些曾经很火的语言，现在已经衰落。一些现在可能很火的语言，在变幻莫测的未来也会逐渐衰落。世界是动态的，我们也要是动态的。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/21/%E5%AF%B9%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E7%9C%8B%E6%B3%95%E6%80%BB%E7%BB%93/">http://example.com/2022/08/21/%E5%AF%B9%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E7%9C%8B%E6%B3%95%E6%80%BB%E7%BB%93/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"># 计算机</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/09/02/app%E5%BC%80%E5%8F%91%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">app开发踩坑记录</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/20/%E5%A4%8D%E4%B9%A0%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%9C%89%E6%84%9F/">复习迪杰斯特拉算法有感</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

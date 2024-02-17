@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Python动态模拟二维天体运行 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Python动态模拟二维天体运行</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">九月 24, 2020&nbsp;&nbsp;13:07:46</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Python-动态模拟二维天体运行-2020年9月24日"><a href="#Python-动态模拟二维天体运行-2020年9月24日" class="headerlink" title="Python 动态模拟二维天体运行 (2020年9月24日)"></a>Python 动态模拟二维天体运行 (2020年9月24日)</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>大二刚刚开学不久，在一天星期一的下午，寝室里做的，这个模拟二维天体运动的程序之前一直都有尝试，但是由于公式计算不正确的原因一直没有成功过，这次才终于成功。</p>
+<p>此程序的灵感来源于一个网站上的平面宇宙沙盒游戏，之前在看b站有关三体运动的视频的时候发现的。</p>
+<p>之前想通过PIL库，把天梯的运行轨迹静态的刻画在一张矢量图片上，但是通过Python计算机二级考试的内容让我了解到了还有叫turtle，即“海龟绘图”这个内置库，可以动态的在屏幕上回值直线和曲线，于是这次我便使用了这种方式来展现出来。</p>
+<h2 id="效果截图"><a href="#效果截图" class="headerlink" title="效果截图"></a>效果截图</h2><p><img src="/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/%E5%A4%A9%E4%BD%93%E8%BF%90%E5%8A%A81.png" alt="天体运动1"></p>
+<p><img src="/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/%E5%A4%A9%E4%BD%93%E8%BF%90%E5%8A%A82.png" alt="天体运动2"></p>
+<p><img src="/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/%E5%A4%A9%E4%BD%93%E8%BF%90%E5%8A%A83.png" alt="天体运动3"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">天体运行 二维平面模拟</span></span><br><span class="line"><span class="string">2020年9月24日</span></span><br><span class="line"><span class="string">by littlefean</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> turtle</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 普朗克时间（最小时间分度）</span></span><br><span class="line">    dt = <span class="number">1</span></span><br><span class="line">    Earth = Planet(<span class="string">&quot;earth&quot;</span>)</span><br><span class="line">    Sun = Planet(<span class="string">&quot;sun&quot;</span>)</span><br><span class="line">    turtle.goto(Sun.loc)</span><br><span class="line">    turtle.pendown()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">        turtle.goto(Sun.loc[<span class="number">0</span>] + randint(<span class="number">1</span>, <span class="number">5</span>), Sun.loc[<span class="number">1</span>] + randint(<span class="number">1</span>, <span class="number">5</span>))</span><br><span class="line">    Earth.loc = (<span class="number">150</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    turtle.penup()</span><br><span class="line">    turtle.goto(Earth.loc)</span><br><span class="line">    turtle.pendown()</span><br><span class="line"></span><br><span class="line">    Earth.v = (<span class="number">0</span>, <span class="number">0.5</span>)  <span class="comment"># up</span></span><br><span class="line">    Earth.m = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">    Sun.m = <span class="number">5</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># 更新地球的合外力</span></span><br><span class="line">        Earth.force = ((</span><br><span class="line">            f(Earth, Sun) * ((Sun.loc[<span class="number">0</span>] - Earth.loc[<span class="number">0</span>]) / r(Earth.loc, Sun.loc)),</span><br><span class="line">            f(Earth, Sun) * ((Sun.loc[<span class="number">1</span>] - Earth.loc[<span class="number">1</span>]) / r(Earth.loc, Sun.loc))</span><br><span class="line">        ))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 更新地球的加速度</span></span><br><span class="line">        Earth.a = ((</span><br><span class="line">            Earth.force[<span class="number">0</span>] / Earth.m,</span><br><span class="line">            Earth.force[<span class="number">1</span>] / Earth.m</span><br><span class="line">        ))</span><br><span class="line">        <span class="comment"># 更新地球的速度</span></span><br><span class="line">        Earth.v = ((</span><br><span class="line">            Earth.v[<span class="number">0</span>] + Earth.a[<span class="number">0</span>] * dt,</span><br><span class="line">            Earth.v[<span class="number">1</span>] + Earth.a[<span class="number">1</span>] * dt,</span><br><span class="line">        ))</span><br><span class="line">        <span class="comment"># 更新地球的位置</span></span><br><span class="line">        Earth.loc = ((</span><br><span class="line">            Earth.loc[<span class="number">0</span>] + Earth.v[<span class="number">0</span>] * dt,</span><br><span class="line">            Earth.loc[<span class="number">1</span>] + Earth.v[<span class="number">1</span>] * dt</span><br><span class="line">        ))</span><br><span class="line">        turtle.goto(Earth.loc[<span class="number">0</span>], Earth.loc[<span class="number">1</span>])</span><br><span class="line">    <span class="comment"># return</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Planet</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    星球类</span></span><br><span class="line"><span class="string">    默认位置，速度矢量，加速度矢量，均为 (0, 0)</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name</span>):</span><br><span class="line">        self.name = name</span><br><span class="line">        self.loc = (<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        self.v = (<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        self.a = (<span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        self.m = <span class="number">5e10</span>  <span class="comment"># 默认为地球的质量</span></span><br><span class="line">        self.force = (<span class="number">0</span>, <span class="number">0</span>)  <span class="comment"># 这里是合外力</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__str__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;x:<span class="subst">&#123;self.loc[<span class="number">0</span>]&#125;</span>,y:<span class="subst">&#123;self.loc[<span class="number">1</span>]&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">    __repr__ = __str__</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">r</span>(<span class="params">locationA, locationB</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    计算两点之间的位置</span></span><br><span class="line"><span class="string">    :param locationA: A点的位置</span></span><br><span class="line"><span class="string">    :param locationB: B点的位置</span></span><br><span class="line"><span class="string">    :return: AB之间的距离</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    x1, y1 = locationA</span><br><span class="line">    x2, y2 = locationB</span><br><span class="line">    distance = ((x1 - x2) ** <span class="number">2</span> + (y1 - y2) ** <span class="number">2</span>) ** <span class="number">0.5</span></span><br><span class="line">    <span class="keyword">return</span> distance</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">f</span>(<span class="params">planetA, planetB</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    计算AB星球之间的万有引力，返回力的数值</span></span><br><span class="line"><span class="string">    :param planetA:</span></span><br><span class="line"><span class="string">    :param planetB:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    G = <span class="number">9.8</span></span><br><span class="line">    force = G * planetA.m * planetB.m / r(planetA.loc, planetB.loc) ** <span class="number">2</span></span><br><span class="line">    <span class="keyword">return</span> force</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="反思"><a href="#反思" class="headerlink" title="反思"></a>反思</h2><p>还需要增强面向对象的意识，关于力的函数f，使用的是一个函数，返回力的大小，然后再将其转化成一个数组。不如加一个class叫vector，<br>直接写一个函数getForce返回一个vector。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/">http://example.com/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/11/17/CSS%E5%AF%B9%E4%BA%94%E7%A7%8D%E9%80%89%E6%8B%A9%E5%99%A8%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F/">CSS对五种选择器的理解与优先级排序</a>
+            
+            
+            <a class="next" rel="next" href="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/">Python随机山脉算法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

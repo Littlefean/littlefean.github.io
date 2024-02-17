@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Python随机山脉算法 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Python随机山脉算法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">九月 12, 2020&nbsp;&nbsp;12:17:11</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Python-随机山脉算法（2020年9月12日）"><a href="#Python-随机山脉算法（2020年9月12日）" class="headerlink" title="Python 随机山脉算法（2020年9月12日）"></a>Python 随机山脉算法（2020年9月12日）</h1><hr>
+<h2 id="制作背景"><a href="#制作背景" class="headerlink" title="制作背景"></a>制作背景</h2><p>大二刚开学不久，和一个朋友Rutubet比赛了一个二维移动的程序设计，其中用到了一种生成地形的算法，同时看到Rutubte分享了一篇有关生成立体山脉有关的算法，受到了启发，于是用python的turtle内置库做了一个一维的生成山脉的展示。</p>
+<p>此篇文章为当时参考的 生成立体山脉的思路 <a target="_blank" rel="noopener" href="https://gameinstitute.qq.com/community/detail/109402">https://gameinstitute.qq.com/community/detail/109402</a> （侵删）</p>
+<h2 id="效果截图"><a href="#效果截图" class="headerlink" title="效果截图"></a>效果截图</h2><p>n级山脉表示循环执行add函数n次，n越高表示山脉的曲折点数量越多。</p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/%E4%BD%8E%E7%BA%A7%E5%B9%B6%E4%B8%94%E6%9B%B4%E9%99%A1%E5%B3%AD.png" alt="低级并且更陡峭"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/%E7%BB%A7%E7%BB%AD%E8%B0%83%E9%AB%98%E7%9A%84%E6%95%88%E6%9E%9C.png" alt="继续调高的效果"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/%E5%8F%AF%E4%BB%A5%E8%B0%83%E9%AB%98%E5%B1%B1%E8%84%89%E7%9A%84%E9%99%A1%E5%B3%AD%E7%A8%8B%E5%BA%A6.png" alt="可以调高山脉的陡峭程度"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/3%E7%BA%A7%E5%B1%B1%E8%84%89%EF%BC%8C%E5%8F%AF%E4%BB%A5%E7%9C%8B%E5%87%BA%E8%A4%B6%E7%9A%B1%E5%BE%88%E5%B0%91.png" alt="3级山脉，可以看出褶皱很少"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/7%E7%BA%A7%E5%B1%B1%E8%84%89.png" alt="7级山脉"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/9%E7%BA%A7%E5%B1%B1%E8%84%89%EF%BC%8C%E5%9F%BA%E6%9C%AC%E7%9C%8B%E4%B8%8D%E5%87%BA%E5%92%8C7%E7%BA%A7%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BA%86.png" alt="9级山脉，基本看不出和7级的区别了"></p>
+<p><img src="/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/%E4%BD%8E%E7%BA%A7%E5%B9%B6%E4%B8%94%E9%99%A1%E5%B3%AD.png" alt="低级并且陡峭"></p>
+<h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">一维山脉生成</span></span><br><span class="line"><span class="string">2020年9月12日</span></span><br><span class="line"><span class="string">by littlefean</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">import</span> turtle <span class="keyword">as</span> t</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> uniform</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">array</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    输入一个子元素全为浮点数的数组array，此函数在array内部每两个元素间插入一个数值，</span></span><br><span class="line"><span class="string">    此数值为左右两侧数字的平均值加上正负一定范围内的随机数</span></span><br><span class="line"><span class="string">    用以提高数组所表示的山脉的褶皱数量即复杂程度</span></span><br><span class="line"><span class="string">    并将修改后的数组返回</span></span><br><span class="line"><span class="string">    :param array: 修改前的数组</span></span><br><span class="line"><span class="string">    :return: 修改后的数组</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    divNum = <span class="number">1</span> / (<span class="built_in">len</span>(array) - <span class="number">1</span>) / <span class="number">2</span></span><br><span class="line">    newArray = []</span><br><span class="line">    lenNewArray = <span class="built_in">len</span>(array) * <span class="number">2</span> - <span class="number">1</span></span><br><span class="line">    index = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(lenNewArray):</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>:</span><br><span class="line">            newArray.append(array[index])</span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            left = array[index - <span class="number">1</span>]</span><br><span class="line">            right = array[index]</span><br><span class="line">            point = (left + right) / <span class="number">2</span> + uniform(-<span class="number">1</span>, <span class="number">1</span>) * divNum</span><br><span class="line">            newArray.append(point)</span><br><span class="line">    <span class="keyword">return</span> newArray</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">show</span>(<span class="params">array</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    传入表示山脉的array数组，并通过turtle绘图将其绘制在屏幕上</span></span><br><span class="line"><span class="string">    :param array: 表示山脉的array数组</span></span><br><span class="line"><span class="string">    :return: 无返回值</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    R = <span class="number">450</span></span><br><span class="line">    H = <span class="number">330</span></span><br><span class="line">    xStart = -R</span><br><span class="line">    xStep = <span class="number">2</span> * R / (<span class="built_in">len</span>(array) - <span class="number">1</span>)</span><br><span class="line">    t.penup()</span><br><span class="line">    t.goto(xStart, array[<span class="number">0</span>])</span><br><span class="line">    t.fillcolor(<span class="string">&#x27;brown&#x27;</span>)</span><br><span class="line">    t.begin_fill()</span><br><span class="line">    t.pendown()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(array)):</span><br><span class="line">        xStart += xStep</span><br><span class="line">        t.goto(xStart, array[i]*H)</span><br><span class="line">        <span class="built_in">print</span>(xStart, array[i]*H)</span><br><span class="line">    t.right(<span class="number">90</span>)</span><br><span class="line">    t.fd(H)</span><br><span class="line">    t.right(<span class="number">90</span>)</span><br><span class="line">    t.fd(<span class="number">2</span>*R)</span><br><span class="line">    t.right(<span class="number">90</span>)</span><br><span class="line">    t.fd(H)</span><br><span class="line">    t.end_fill()</span><br><span class="line">    t.mainloop()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    arr = [<span class="number">0.0</span>, uniform(-<span class="number">1</span>, <span class="number">1</span>), <span class="number">0.0</span>]</span><br><span class="line">    <span class="built_in">print</span>(arr)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">7</span>):</span><br><span class="line">        arr = add(arr)</span><br><span class="line">    <span class="built_in">print</span>(arr)</span><br><span class="line">    show(arr)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>此算法生成的山脉的形状让我想到了很多二维游戏里的场景，比如：百战天虫、泰拉瑞亚、弹弹堂。</p>
+<p>这种生成山脉的算法还算比较简单，之前做过二维山脉，用俯视图生成一张位图，但是没能成功，有bug，今后可能会继续挑战一下二维的山脉</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/">http://example.com/2020/09/12/Python%E9%9A%8F%E6%9C%BA%E5%B1%B1%E8%84%89%E7%AE%97%E6%B3%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/09/24/Python%E5%8A%A8%E6%80%81%E6%A8%A1%E6%8B%9F%E4%BA%8C%E7%BB%B4%E5%A4%A9%E4%BD%93%E8%BF%90%E8%A1%8C/">Python动态模拟二维天体运行</a>
+            
+            
+            <a class="next" rel="next" href="/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/">JavaScript模拟一维康威宇宙</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>大前端项目z-index规划设计 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">大前端项目z-index规划设计</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 3, 2023&nbsp;&nbsp;13:22:29</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="大前端项目z-index规划设计"><a href="#大前端项目z-index规划设计" class="headerlink" title="大前端项目z-index规划设计"></a>大前端项目z-index规划设计</h1><p>个人发现在做前端的时候经常出现一些绝对定位、设置图层高度的时候，但不同的图层都有一个z-index的css属性。</p>
+<p>如何规划这些图层成了一个值得思考的问题。今天设计了一套“夹层模型”的方案。考虑到了很多情况。</p>
+<p>直接来一张草稿图：</p>
+<p><img src="/2023/08/03/%E5%A4%A7%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AEz-index%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1/QQ%E6%88%AA%E5%9B%BE20230803210050.png" alt="QQ截图20230803210050"></p>
+<p>上面的夹层模型适用于React、Vue这样的前端框架，都有一个“一人之上，万人之下”的APP组件。</p>
+<p>整个结构分为APP层和页面组件层。APP只有一个，但页面有很多。</p>
+<p>1~999：都是页面内比较正常的元素</p>
+<p>1000~1999：弹窗的灰色遮罩背景之类的组件，或者是能够遮住全屏的加载动画</p>
+<p>2000~2999：弹窗面板，比如突然弹出来一个界面提示框，登录框、警告框之类的</p>
+<p>3000~3999：页面鼠标交互层：比如在这个界面，会有一个鼠标点击一下就能让屏幕上多出来一个小桃心的上浮动画，这个小桃心就可以用绝对定位一个div来实现。但他的z-index必须很高，比弹窗组件还要高。</p>
+<p>有了界面层，其实还应该有个全局的APP层，APP层是完全高于界面层的一种层。和界面一样，也有遮罩层、弹窗面板层和鼠标交互层。为了方便记忆，直接设定APP层为四位数上万。</p>
+<p>也就是10000<del>19999,20000</del>29999,30000~39999。</p>
+<p>值得注意的是，该模型中不仅有向上的考虑，还有0以下的考虑，可以设定一个页面背景层，让z-index：-1</p>
+<p>然后再设计一个APP通用背景层，z-index：-2。</p>
+<h2 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h2><p>考虑相对全面，记忆方便：1000以内都是正常页面，上千级别是页面级别的东西，上万级别是APP级别的东西。</p>
+<p>1xxx+是弹窗背景，2xxx+是弹窗，3xxx+是鼠标交互层。</p>
+<h2 id="方案模型缺点：老浏览器的兼容性问题"><a href="#方案模型缺点：老浏览器的兼容性问题" class="headerlink" title="方案模型缺点：老浏览器的兼容性问题"></a>方案模型缺点：老浏览器的兼容性问题</h2><p>但在一般情况下，设置负值的z-index应该尽量避免，因为它可能会引起一些层叠问题和混乱。然而，如果确实需要设置负值的z-index，可以考虑将其限制在一个较小的范围内。一般建议最小的负值不要超过-1。<br>——chatGPT</p>
+<p>建议尽量避免设置过大的z-index值，以避免可能出现的层叠顺序混乱或其他问题。通常来说，一个较为保守的做法是将z-index值限制在较小的范围内，例如1000以下。<br>——chatGPT</p>
+<p>IE6及一下对z-index负数会有奇怪行为</p>
+<h2 id="一些大厂的规范"><a href="#一些大厂的规范" class="headerlink" title="一些大厂的规范"></a>一些大厂的规范</h2><p>谷歌（Google）：谷歌推荐使用自定义的z-index堆栈，通过定义一组常量变量来表示不同的层级关系，例如「Z_INDEX_DIALOG」、「Z_INDEX_NAVIGATION」等。</p>
+<p>Facebook：Facebook的z-index规范建议使用较小的z-index值，将其限制在较小的范围内，通常为0-999。</p>
+<p>Airbnb：Airbnb的z-index规范建议使用基于自然层次结构的命名约定，例如「layer-modal」、「layer-popover」等，以便理解和维护。</p>
+<p>最后，如果该模型有什么没有考虑到的情况欢迎评论补充。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/08/03/%E5%A4%A7%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AEz-index%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1/">http://example.com/2023/08/03/%E5%A4%A7%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AEz-index%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/css/"># css</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2023/11/08/%E3%80%8A%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E3%80%8B%E7%AC%94%E8%AE%B0/">《代码整洁之道》读书笔记</a>
+            
+            
+            <a class="next" rel="next" href="/2023/04/25/js%E5%9C%B0%E5%BD%A2%E7%94%9F%E6%88%90/">柏林噪声简化版地形生成算法js版代码</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

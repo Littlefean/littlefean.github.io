@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>位运算结果矩阵转成图像的小发现 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">位运算结果矩阵转成图像的小发现</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 22, 2021&nbsp;&nbsp;13:49:01</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="关于位运算的新发现（2021年06月22日）"><a href="#关于位运算的新发现（2021年06月22日）" class="headerlink" title="关于位运算的新发现（2021年06月22日）"></a>关于位运算的新发现（2021年06月22日）</h1><hr>
+<h2 id="发现历程"><a href="#发现历程" class="headerlink" title="发现历程"></a>发现历程</h2><p>2021年06月21日晚上，在做算法题的时候遇到了二进制的位运算相关内容，位运算包括与运算、或运算、异或运算、取反等等。</p>
+<p>我感觉平时在编程的时候更多的是主要用加减乘除以及求余数运算，在位运算这方面比较欠缺和薄弱，于是我打算先探索一下二进制位运算中的 与运算 的规律。</p>
+<h4 id="与运算方法"><a href="#与运算方法" class="headerlink" title="与运算方法"></a>与运算方法</h4><blockquote>
+<p>6 &amp; 2 &#x3D; 2</p>
+<p>6 的二进制表示是 110， 2的二进制表示是 10</p>
+<p>所以按位与运算就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">110</span><br><span class="line">010</span><br><span class="line">---</span><br><span class="line">010</span><br></pre></td></tr></table></figure>
+
+<p>每一个位相互比较，如果都是1，那么这一位的结果就是1，其他情况就是 0</p>
+<p>结果是 010，就是2</p>
+</blockquote>
+<p>我打算把所有数字与所有数字的与运算写出来，就像九九乘法表一样，做成一个16x16的表格，看看有没有规律</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E6%89%8B%E5%86%99%E8%A1%A8%E6%A0%BC%E8%8D%89%E7%A8%BF.jpg" alt="手写表格"></p>
+<p>（由于是草稿，写的字比较潦草）</p>
+<p>好像是有一点规律，但是表格太大了，看着也不够整齐，于是我想用编程的方式直接输出，这样更加方便</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        n = i &amp; j</span><br><span class="line">        <span class="built_in">print</span>(n, end=<span class="string">&quot;/t&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<p>输出结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	</span><br><span class="line">0	1	0	1	0	1	0	1	0	1	0	1	0	1	0	1	</span><br><span class="line">0	0	2	2	0	0	2	2	0	0	2	2	0	0	2	2	</span><br><span class="line">0	1	2	3	0	1	2	3	0	1	2	3	0	1	2	3	</span><br><span class="line">0	0	0	0	4	4	4	4	0	0	0	0	4	4	4	4	</span><br><span class="line">0	1	0	1	4	5	4	5	0	1	0	1	4	5	4	5	</span><br><span class="line">0	0	2	2	4	4	6	6	0	0	2	2	4	4	6	6	</span><br><span class="line">0	1	2	3	4	5	6	7	0	1	2	3	4	5	6	7	</span><br><span class="line">0	0	0	0	0	0	0	0	8	8	8	8	8	8	8	8	</span><br><span class="line">0	1	0	1	0	1	0	1	8	9	8	9	8	9	8	9	</span><br><span class="line">0	0	2	2	0	0	2	2	8	8	10	10	8	8	10	10	</span><br><span class="line">0	1	2	3	0	1	2	3	8	9	10	11	8	9	10	11	</span><br><span class="line">0	0	0	0	4	4	4	4	8	8	8	8	12	12	12	12	</span><br><span class="line">0	1	0	1	4	5	4	5	8	9	8	9	12	13	12	13	</span><br><span class="line">0	0	2	2	4	4	6	6	8	8	10	10	12	12	14	14	</span><br><span class="line">0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	</span><br></pre></td></tr></table></figure>
+
+<p>右下角的两位数部分好像有一点奇怪的形状，</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/1.png" alt="1"></p>
+<p>于是我继续扩大范围，发现了这所有二位数的部分似乎组成了一个奇妙的形状！这让我想起了分形结构。</p>
+<p>于是我觉得应该还可以再直观可视化一些，于是我就让程序输出成一张图片，我们都知道图片通常是有像素点矩阵组成的像素点，矩阵里的数字可以用像素点的亮度，也就是灰度来表示，这样就更加直观了。</p>
+<p>于是我改了一下代码，由于像素点太小了，我顺便也扩大了表格的边界到256</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">N = <span class="number">256</span></span><br><span class="line">im = Image.new(<span class="string">&#x27;RGBA&#x27;</span>, (N, N), (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(N):</span><br><span class="line">        n = i &amp; j</span><br><span class="line">        im.putpixel((i, j), (n, n, n))</span><br><span class="line">im.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E4%B8%8E%E8%BF%90%E7%AE%97256.png" alt="与运算256"></p>
+<p>图片出现了明显的分形结构，越白的地方就是数字越大的地方。纯黑的像素是0。</p>
+<p>我改变边长，将256扩展到2048，由于有些数字太大了，就导致是纯白了。这里的分形结构就变得更明显了。</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E4%BD%8D%E8%BF%90%E7%AE%972048.png" alt="位运算2048"></p>
+<p>由于颜色的表示方式是 三个数 (r, g, b)，r表示红色，g表示绿色，b表示蓝色，r，g，b三个数字的取值范围都是在[0, 256)。</p>
+<p>我上面用亮度表示的方法是：<code>n</code>为一个数字，则颜色表示为：<code>(n, n, n)</code>，</p>
+<p>其实还可以随意修改将数字转化为颜色的方式，比如 n&lt;255时候只有蓝色分量的颜色 即 (0, 0, n)，在 n &lt; 255x2 的时候，把它多出255的部分加到另一个颜色的分量上等等……</p>
+<p>于是就可以有这样的图案</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E7%B2%89%E8%89%B2.png" alt="粉色"></p>
+<p>白色的部分，居然还出现了<strong>谢尔宾斯基三角形</strong>，这是一个著名的分形结构。看来这个矩阵里隐藏的规律很多呀。</p>
+<p>随后我又在256边长、正常灰度的输出颜色的规则下，看了或运算</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E6%88%96.png" alt="或"></p>
+<p>以及异或运算</p>
+<p><img src="/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/%E5%BC%82%E6%88%96.png" alt="异或"></p>
+<p>他们在整体上似乎都有相似的纹理，但是有各有各的不同。</p>
+<p>目前看来，与运算比或运算的图片暗淡，因为与运算中的结果大小不可能超过参与运算的两个数的大小。而或运算可以。</p>
+<p>异或运算的图片，有一条明显的黑色的缝隙，这也很符合异或运算的特点，当参与运算的两个数一样的时候，没有任何一个位数是不同的，所以运算的结果就是0。</p>
+<p>二进制似乎总是隐藏这各种各样的规律。我还需要继续学习。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/">http://example.com/2021/06/22/%E4%BD%8D%E8%BF%90%E7%AE%97%E7%BB%93%E6%9E%9C%E7%9F%A9%E9%98%B5%E8%BD%AC%E6%88%90%E5%9B%BE%E5%83%8F%E7%9A%84%E5%B0%8F%E5%8F%91%E7%8E%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/07/15/20%E8%A1%8Ccss%E5%AE%9E%E7%8E%B0%E5%A5%97%E5%A8%83%E9%85%B7%E7%82%AB%E5%8A%A8%E7%94%BB/">20行css实现套娃酷炫动画</a>
+            
+            
+            <a class="next" rel="next" href="/2021/04/02/%E9%A1%B9%E7%9B%AE%E7%BB%84%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%A1%B9%E7%9B%AE%E4%BD%93%E4%BC%9A/">项目组第一次项目体会</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

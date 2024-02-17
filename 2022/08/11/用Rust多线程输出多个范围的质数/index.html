@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>用Rust多线程输出多个范围的质数 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">用Rust多线程输出多个范围的质数</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 11, 2022&nbsp;&nbsp;14:01:23</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="用Rust多线程计算一定范围内的质数"><a href="#用Rust多线程计算一定范围内的质数" class="headerlink" title="用Rust多线程计算一定范围内的质数"></a>用Rust多线程计算一定范围内的质数</h1><hr>
+<h2 id="背景引入"><a href="#背景引入" class="headerlink" title="背景引入"></a>背景引入</h2><p>计算质数是学习编程入门的案例，也可能是初学者的噩梦。但是时间长了之后就习惯了。</p>
+<p>比如打印1~1000以内的质数，或者范围更大。打印所有的质数、输出质数有多少个</p>
+<p>这里我们可以尝试用多线程的方式，将一个大范围分成很多个小范围，然后用多线程的方式来计算。</p>
+<p>rust语言也是一个性能非常高的语言，性能和效率仅次于C语言。同时也有很好的并发性能。然而python不适合写cpu密集型的程序，所以这里尝试一下Rust语言。</p>
+<h2 id="开始代码"><a href="#开始代码" class="headerlink" title="开始代码"></a>开始代码</h2><p>执行以下python代码可知，0~2000的质数有303个</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">isPrim</span>(<span class="params">n</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span> <span class="keyword">if</span> n &lt; <span class="number">2</span> <span class="keyword">else</span> <span class="built_in">all</span>(n % i != <span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>, n))</span><br><span class="line">c = <span class="built_in">sum</span>(<span class="number">1</span> <span class="keyword">for</span> num <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2000</span>) <span class="keyword">if</span> isPrim(num))</span><br><span class="line"><span class="built_in">print</span>(c)  <span class="comment"># 303个！</span></span><br></pre></td></tr></table></figure>
+
+<p>可以把范围分成两段，0<del>999  和  1000</del>1999</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;开始了&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">h1</span> = thread::<span class="title function_ invoke__">spawn</span>(t1);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">h2</span> = thread::<span class="title function_ invoke__">spawn</span>(t2);</span><br><span class="line">    h1.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    h2.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;结束了&quot;</span>);</span><br><span class="line">    <span class="comment">// 选中可以看到打印了303行，结果正确</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">t1</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1000</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">t2</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1000</span>..<span class="number">2000</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">is_prim</span>(n: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">2</span>..n &#123;</span><br><span class="line">            <span class="keyword">if</span> n % i == <span class="number">0</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>关键是线程函数没法带参数，这太恶心了。导致我分成两个范围代码重复严重。</p>
+<p>但是函数可以套函数，这太好了。</p>
+<p>先把上面的代码用匿名函数改成这样</p>
+<p>join 方法可以使子线程运行结束后再停止运行程序。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;开始了&quot;</span>);</span><br><span class="line">    <span class="comment">// let range_len = 10000;</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">h1</span> = thread::<span class="title function_ invoke__">spawn</span>(|| &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">1000</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">h2</span> = thread::<span class="title function_ invoke__">spawn</span>(|| &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">1000</span>..<span class="number">2000</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    h1.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    h2.<span class="title function_ invoke__">join</span>().<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;结束了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再把两个函数合并写成一个，但是这里就出问题了，匿名函数里访问了外部的t变量和rangelen变量。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;开始了&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">range_len</span> = <span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">2</span> &#123;</span><br><span class="line">        thread::<span class="title function_ invoke__">spawn</span>(|| &#123;</span><br><span class="line">            <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> t * range_len..(t + <span class="number">1</span>) * range_len &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">join</span>()</span><br><span class="line">        .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;结束了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>引用菜鸟教程的话</p>
+<blockquote>
+<p>在子线程中尝试使用当前函数的资源，这一定是错误的！因为所有权机制禁止这种危险情况的产生，它将破坏所有权机制销毁资源的一定性。我们可以使用闭包的 move 关键字来处理：</p>
+</blockquote>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;开始了&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> <span class="variable">range_len</span> = <span class="number">1000</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> <span class="number">0</span>..<span class="number">2</span> &#123;</span><br><span class="line">        thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;  <span class="comment">// 添加move</span></span><br><span class="line">            <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> t * range_len..(t + <span class="number">1</span>) * range_len &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">join</span>()</span><br><span class="line">        .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;结束了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样发现就好了，打印了303行。</p>
+<p>接下来就可以加大数据量测试了。</p>
+<p>打印了1229行。说明一万以内有1229个质数，经过相同算法逻辑的单线程python代码验证正确。</p>
+<p>以下是继续优化了一下代码</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="comment">// 求 0 ~ limit 范围内有多少质数</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">limit</span> = <span class="number">10000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 按照范围均等的分成 thread_num 段，每段单独一个线程</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">thread_num</span> = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> <span class="number">0</span>..thread_num &#123;</span><br><span class="line">        thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> t * (limit / thread_num)..(t + <span class="number">1</span>) * (limit / thread_num) &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125;&quot;</span>, i);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">join</span>()</span><br><span class="line">        .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;   </span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;结束了!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在又出现一个问题，打印太多行了，不方便统计，还得整体复制到txt里看看有多少行，应该添加一个cout变量记录有多少个质数，然后把拖慢速度的print去掉。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="number">0</span>;  <span class="comment">// 直接声明一个变量</span></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> <span class="number">0</span>..thread_num &#123;</span><br><span class="line">        thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> t * (limit / thread_num)..(t + <span class="number">1</span>) * (limit / thread_num) &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                    cout += <span class="number">1</span>;  <span class="comment">// 直接在这里写+1</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">join</span>()</span><br><span class="line">        .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述方法肯定是不行的，这里应该是涉及到了多个线程对外部变量进行修改的问题，而且还涉及到了闭包和变量的问题。</p>
+<p>经过了一番大力的搜索，看案例学习了一下线程通信问题的问题，现在居然又有新的bug产生了，10个管道传送完了所有的数据之后居然还在等待。接收端的for循环没有结束。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::sync::mpsc;</span><br><span class="line"><span class="keyword">use</span> std::thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;开始了&quot;</span>);</span><br><span class="line">    <span class="comment">// 求 0 ~ limit 范围内有多少质数</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">limit</span> = <span class="number">2000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 按照范围均等的分成 thread_num 段，每段单独一个线程</span></span><br><span class="line">    <span class="keyword">let</span> <span class="variable">thread_num</span> = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">count</span> = <span class="number">0</span>; <span class="comment">// 记录质数的数量</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 新建一个管道，管道两端是发送者和接受者</span></span><br><span class="line">    <span class="keyword">let</span> (tx, rx) = mpsc::<span class="title function_ invoke__">channel</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">t</span> <span class="keyword">in</span> <span class="number">0</span>..thread_num &#123;</span><br><span class="line">        <span class="comment">// 克隆管道，这个管道用于传输子线程发现的质数</span></span><br><span class="line">        <span class="keyword">let</span> <span class="variable">find_prim_pipe</span> = mpsc::Sender::<span class="title function_ invoke__">clone</span>(&amp;tx);</span><br><span class="line"></span><br><span class="line">        thread::<span class="title function_ invoke__">spawn</span>(<span class="keyword">move</span> || &#123;</span><br><span class="line">            <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> t * (limit / thread_num)..(t + <span class="number">1</span>) * (limit / thread_num) &#123;</span><br><span class="line">                <span class="keyword">if</span> <span class="title function_ invoke__">is_prim</span>(i) &#123;</span><br><span class="line">                    find_prim_pipe.<span class="title function_ invoke__">send</span>(i).<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">println!</span>(<span class="string">&quot;第&#123;&#125;个线程执行结束&quot;</span>, t);</span><br><span class="line">        &#125;)</span><br><span class="line">        .<span class="title function_ invoke__">join</span>()</span><br><span class="line">        .<span class="title function_ invoke__">unwrap</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;for 1&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> <span class="variable">_</span> <span class="keyword">in</span> rx &#123;</span><br><span class="line">        <span class="comment">// 这里可能不应该用for循环，会一直等待下去</span></span><br><span class="line">        count += <span class="number">1</span>;</span><br><span class="line">        <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; 增加中&quot;</span>, count);</span><br><span class="line">        <span class="comment">// if count == 303 &#123;</span></span><br><span class="line">        <span class="comment">//     break;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;for 2&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;&#123;&#125; 结束了!&quot;</span>, count);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">is_prim</span>(n: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">2</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">i</span> <span class="keyword">in</span> <span class="number">2</span>..n &#123;</span><br><span class="line">            <span class="keyword">if</span> n % i == <span class="number">0</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>问题应该是这样的，我创建了一个管道，然而我克隆了10个管道，我的10个子线程都用完了10个管道之后把这些管道都关闭了，然而还有那个主管道其实一直没有被我用。主管道的接收端就会一直在等待。</p>
+<p>摆烂了，先暂时先做成这样。以后再优化。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/08/11/%E7%94%A8Rust%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%BE%93%E5%87%BA%E5%A4%9A%E4%B8%AA%E8%8C%83%E5%9B%B4%E7%9A%84%E8%B4%A8%E6%95%B0/">http://example.com/2022/08/11/%E7%94%A8Rust%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%BE%93%E5%87%BA%E5%A4%9A%E4%B8%AA%E8%8C%83%E5%9B%B4%E7%9A%84%E8%B4%A8%E6%95%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/rust/"># rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/20/%E5%A4%8D%E4%B9%A0%E8%BF%AA%E6%9D%B0%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95%E6%9C%89%E6%84%9F/">复习迪杰斯特拉算法有感</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/16/%E5%88%B7%E4%BA%86%E4%B8%80%E5%A4%A9%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/">刷了一天回溯算法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>《代码整洁之道》读书笔记 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《代码整洁之道》读书笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十一月 8, 2023&nbsp;&nbsp;0:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="一些可能发生的情况"><a href="#一些可能发生的情况" class="headerlink" title="一些可能发生的情况"></a>一些可能发生的情况</h2><p>代码写的不好了，导致团队中另一波人开始对项目另起炉灶，开了一个新的仓库。然后开始了持久的双方的竞赛。这对开发来说是一种巨大的精力浪费。</p>
+<p>正常情况下，平时写代码的时候，阅读代码：编写代码的时间是9:1 ，使用一个录屏然后加速处理就可以看出来。但实际上糟糕的时候这个比值会变大。</p>
+<p>要写一写测试框架，甚至有专门的面向测试编程。</p>
+<p>python的单元测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件名: calculator.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Calculator</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subtract</span>(<span class="params">self, a, b</span>):</span><br><span class="line">        <span class="keyword">return</span> a - b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 文件名: test_calculator.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> unittest</span><br><span class="line"><span class="keyword">from</span> calculator <span class="keyword">import</span> Calculator</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestCalculator</span>(unittest.TestCase):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">        calc = Calculator()</span><br><span class="line">        self.assertEqual(calc.add(<span class="number">1</span>, <span class="number">2</span>), <span class="number">3</span>)</span><br><span class="line">        self.assertEqual(calc.add(-<span class="number">1</span>, <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">        self.assertEqual(calc.add(-<span class="number">1</span>, -<span class="number">1</span>), -<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_subtract</span>(<span class="params">self</span>):</span><br><span class="line">        calc = Calculator()</span><br><span class="line">        self.assertEqual(calc.subtract(<span class="number">3</span>, <span class="number">1</span>), <span class="number">2</span>)</span><br><span class="line">        self.assertEqual(calc.subtract(-<span class="number">1</span>, <span class="number">1</span>), -<span class="number">2</span>)</span><br><span class="line">        self.assertEqual(calc.subtract(-<span class="number">1</span>, -<span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    unittest.main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>有点像出算法题的测试用例。单元测试可以帮助我们节省一些手动测试的情况，让我们心里更有底。</p>
+<h2 id="糟糕的代码"><a href="#糟糕的代码" class="headerlink" title="糟糕的代码"></a>糟糕的代码</h2><h3 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h3><ol>
+<li>命名不好：拼音、拼错、奇怪的方言</li>
+<li>不好理解：缩写、抖机灵、驼峰格式不一致</li>
+<li>出现冲突：和一些专用词冲突、通用性太强难搜索</li>
+<li>误导歧义：本来是set类型但名字却有个list。</li>
+</ol>
+<h3 id="血泪经验"><a href="#血泪经验" class="headerlink" title="血泪经验"></a>血泪经验</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用的太多了，建议加上user</span></span><br><span class="line">name -&gt; userName</span><br><span class="line"><span class="built_in">id</span> -&gt; userId</span><br><span class="line"><span class="comment"># 不专业</span></span><br><span class="line">headSculpture -&gt; avatar   <span class="comment"># 哈哈，头部雕像</span></span><br><span class="line"><span class="comment"># 拼写错误</span></span><br><span class="line">paino -&gt; piano</span><br><span class="line">mood -&gt; mode</span><br><span class="line"><span class="comment"># 冲突</span></span><br><span class="line">str = <span class="string">&#x27;xxx&#x27;</span>  <span class="comment"># python内置了</span></span><br><span class="line">list = <span class="string">&#x27;xxx&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>一个函数多多件事情（违反单一职责原则）</p>
+<p>参数不好：太多，参数位置混乱</p>
+<p>考虑副作用</p>
+<p>异常处理存放层级混乱</p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><ol>
+<li>编辑器可能有注释折叠功能</li>
+<li>编辑器带有注释高亮效果：todo 、fixme。但在合作中写todo会让别人感觉不爽，也会让git提交时候产生警告。</li>
+<li>废话注释，重复的话说来说去，一旦代码功能改了但注释忘了改，这个废话会变成谎言</li>
+<li>滥用位置标记注释</li>
+<li>注释掉的代码：会让合作者产生担心，不敢碰。确信没用的代码就删了，别总留着注释。</li>
+</ol>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><p>编辑器不同引发的问题：</p>
+<p>2023年前端项目和别人合作，我用的Webstome，另一个人用的vscode，格式化标准都不一样，最后安装了一个专门格式化的包 prettierrc。</p>
+<p>webstome安装之后自带的报错警告效果优于刚安装的vscode，但是vscode在各种插件的加持下会优于刚安装的webstome。</p>
+<p>报错警告不同引起合作的时候一个人看起来代码正常但另一个人打开的时候难受。</p>
+<p>需要一个文件夹专门存放代码格式说明</p>
+<h3 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h3><ol>
+<li>规定每个代码文件一行尽量不超过多少字符</li>
+<li>规定每个代码文件尽量不超过多少行</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/11/08/%E3%80%8A%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E3%80%8B%E7%AC%94%E8%AE%B0/">http://example.com/2023/11/08/%E3%80%8A%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E3%80%8B%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/02/04/%E4%BD%BF%E7%94%A8tailwindcss%E5%BC%80%E5%8F%91%E5%B1%B1%E4%B9%8B%E6%B3%89%E5%9B%BD%E4%BA%A7%E5%93%81%E7%89%8C%E5%AE%98%E7%BD%91/">使用tailwindcss开发山之泉国产品牌官网</a>
+            
+            
+            <a class="next" rel="next" href="/2023/08/03/%E5%A4%A7%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AEz-index%E8%A7%84%E5%88%92%E8%AE%BE%E8%AE%A1/">大前端项目z-index规划设计</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

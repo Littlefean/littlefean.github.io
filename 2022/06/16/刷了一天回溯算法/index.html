@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>刷了一天回溯算法 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">刷了一天回溯算法</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 16, 2022&nbsp;&nbsp;13:47:25</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="刷了一天回溯算法"><a href="#刷了一天回溯算法" class="headerlink" title="刷了一天回溯算法"></a>刷了一天回溯算法</h1><hr>
+<p>由于发现自己递归的回溯部分还是不太清楚，今天就特意抽出一整天的时间来练习回溯算法。</p>
+<p>练习方式：把《代码随想录》上面第九章回溯算法这一章的所有题目，总共有十四道题目都做了一遍。</p>
+<table>
+<thead>
+<tr>
+<th>32 分钟前</th>
+<th><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sudoku-solver/">#37 解数独</a></th>
+<th>困难</th>
+<th>2 次</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>4 小时前</th>
+<th><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/n-queens/">#51 N 皇后</a></th>
+<th>困难</th>
+<th>3 次</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations-ii/">#47 全排列 II</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>5 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations/">#46 全排列</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>5 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/increasing-subsequences/">#491 递增子序列</a></td>
+<td>中等</td>
+<td>3 次</td>
+</tr>
+<tr>
+<td>7 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subsets-ii/">#90 子集 II</a></td>
+<td>中等</td>
+<td>3 次</td>
+</tr>
+<tr>
+<td>8 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subsets/">#78 子集</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>8 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/restore-ip-addresses/">#93 复原 IP 地址</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>8 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/palindrome-partitioning/">#131 分割回文串</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>10 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum-ii/">#40 组合总和 II</a></td>
+<td>中等</td>
+<td>4 次</td>
+</tr>
+<tr>
+<td>11 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum/">#39 组合总和</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>12 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/letter-combinations-of-a-phone-number/">#17 电话号码的字母组合</a></td>
+<td>中等</td>
+<td>2 次</td>
+</tr>
+<tr>
+<td>12 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum-iii/">#216 组合总和 III</a></td>
+<td>中等</td>
+<td>1 次</td>
+</tr>
+<tr>
+<td>12 小时前</td>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combinations/">#77 组合</a></td>
+<td>中等</td>
+<td>2 次</td>
+</tr>
+</tbody></table>
+<h2 id="回顾复盘一下"><a href="#回顾复盘一下" class="headerlink" title="回顾复盘一下"></a>回顾复盘一下</h2><h4 id="77-组合"><a href="#77-组合" class="headerlink" title="77. 组合"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combinations/">77. 组合</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">combine</span>(<span class="params">self, n: <span class="built_in">int</span>, k: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, lst: <span class="built_in">list</span>, remain: <span class="built_in">int</span></span>):</span><br><span class="line">            <span class="keyword">if</span> remain == <span class="number">0</span>:</span><br><span class="line">                res.append(lst[:])</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> left &gt; n:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(left, n + <span class="number">1</span>):</span><br><span class="line">                lst.append(i)</span><br><span class="line">                dfs(i + <span class="number">1</span>, lst, remain - <span class="number">1</span>)</span><br><span class="line">                lst.pop()  <span class="comment"># 精髓，撤销！！</span></span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">1</span>, [], k)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题以前是直接用python的combination做的，但是总感觉用库心里不踏实，没有学到精髓。也不利于递归思维的提升。所以就看书学了学回溯算法。</p>
+<p>感觉回溯算法的核心精髓，就是：<strong>每次递归操作完了之后都会撤销当前操作。</strong>，就比如这段代码里面的 <code>lst.pop()</code>，忽然感觉以前的自己实在是太屑了。不知道在遍历决策树的时候怎么倒退，干着急也没办法，原来就是这么简单，感觉很妙。</p>
+<h4 id="216-组合总和-III"><a href="#216-组合总和-III" class="headerlink" title="216. 组合总和 III"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum-iii/">216. 组合总和 III</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> combinations</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">combinationSum3</span>(<span class="params">self, k: <span class="built_in">int</span>, n: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        <span class="keyword">return</span> [<span class="built_in">list</span>(item) <span class="keyword">for</span> item <span class="keyword">in</span> combinations(<span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>), k) <span class="keyword">if</span> <span class="built_in">sum</span>(item) == n]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个题偷了个懒。感觉和第一题有点相似了。就调了个库</p>
+<h4 id="17-电话号码的字母组合"><a href="#17-电话号码的字母组合" class="headerlink" title="17. 电话号码的字母组合"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/letter-combinations-of-a-phone-number/">17. 电话号码的字母组合</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">letterCombinations</span>(<span class="params">self, digits: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        res = []</span><br><span class="line">        <span class="keyword">if</span> digits == <span class="string">&quot;&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span> res</span><br><span class="line">        digs = [</span><br><span class="line">            <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">            <span class="string">&quot;def&quot;</span>,</span><br><span class="line">            <span class="string">&quot;ghi&quot;</span>,</span><br><span class="line">            <span class="string">&quot;jkl&quot;</span>,</span><br><span class="line">            <span class="string">&quot;mno&quot;</span>,</span><br><span class="line">            <span class="string">&quot;pqrs&quot;</span>,</span><br><span class="line">            <span class="string">&quot;tuv&quot;</span>,</span><br><span class="line">            <span class="string">&quot;wxyz&quot;</span>,</span><br><span class="line">        ]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">digIndex: <span class="built_in">int</span>, path: <span class="built_in">str</span></span>):</span><br><span class="line">            <span class="comment"># digIndex：表示当前选到了第几个数字</span></span><br><span class="line">            <span class="comment"># path，写入答案的暂存小数组</span></span><br><span class="line">            <span class="keyword">if</span> digIndex &gt;= <span class="built_in">len</span>(digits):</span><br><span class="line">                res.append(path)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> char <span class="keyword">in</span> digs[<span class="built_in">int</span>(digits[digIndex]) - <span class="number">2</span>]:  <span class="comment"># 这里稍微绕了一下的就是把数字转化成索引，-2</span></span><br><span class="line">                <span class="comment"># 树形宽度遍历每一种字符可能</span></span><br><span class="line">                path += char</span><br><span class="line">                dfs(digIndex + <span class="number">1</span>, path)</span><br><span class="line">                path = path[:-<span class="number">1</span>]  <span class="comment"># 去掉最后一个字符，用的切片</span></span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">0</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题踩了个坑WA了一下，传入空字符串的时候居然回出错，于是就加了个特殊判断。</p>
+<blockquote>
+<p>这个题目看了之后梦回小学时代，那个时候我还在用诺基亚。题目就是用一个九键手机，给出一串数字，给出所有的能匹配出来的字母，这个题好像和实际的现实还不太一样，因为现实情况实际上是想打出一个b，要按两下2才行。这个只是直接求组合的所有可能了。就是按一下2，abc都有可能了。</p>
+</blockquote>
+<blockquote>
+<p>想起来以前周赛好像做过一个题，是给出了很长很长一串数字，问可能打出多少种字母，那个题的配图和这个题的配图居然是一样的我记得。但是这个题好像感觉不如那个题难，那个题当时是用动态规划来解决的。当时居然还做了快一个小时，当时那个题的dp递推式子居然是刚好碰出来的。</p>
+</blockquote>
+<h4 id="39-组合总和"><a href="#39-组合总和" class="headerlink" title="39. 组合总和"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum/">39. 组合总和</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">combinationSum</span>(<span class="params">self, candidates: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, sumVal: <span class="built_in">int</span>, path: <span class="type">List</span>[<span class="built_in">int</span>]</span>):</span><br><span class="line">            <span class="comment"># left 当前要选择的数组的下标</span></span><br><span class="line">            <span class="comment"># sumval 当前已经选择了的和</span></span><br><span class="line">            <span class="comment"># path 当前选择了的数字 list</span></span><br><span class="line">            <span class="keyword">if</span> sumVal &gt; target:</span><br><span class="line">                <span class="comment"># 如果已经选超了，就不要再选下去了</span></span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> sumVal == target:</span><br><span class="line">                <span class="comment"># 刚好！记录答案</span></span><br><span class="line">                res.append(path[:])</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="comment"># sum 还不够</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(left, <span class="built_in">len</span>(candidates)):</span><br><span class="line">                path.append(candidates[i])  <span class="comment"># 添加一个当前这个数字</span></span><br><span class="line">                dfs(i, sumVal + candidates[i], path)  <span class="comment"># 第一个参数i不用加1.因为可以无限选择</span></span><br><span class="line">                path.pop()  <span class="comment"># 撤销</span></span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">0</span>, <span class="number">0</span>, [])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题不一样的点在于里面的元素可以<strong>无限次</strong>被选择。</p>
+<p>做到这道题的时候就感觉自己在22年五月份还是四月份的时候，也就是刷剑指offer1的时候，自己当时的很多这种组合问题好像也遇到过，当时就是全用的combination全偷懒做的，一遇到变种，发现不能偷懒，就不会了，当时就直接抄别人的答案提交了。但是打开这道题的时候找不到自己的提交记录了，可能是剑指offer上面的题有重复的一样的题，题源地址可能不是一个。</p>
+<h4 id="40-组合总和-II"><a href="#40-组合总和-II" class="headerlink" title="40. 组合总和 II"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/combination-sum-ii/">40. 组合总和 II</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># 2022年6月16日</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">combinationSum2</span>(<span class="params">self, candidates: <span class="type">List</span>[<span class="built_in">int</span>], target: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        candidates.sort()</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, sumVal: <span class="built_in">int</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> sumVal &gt; target:</span><br><span class="line">                <span class="comment"># 已经加超过了</span></span><br><span class="line">                <span class="comment"># print(&quot;add over&quot;)</span></span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> sumVal == target:</span><br><span class="line">                <span class="comment"># 刚好</span></span><br><span class="line">                res.append(path[:])</span><br><span class="line">            <span class="keyword">if</span> sumVal &lt; target:</span><br><span class="line">                <span class="comment"># 继续递归</span></span><br><span class="line">                s = <span class="built_in">set</span>()</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(left + <span class="number">1</span>, <span class="built_in">len</span>(candidates)):</span><br><span class="line"></span><br><span class="line">                    addNum = candidates[i]</span><br><span class="line">                    <span class="keyword">if</span> addNum <span class="keyword">in</span> s:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    s.add(addNum)</span><br><span class="line"></span><br><span class="line">                    path.append(addNum)</span><br><span class="line">                    dfs(i, sumVal + addNum, path)</span><br><span class="line">                    path.pop()</span><br><span class="line"></span><br><span class="line">        dfs(-<span class="number">1</span>, <span class="number">0</span>, [])  <span class="comment"># 从-1开始，因为for循环遍历会+1，就加成0了</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题总是超过时间限制</p>
+<p>这个题的特点是：结果的每一个组合里可以有重复的数字，但是！！所有的结果里不能有重复的组合。。。</p>
+<p>就是有一个组合 [1, 1, 2] 是合法的，但是不能有两个 [1, 1, 2]。</p>
+<p>这个我和书上的最开始的做法很一致，一上来先拍了序，但是排序之后怎么去重是个大问题，最开始我是直接遍历所有组合，单纯用一个集合放在最外层来去重，但是发现这样总是超时。</p>
+<p>其实应该是在遍历决策树的时候，直接用同层重复数字来剪枝去重，不仅达到了去重的效果，而且还达到大大大大节省时间的效果。</p>
+<p>这里的同层去重就是在内层放一个set，就是刚好在for的外一层的地方。然后先检测是否在集合里就行了。</p>
+<h4 id="131-分割回文串"><a href="#131-分割回文串" class="headerlink" title="131. 分割回文串"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/palindrome-partitioning/">131. 分割回文串</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>(<span class="params">a: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="keyword">return</span> a == a[::-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">partition</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">remain: <span class="built_in">str</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="comment"># print(path)</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> remain:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> test(remain):</span><br><span class="line">                res.append(path[:] + [remain])</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(remain)):</span><br><span class="line">                <span class="comment"># 在当前位置i一切割</span></span><br><span class="line">                left = remain[:i + <span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> test(left):</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                right = remain[i + <span class="number">1</span>:]</span><br><span class="line">                <span class="comment"># print(&quot;/t&quot;, path, left, right)</span></span><br><span class="line">                path.append(left)</span><br><span class="line">                dfs(right, path)</span><br><span class="line">                path.pop()</span><br><span class="line"></span><br><span class="line">        dfs(s, [])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>判断一个字符串是不是回文的，直接用python语法糖了。本质上都是用的线性的时间复杂度。</p>
+<p>这个题问的意思是，在一个字符串的各个缝隙位置上放若干个隔板，隔板分割出来的每一个字符串都是回文的。</p>
+<p>有多少种放隔板的方式。</p>
+<p>我规定的下标是在对应i下标元素之后，与i+1之间放隔板。</p>
+<p>想了想执行一次之后就通过了</p>
+<h4 id="93-复原-IP-地址"><a href="#93-复原-IP-地址" class="headerlink" title="93. 复原 IP 地址"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/restore-ip-addresses/">93. 复原 IP 地址</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">restoreIpAddresses</span>(<span class="params">self, s: <span class="built_in">str</span></span>) -&gt; <span class="type">List</span>[<span class="built_in">str</span>]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">remain: <span class="built_in">str</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(path) == <span class="number">4</span> <span class="keyword">and</span> <span class="keyword">not</span> remain:</span><br><span class="line">                <span class="comment"># 没有剩余的了，并且path刚好也等于四，记录答案！</span></span><br><span class="line">                res.append(<span class="string">&quot;.&quot;</span>.join(path))</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(path) == <span class="number">4</span> <span class="keyword">and</span> remain:</span><br><span class="line">                <span class="comment"># 已经满了但是还没切完呢</span></span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">min</span>(<span class="number">3</span>, <span class="built_in">len</span>(remain))):</span><br><span class="line">                <span class="keyword">if</span> remain[<span class="number">0</span>] == <span class="string">&quot;0&quot;</span>:  <span class="comment"># 因为不能有前导零，所以加个图书判断</span></span><br><span class="line">                    path.append(<span class="string">&quot;0&quot;</span>)</span><br><span class="line">                    dfs(remain[<span class="number">1</span>:], path)</span><br><span class="line">                    path.pop()</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">                <span class="comment"># 遍历每一个剩余可切割索引</span></span><br><span class="line">                leftStr = remain[:i + <span class="number">1</span>]</span><br><span class="line">                rightStr = remain[i + <span class="number">1</span>:]</span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">int</span>(leftStr) &lt; <span class="number">256</span>:</span><br><span class="line">                    path.append(leftStr)</span><br><span class="line">                    dfs(rightStr, path)</span><br><span class="line">                    path.pop()</span><br><span class="line">                ...</span><br><span class="line">        dfs(s, [])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题是把所有可能的IP地址返回出来，就是不停的加点，和上一个题有点像。</p>
+<p>这个题里面有一些特殊情况的处理。</p>
+<h4 id="78-子集"><a href="#78-子集" class="headerlink" title="78. 子集"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subsets/">78. 子集</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="comment"># 2022年6月16日</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subsets</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> left &gt;= <span class="built_in">len</span>(nums):</span><br><span class="line">                res.append(path[:])</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 我要当前这个</span></span><br><span class="line">            path.append(nums[left])</span><br><span class="line">            dfs(left + <span class="number">1</span>, path)</span><br><span class="line">            path.pop()</span><br><span class="line">            <span class="comment"># 我不要当前这个</span></span><br><span class="line">            dfs(left + <span class="number">1</span>, path)</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">0</span>, [])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这题就是获取一个集合的幂集，以前做这个题的时候我发现自己是用combination偷懒了。这次好好做一下。</p>
+<p>这个做的时候懵了一下，看了一下书上画的图才意识到，原来是在决策树上每走一步都记录添加。</p>
+<p>这个不是for循环横向扩展决策树宽度了。而是一个二叉树的形状，要不要当前位置了。</p>
+<h4 id="90-子集-II"><a href="#90-子集-II" class="headerlink" title="90. 子集 II"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subsets-ii/">90. 子集 II</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">subsetsWithDup</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line">        nums.sort()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> left &gt;= <span class="built_in">len</span>(nums):</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            s = <span class="built_in">set</span>()</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(left + <span class="number">1</span>, <span class="built_in">len</span>(nums)):</span><br><span class="line">                <span class="comment"># 要</span></span><br><span class="line">                n = nums[i]</span><br><span class="line">                <span class="keyword">if</span> n <span class="keyword">in</span> s:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    s.add(n)</span><br><span class="line">                path.append(n)</span><br><span class="line">                res.append(path[:])</span><br><span class="line">                dfs(i, path)</span><br><span class="line">                path.pop()</span><br><span class="line">                ...</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs(-<span class="number">1</span>, [])  <span class="comment"># 又是从-1开始</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> res + [[]]</span><br></pre></td></tr></table></figure>
+
+<p>这个题是变成了集合里有重复元素了，然后返回幂集。</p>
+<p>答案里面可以有 [1, 1, 2] 这样的子集，但是不能有重复的子集，就不能有两个[1, 1, 2]。这又成了去重问题了</p>
+<p>这个去重问题也是，先排序，然后再对决策树同层去重。</p>
+<h4 id="491-递增子序列"><a href="#491-递增子序列" class="headerlink" title="491. 递增子序列"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/increasing-subsequences/">491. 递增子序列</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">findSubsequences</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">left: <span class="built_in">int</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            s = <span class="built_in">set</span>()</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(path) &gt;= <span class="number">2</span>:</span><br><span class="line">                res.append(path[:])</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(left + <span class="number">1</span>, <span class="built_in">len</span>(nums)):</span><br><span class="line"></span><br><span class="line">                n = nums[i]</span><br><span class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> s:</span><br><span class="line">                    s.add(n)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="keyword">if</span> path <span class="keyword">and</span> path[-<span class="number">1</span>] &gt; n:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                path.append(n)</span><br><span class="line">                dfs(i, path)</span><br><span class="line"></span><br><span class="line">                path.pop()</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs(-<span class="number">1</span>, [])  <span class="comment"># 在for循环里才开始选择，会+1，所以写了-1</span></span><br><span class="line">        <span class="comment"># print(len(res))</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题目就如题的名字一样简洁，获得一个数组的所有的递增的子序列。因为递增性质，所以所有子序列的长度必须是大于等于2的。</p>
+<p>这个题也是，发现得去重，去重就挺麻烦的，发现是同层去重。</p>
+<p>然后记录答案的时候，是只要path数组的长度一旦大于2，就会记录。</p>
+<p>最开始看到这个题我想的是，这不直接来个二重循环就可以了吗。后来逝了一下才发现，不行。因为二重循环里面那一层没法做到间断跳跃的选择。这个题WA了两次。边界条件还得处理。</p>
+<h4 id="46-全排列"><a href="#46-全排列" class="headerlink" title="46. 全排列"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations/">46. 全排列</a></h4><p>这个题好像也可以直接调用itertools里面的全排列直接写，但是就失去练习的意义了。所以特意要学习一下回溯怎么实现全排列。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">permute</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(path) == <span class="built_in">len</span>(nums):</span><br><span class="line">                res.append([nums[i] <span class="keyword">for</span> i <span class="keyword">in</span> path])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">                <span class="keyword">if</span> i <span class="keyword">in</span> path:  <span class="comment"># 排除自己选自己</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                path.append(i)</span><br><span class="line">                dfs(path)</span><br><span class="line">                path.pop()</span><br><span class="line"></span><br><span class="line">        dfs([])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个决策树就是一个完整的树了，像之前的题一样，左边深右边空。</p>
+<p>记录答案的时候就刚好是path数组写满了的时候就记录。</p>
+<p>for循环里面写的也是，直接遍历满，要排除自己。</p>
+<p>以前大二的时候刚做行列式的程序就用到了全排列算法，当时自己不知道python内置库实现了，就自己瞎搞，搞的代码又臭又长，空间复杂度On！，直接生成了一个多叉树，也根本不会回溯，就无奈又把多叉树改成了三叉链表。增加了指向父亲节点的指针。特别特别麻烦，居然还搞了一下午。现在看看以前的自己真的好憨憨。但也没办法。只是感觉过去的自己学习的进度和效率低了。</p>
+<p>现在看看这个全排列算法，感觉不怎么难。看着这么几行代码，居然还感觉有点简单。</p>
+<p>也许我应该有这样一个警醒：<strong>当我特别想做出一个东西，但是我的算法卡脖子了，然后我硬是去用自己的方法做。虽然可能很有成就感，但是这可能说明我的算法技能和知识有着严重漏洞。</strong></p>
+<h4 id="47-全排列-II"><a href="#47-全排列-II" class="headerlink" title="47. 全排列 II"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/permutations-ii/">47. 全排列 II</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">permuteUnique</span>(<span class="params">self, nums: <span class="type">List</span>[<span class="built_in">int</span>]</span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">int</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">choice: <span class="built_in">list</span>, path: <span class="built_in">list</span></span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(nums) == <span class="built_in">len</span>(path):</span><br><span class="line">                res.append(path[:])</span><br><span class="line"></span><br><span class="line">            s = <span class="built_in">set</span>()</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(nums)):</span><br><span class="line">                <span class="keyword">if</span> i <span class="keyword">in</span> choice <span class="keyword">or</span> nums[i] <span class="keyword">in</span> s:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                s.add(nums[i])</span><br><span class="line">                <span class="comment"># 选择这个元素</span></span><br><span class="line">                choice.append(i)</span><br><span class="line">                path.append(nums[i])</span><br><span class="line">                dfs(choice, path)</span><br><span class="line">                path.pop()</span><br><span class="line">                choice.pop()</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs([], [])</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个题就是在上一个题的基础上，要给出全排列的序列里面有了重复的元素了。</p>
+<p>这个去重又有点麻烦了。搞了挺长时间。</p>
+<p>递归参数搞了两个数组，一个是记录选择下标的数组，一个是记录选择的元素的数组，</p>
+<p>选择下标的数组不能重复选择，选择元素的数组在树的同层也是要去重的。</p>
+<h4 id="51-N-皇后"><a href="#51-N-皇后" class="headerlink" title="51. N 皇后"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/n-queens/">51. N 皇后</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">solveNQueens</span>(<span class="params">self, n: <span class="built_in">int</span></span>) -&gt; <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]:</span><br><span class="line">        res = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">lines: <span class="built_in">list</span>, y: <span class="built_in">int</span></span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">len</span>(lines) == n:</span><br><span class="line">                <span class="comment"># write</span></span><br><span class="line">                <span class="comment"># print(lines, y)</span></span><br><span class="line">                ans = []</span><br><span class="line">                <span class="keyword">for</span> x <span class="keyword">in</span> lines:</span><br><span class="line">                    line = [<span class="string">&quot;.&quot;</span>] * n</span><br><span class="line">                    line[x] = <span class="string">&quot;Q&quot;</span></span><br><span class="line">                    ans.append(<span class="string">&quot;&quot;</span>.join(line))</span><br><span class="line">                res.append(ans)</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> y &gt;= n:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">                <span class="comment"># 判断竖着是否重复</span></span><br><span class="line">                <span class="keyword">if</span> x <span class="keyword">in</span> lines:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 判断斜着是否重复</span></span><br><span class="line">                lst = []</span><br><span class="line">                <span class="keyword">for</span> i, q <span class="keyword">in</span> <span class="built_in">enumerate</span>(lines):</span><br><span class="line">                    lst.extend((q - (y - i), q + (y - i)))</span><br><span class="line">                <span class="comment"># print(&quot;/t&quot;, lines, lst)</span></span><br><span class="line">                <span class="keyword">if</span> x <span class="keyword">in</span> lst:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="comment"># 这个位置可以放</span></span><br><span class="line">                lines.append(x)</span><br><span class="line">                dfs(lines, y + <span class="number">1</span>)</span><br><span class="line">                lines.pop()</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        dfs([], <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>这个N皇后问题，以前做过，一看提交记录发现，竟然恰好是上一年的这个月</p>
+<table>
+<thead>
+<tr>
+<th>提交结果</th>
+<th>执行用时</th>
+<th>内存消耗</th>
+<th>语言</th>
+<th>提交时间</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/submissions/detail/325945765/">通过</a></td>
+<td>72 ms</td>
+<td>15.3 MB</td>
+<td>Python3</td>
+<td>2022&#x2F;06&#x2F;16 17:10</td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>添加备注</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/submissions/detail/186372943/">通过</a></td>
+<td>996 ms</td>
+<td>15.8 MB</td>
+<td>Python3</td>
+<td>2021&#x2F;06&#x2F;13 18:03</td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>DFS，减少了搜索范围</th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://leetcode.cn/submissions/detail/186347794/">超出时间限制</a></td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td>Python3</td>
+<td>2021&#x2F;06&#x2F;13 16:26</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>上一年的今天左右相差了三天，回忆起以前这个题当时搞了好像将近两个多小时，这次好像半小时就搞过了。看来掌握回溯就是好啊。</p>
+<p>并且当时的运行时间也好多。</p>
+<p>现在写的时候，就判断斜着相撞的时候，绕了一下。</p>
+<p>字符串处理也感觉得心应手了。</p>
+<h4 id="37-解数独"><a href="#37-解数独" class="headerlink" title="37. 解数独"></a><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sudoku-solver/">37. 解数独</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">valid</span>(<span class="params">board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="comment"># line</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> board:</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> line:</span><br><span class="line">            <span class="keyword">if</span> char == <span class="string">&quot;.&quot;</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> line.count(char) &gt; <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="comment"># col</span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">9</span>):</span><br><span class="line">        s = <span class="built_in">set</span>()</span><br><span class="line">        <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">9</span>):</span><br><span class="line">            char = board[y][x]</span><br><span class="line">            <span class="keyword">if</span> char == <span class="string">&quot;.&quot;</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> char <span class="keyword">in</span> s:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">            s.add(char)</span><br><span class="line">    <span class="comment"># box</span></span><br><span class="line">    <span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">        locY = y * <span class="number">3</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            locX = x * <span class="number">3</span></span><br><span class="line"></span><br><span class="line">            s = <span class="built_in">set</span>()</span><br><span class="line">            <span class="keyword">for</span> dy <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">                realY = locY + dy</span><br><span class="line">                <span class="keyword">for</span> dx <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">                    realX = locX + dx</span><br><span class="line">                    char = board[realY][realX]</span><br><span class="line">                    <span class="keyword">if</span> char == <span class="string">&quot;.&quot;</span>:</span><br><span class="line">                        <span class="keyword">continue</span></span><br><span class="line">                    <span class="keyword">if</span> char <span class="keyword">in</span> s:</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">                    s.add(char)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">full</span>(<span class="params">board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]</span>):</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> board:</span><br><span class="line">        <span class="keyword">for</span> char <span class="keyword">in</span> line:</span><br><span class="line">            <span class="keyword">if</span> char == <span class="string">&quot;.&quot;</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">solveSudoku</span>(<span class="params">self, board: <span class="type">List</span>[<span class="type">List</span>[<span class="built_in">str</span>]]</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Do not return anything, modify board in-place instead.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># 记录下来所有可以更改的坐标点</span></span><br><span class="line">        modifyList = []  <span class="comment"># len = 51</span></span><br><span class="line">        <span class="keyword">for</span> y, line <span class="keyword">in</span> <span class="built_in">enumerate</span>(board):</span><br><span class="line">            modifyList.extend((x, y) <span class="keyword">for</span> x, char <span class="keyword">in</span> <span class="built_in">enumerate</span>(line) <span class="keyword">if</span> char == <span class="string">&quot;.&quot;</span>)</span><br><span class="line">        success = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 在所有可以更改的坐标点上一步一步往前实验</span></span><br><span class="line">        <span class="comment"># 每试一次就全局检测一次，如果检测失败就往回反</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">dfs</span>(<span class="params">modifyIndex: <span class="built_in">int</span></span>):</span><br><span class="line">            <span class="keyword">nonlocal</span> success</span><br><span class="line">            <span class="keyword">if</span> success:</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> valid(board):</span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line">            <span class="keyword">if</span> modifyIndex &gt;= <span class="built_in">len</span>(modifyList):</span><br><span class="line">                success = <span class="literal">True</span></span><br><span class="line">                <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">            mx, my = modifyList[modifyIndex]</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">10</span>):</span><br><span class="line">                board[my][mx] = <span class="built_in">str</span>(i)</span><br><span class="line">                dfs(modifyIndex + <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> success:</span><br><span class="line">                    board[my][mx] = <span class="string">&quot;.&quot;</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        dfs(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个解数独，以前大一的时候2020年上半年，也就是刚开始学python的那半年搞出来过，当时还没学算法，还没学数据结构，就是想搞出来解决数独的问题。当时也还做了框图。只是没有用递归。做了整整大半天。</p>
+<p>后来知道了leetcode，发现了有解数独这个题，只是没想到格式居然是字符串格式，太麻烦了，就一直没做。</p>
+<p>今天终于把这个题给解决了。</p>
+<p>判断数独整体是否有效的时候还是出了点小bug。</p>
+<p>整个回溯递归的时候逻辑也遇到了点问题，发现自己明明写好了，但是最后好像又全给擦掉了，就用了一个success变量。但是又发现最后填写的数全都变成9了，原来是自己在递归for循环里忘了break了。还是有好多小细节问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>今天用了整整一天的时间又弥补了一下以前算法一直欠缺的地方，感觉很有收获。</p>
+<p>这些去重的问题，层间去重和树枝下去重，书里讲的真的挺清楚的。这个书里给出的做题顺序也真的不错。</p>
+<p>可能以后有时间还是要回头继续做这些题，时间长了可能又会变得生疏。也许一年之后，我又会变成一个更强的自己。回头看到自己现在写的代码可能还是不够好。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/06/16/%E5%88%B7%E4%BA%86%E4%B8%80%E5%A4%A9%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/">http://example.com/2022/06/16/%E5%88%B7%E4%BA%86%E4%B8%80%E5%A4%A9%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/08/11/%E7%94%A8Rust%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%BE%93%E5%87%BA%E5%A4%9A%E4%B8%AA%E8%8C%83%E5%9B%B4%E7%9A%84%E8%B4%A8%E6%95%B0/">用Rust多线程输出多个范围的质数</a>
+            
+            
+            <a class="next" rel="next" href="/2022/06/07/%E6%AD%A3%E5%A4%9A%E9%9D%A2%E4%BD%93css%E5%AE%9E%E7%8E%B0/">正多面体css实现</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

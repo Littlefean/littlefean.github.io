@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>app开发踩坑记录 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">app开发踩坑记录</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">九月 2, 2022&nbsp;&nbsp;12:02:04</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="app开发踩坑记录及其经验总结-2022暑假"><a href="#app开发踩坑记录及其经验总结-2022暑假" class="headerlink" title="app开发踩坑记录及其经验总结-2022暑假"></a>app开发踩坑记录及其经验总结-2022暑假</h1><p>小学期做项目js+python，收获很多，总结一下，以后可能就忘了，做个记忆保存和学习记录，记录点经验和体会。</p>
+<p>最重要的一个：没有使用框架，纯原生js实现，做着做着发现自己其实已经不自觉的有开发框架的倾向了。说“开发框架”有点过了，其实只是把一些常用的过程简单的封装了一下。</p>
+<p>其实学个框架挺重要的，至少代码不至于被拆的像屎山一样。不过自己手造轮子也有点小收获。发现了自己一些细小知识点的不足。同时也有点能够感觉到框架是怎么被开发出来的了。</p>
+<h2 id="前瞻性思考不足"><a href="#前瞻性思考不足" class="headerlink" title="前瞻性思考不足"></a>前瞻性思考不足</h2><p>最开始没打算做PC端，导致在pc端看起来太宽的双切换界面改起来已经不太好改了。</p>
+<h2 id="接口格式"><a href="#接口格式" class="headerlink" title="接口格式"></a>接口格式</h2><p>因为”title”在前端传递的时候给写成name了，导致以为后端出了错误，低级错误</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;title&quot;</span><span class="punctuation">:</span> <span class="string">&quot;打比赛&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;week&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">6</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;startTime&quot;</span><span class="punctuation">:</span> <span class="string">&quot;13:15&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;alarm&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="日期操作"><a href="#日期操作" class="headerlink" title="日期操作"></a>日期操作</h2><p>获取今天是星期几，每次都忘，每次都查。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line">d = datetime.now()</span><br><span class="line"><span class="built_in">print</span>(d.strftime(<span class="string">&quot;%A&quot;</span>))  <span class="comment"># 字符串的星期六中文</span></span><br><span class="line"><span class="built_in">print</span>(d.isoweekday())  <span class="comment"># 1 2 3 4 5 6 7</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="系统路径"><a href="#系统路径" class="headerlink" title="系统路径"></a>系统路径</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">f&quot;myDB/jsonDB/<span class="subst">&#123;fileName&#125;</span>.json&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>要写<code>/</code>，不要写 <code>//</code></p>
+<h2 id="颜色输入框设置默认颜色"><a href="#颜色输入框设置默认颜色" class="headerlink" title="颜色输入框设置默认颜色"></a>颜色输入框设置默认颜色</h2><p>必须是十六进制字符，rgb不行 ，red也不行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;color&quot;</span> <span class="attr">class</span>=<span class="string">&quot;fillColor&quot;</span> <span class="attr">value</span>=<span class="string">&quot;#fff&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="canvas模糊问题"><a href="#canvas模糊问题" class="headerlink" title="canvas模糊问题"></a>canvas模糊问题</h2><p>canvas其实是模糊的，需要先放大，再css强制缩小。</p>
+<h2 id="封装canvas画图操作"><a href="#封装canvas画图操作" class="headerlink" title="封装canvas画图操作"></a>封装canvas画图操作</h2><p>因为每次画个小东西还要改ctx太麻烦了，索性直接写成function，同时还解决模糊问题。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * canvas绘制标准化</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">n</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> &#123;<span class="type">number</span>&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">standardize</span>(<span class="params">n</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>(n * <span class="variable constant_">PR</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 在canvas上下文对象中画一条线，</span></span><br><span class="line"><span class="comment"> * 这条线是对齐了像素点的，之所以要对齐像素点就是要解决模糊的效果</span></span><br><span class="line"><span class="comment"> * 也就是传入的参数会默认取整</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">ctx</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">x1</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">y1</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">x2</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">y2</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">lineWidth</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">color</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">isDash</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">drawLine</span>(<span class="params">ctx, x1, y1, x2, y2,</span></span><br><span class="line"><span class="params">                  lineWidth = <span class="number">1</span>, color = <span class="string">&quot;black&quot;</span>, isDash = <span class="literal">false</span></span>) &#123;</span><br><span class="line">    ctx.<span class="property">lineWidth</span> = lineWidth;</span><br><span class="line">    ctx.<span class="property">strokeStyle</span> = color;</span><br><span class="line">    ctx.<span class="title function_">beginPath</span>();</span><br><span class="line">    <span class="keyword">if</span> (isDash) &#123;</span><br><span class="line">        ctx.<span class="title function_">setLineDash</span>([<span class="number">5</span>, <span class="number">5</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ctx.<span class="title function_">setLineDash</span>([]);</span><br><span class="line">    &#125;</span><br><span class="line">    ctx.<span class="title function_">moveTo</span>(<span class="title function_">standardize</span>(x1), <span class="title function_">standardize</span>(y1));</span><br><span class="line">    ctx.<span class="title function_">lineTo</span>(<span class="title function_">standardize</span>(x2), <span class="title function_">standardize</span>(y2));</span><br><span class="line">    ctx.<span class="title function_">stroke</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 画矩形边框</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> ctx 上下文对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x 左上角顶点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> y 左上角顶点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> width 宽度</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> height 高度</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">color</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">lineWidth</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">drawRectStroke</span>(<span class="params">ctx, x, y, width, height, color, lineWidth</span>) &#123;</span><br><span class="line">    ctx.<span class="property">strokeStyle</span> = color;</span><br><span class="line">    ctx.<span class="property">lineWidth</span> = <span class="title function_">standardize</span>(lineWidth);</span><br><span class="line">    ctx.<span class="property">lineJoin</span> = <span class="string">&quot;round&quot;</span>;</span><br><span class="line">    ctx.<span class="title function_">strokeRect</span>(<span class="title function_">standardize</span>(x), <span class="title function_">standardize</span>(y), <span class="title function_">standardize</span>(width), <span class="title function_">standardize</span>(height));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 画矩形填充</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">ctx</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x 左上角顶点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> y 左上角顶点</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">width</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">height</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">color</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">drawRectFill</span>(<span class="params">ctx, x, y, width, height, color</span>) &#123;</span><br><span class="line">    ctx.<span class="property">fillStyle</span> = color;</span><br><span class="line">    ctx.<span class="title function_">fillRect</span>(<span class="title function_">standardize</span>(x), <span class="title function_">standardize</span>(y), <span class="title function_">standardize</span>(width), <span class="title function_">standardize</span>(height));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 写文字</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> <span class="variable">ctx</span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> content &#123;String&#125;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x &#123;Number&#125; px</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> y &#123;Number&#125; px</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> color 颜色字符串</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> fontSize &#123;Number&#125; px</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">writeFont</span>(<span class="params">ctx, content, x, y, color = <span class="string">&quot;black&quot;</span>, fontSize = <span class="number">20</span></span>) &#123;</span><br><span class="line">    ctx.<span class="property">fillStyle</span> = color;</span><br><span class="line">    ctx.<span class="property">font</span> = <span class="string">`<span class="subst">$&#123;standardize(fontSize)&#125;</span>px &quot;微软雅黑&quot;`</span>;           <span class="comment">//设置字体</span></span><br><span class="line">    <span class="comment">// 默认中心对齐</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *   |</span></span><br><span class="line"><span class="comment">     * --+-----</span></span><br><span class="line"><span class="comment">     *   |</span></span><br><span class="line"><span class="comment">     *   也就是填入的坐标点是整个文字的中心坐标点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    ctx.<span class="property">textBaseline</span> = <span class="string">&quot;middle&quot;</span>;</span><br><span class="line">    ctx.<span class="property">textAlign</span> = <span class="string">&quot;center&quot;</span>;</span><br><span class="line">    ctx.<span class="title function_">fillText</span>(content, <span class="title function_">standardize</span>(x), <span class="title function_">standardize</span>(y));</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="两个IDE混着提交差点导致git乱了"><a href="#两个IDE混着提交差点导致git乱了" class="headerlink" title="两个IDE混着提交差点导致git乱了"></a>两个IDE混着提交差点导致git乱了</h2><p>pycharm和webstome。webstome打开的项目文件是pycharm打开项目文件的子文件夹。在pycharm里囤积的提交，websotme里再提交会忽略。要么只用一个编辑器搞git的事情，要么提交一次推送一次。</p>
+<h2 id="界面弹窗切换"><a href="#界面弹窗切换" class="headerlink" title="界面弹窗切换"></a>界面弹窗切换</h2><p>注意是flex盒子，不要display：block了。早知道用框架了！Vue、react啥的，自己手写逻辑真麻烦。</p>
+<h2 id="css3动画停止状态"><a href="#css3动画停止状态" class="headerlink" title="css3动画停止状态"></a>css3动画停止状态</h2><p>在动作结束时保持该状态不变</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yiyueqinghui/article/details/120292718">https://blog.csdn.net/yiyueqinghui/article/details/120292718</a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">animation-fill-mode</span>:forwards;</span><br></pre></td></tr></table></figure>
+
+<p>目的是为了去掉alert，改成不需要点击的一种气泡上升，于是创造了一个组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 一种气泡组件</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bubble</span> &#123;</span><br><span class="line">    <span class="comment">// 这种气泡组件会在最上方，css 的 z层是100</span></span><br><span class="line">    <span class="keyword">static</span> z = <span class="number">100</span>;</span><br><span class="line">    <span class="comment">// 气泡上升动画持续多少秒</span></span><br><span class="line">    <span class="keyword">static</span> raiseDur = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 气泡多少秒后消失</span></span><br><span class="line">    <span class="keyword">static</span> dur = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 窗口上弹出一个框</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string &#123;String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="title function_">pop</span>(<span class="params">string</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> bubble = <span class="title function_">div</span>(string, <span class="string">&quot;bubble&quot;</span>);</span><br><span class="line">        bubble.<span class="property">style</span>.<span class="property">zIndex</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.z&#125;</span>`</span>;</span><br><span class="line">        <span class="comment">// 设置上升动画秒数</span></span><br><span class="line">        bubble.<span class="property">style</span>.<span class="property">animationDuration</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.raiseDur&#125;</span>s`</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> body = $(<span class="string">&quot;body&quot;</span>);</span><br><span class="line">        body.<span class="title function_">appendChild</span>(bubble);</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            bubble.<span class="property">style</span>.<span class="property">animationDuration</span> = <span class="string">`<span class="subst">$&#123;<span class="variable language_">this</span>.dur - <span class="variable language_">this</span>.raiseDur&#125;</span>s`</span>;</span><br><span class="line">            bubble.<span class="property">style</span>.<span class="property">animationName</span> = <span class="string">`bubbleExpand`</span>;</span><br><span class="line">        &#125;, <span class="variable language_">this</span>.<span class="property">raiseDur</span> * <span class="number">1000</span>);</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            body.<span class="title function_">removeChild</span>(bubble);</span><br><span class="line">        &#125;, <span class="variable language_">this</span>.<span class="property">dur</span> * <span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其实写的还不严谨，就为了图方便图快了。因为项目挺赶的。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">@keyframes</span> bubbleRaise &#123;</span><br><span class="line">  <span class="selector-tag">from</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">20%</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-tag">to</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">10%</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@keyframes</span> bubbleExpand &#123;</span><br><span class="line">  <span class="selector-tag">from</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">10%</span>;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">100%</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-tag">to</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">10%</span>;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scale</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  气泡组件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="selector-class">.bubble</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10px</span> <span class="number">50px</span> <span class="number">10px</span> <span class="number">50px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">1000px</span>;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">2em</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">22px</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bolder;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">outline</span>: solid <span class="number">1px</span>;</span><br><span class="line">  <span class="attribute">border</span>: solid <span class="number">2px</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="built_in">rgba</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.5</span>);</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">20%</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">animation-name</span>: bubbleRaise;</span><br><span class="line">  <span class="attribute">animation-iteration-count</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">animation-duration</span>: <span class="number">2s</span>;</span><br><span class="line">  <span class="attribute">animation-fill-mode</span>: forwards;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="css做出鼠标按一下，就让某个div执行一下一次性动画"><a href="#css做出鼠标按一下，就让某个div执行一下一次性动画" class="headerlink" title="css做出鼠标按一下，就让某个div执行一下一次性动画"></a>css做出鼠标按一下，就让某个div执行一下一次性动画</h2><p>html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;get&quot;</span>&gt;</span>get<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;box&quot;</span>&gt;</span>123123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>css</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> note &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">        <span class="attribute">background-color</span>: transparent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">50%</span> &#123;</span><br><span class="line">        <span class="attribute">background-color</span>: red;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">        <span class="attribute">background-color</span>: transparent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">animation-fill-mode</span>: forwards;</span><br><span class="line">    <span class="attribute">animation-duration</span>: <span class="number">1s</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> box = <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.box&quot;</span>);</span><br><span class="line"><span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;.get&quot;</span>).<span class="property">onclick</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (box.<span class="property">style</span>.<span class="property">animationName</span> === <span class="string">&quot;note&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    box.<span class="property">style</span>.<span class="property">animationName</span> = <span class="string">&quot;note&quot;</span>;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        box.<span class="property">style</span>.<span class="property">animationName</span> = <span class="string">&quot;none&quot;</span>;</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="无意间发现了类属性和匿名内部类"><a href="#无意间发现了类属性和匿名内部类" class="headerlink" title="无意间发现了类属性和匿名内部类"></a>无意间发现了类属性和匿名内部类</h2><p>原来自己一直都没有用过的类属性和匿名内部类，可能这严格来说不算匿名内部类了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> b = <span class="number">15</span>;</span><br><span class="line">    <span class="keyword">static</span> C = <span class="keyword">class</span> &#123;</span><br><span class="line">        <span class="title function_">constructor</span>(<span class="params">x, y</span>) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">x</span> = x;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">y</span> = y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(A.<span class="property">b</span>);</span><br><span class="line">A.<span class="property">b</span> += <span class="number">15</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(A.<span class="property">b</span>);</span><br><span class="line"><span class="keyword">let</span> c = <span class="keyword">new</span> A.<span class="title function_">C</span>(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(c);</span><br></pre></td></tr></table></figure>
+
+<h2 id="ajax封装"><a href="#ajax封装" class="headerlink" title="ajax封装"></a>ajax封装</h2><p>最开始以为一个ajax对象就可以用来处理所有的接口了，所以直接写了一个ajax全局对象。结果出了严重bug。</p>
+<p>后来才意识到原来一个接口对应一个ajax对象才是对的。可以算是基础不牢固、不熟吧。但ajax写多了之后发现又有点麻烦，于是又又又封装成一个函数了。为了疯狂偷懒而疯狂封装。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 手动对ajax进行二次封装</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> urlFix 请求路径后缀</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> sendJson 发送的json，如果不写则自动变成get请求</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> &#123;<span class="type">XMLHttpRequest</span>&#125; 返回一个ajax对象，需要这样写</span></span><br><span class="line"><span class="comment"> * POST(&quot;userGetAllDDL&quot;, &#123;userName: &quot;张全蛋&quot;&#125;).finish((res) =&gt; &#123;</span></span><br><span class="line"><span class="comment">       res 便是自动解析成结果的js对象，可以直接使用了</span></span><br><span class="line"><span class="comment">    &#125;);</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">AJAX</span>(<span class="params">urlFix, sendJson = <span class="literal">null</span></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> ajaxObj = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    ajaxObj.<span class="title function_">open</span>(sendJson === <span class="literal">null</span> ? <span class="string">&quot;GET&quot;</span> : <span class="string">&quot;POST&quot;</span>, <span class="string">`http://<span class="subst">$&#123;ADDRESS&#125;</span>:<span class="subst">$&#123;PORT&#125;</span>/<span class="subst">$&#123;urlFix&#125;</span>`</span>);</span><br><span class="line">    ajaxObj.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (sendJson === <span class="literal">null</span>) &#123;</span><br><span class="line">        ajaxObj.<span class="title function_">send</span>();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ajaxObj.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(sendJson));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// finish 是我自己新创的一个</span></span><br><span class="line">    ajaxObj.<span class="property">finish</span> = <span class="function">(<span class="params">yourFunc</span>) =&gt;</span> &#123;</span><br><span class="line">        ajaxObj.<span class="property">onload</span> = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> obj = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(ajaxObj.<span class="property">responseText</span>);</span><br><span class="line">            <span class="title function_">yourFunc</span>(obj);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> ajaxObj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="依旧待解决的问题"><a href="#依旧待解决的问题" class="headerlink" title="依旧待解决的问题"></a>依旧待解决的问题</h2><p>webstome的html为什么ctrl+&#x2F; 之后，左侧注释开始从行首开始。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/09/02/app%E5%BC%80%E5%8F%91%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/">http://example.com/2022/09/02/app%E5%BC%80%E5%8F%91%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/js/"># js</a>
+                    
+                        <a href="/tags/app/"># app</a>
+                    
+                        <a href="/tags/webstorm/"># webstorm</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/09/19/%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93%E6%8A%80%E6%9C%AF%E4%B8%93%E4%B8%9A%E6%8A%80%E8%83%BD%E6%A0%91/">数字媒体技术专业技能树</a>
+            
+            
+            <a class="next" rel="next" href="/2022/08/21/%E5%AF%B9%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E7%9C%8B%E6%B3%95%E6%80%BB%E7%BB%93/">对编程语言的看法总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

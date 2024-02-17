@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>js、java、c、python变量作用域比较 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">js、java、c、python变量作用域比较</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">一月 2, 2021&nbsp;&nbsp;12:05:35</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="对Js、Java、C、Python-变量作用域的比较"><a href="#对Js、Java、C、Python-变量作用域的比较" class="headerlink" title="对Js、Java、C、Python 变量作用域的比较"></a>对Js、Java、C、Python 变量作用域的比较</h1><hr>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>大二上学期在做网页设计作业时，我用js的for循环批量给按钮绑定事件，但是发现没有效果，甚至iframe标签里的内容显示都显示不出来了，为了寻找原因，我搜索发现用let关键字代替var关键字就可以得到解决了。</p>
+<blockquote>
+<p>当时的js代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;frame&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> listArray = <span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&quot;li&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> titleWord = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;title-word&quot;</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; (listArray.<span class="property">length</span>); i++) &#123;     <span class="comment">/* for循环小括号里的var i 改成 let i */</span></span><br><span class="line"> <span class="keyword">var</span> name = <span class="string">&quot;frame/page (&quot;</span> + (i + <span class="number">1</span>) + <span class="string">&quot;).html&quot;</span>;</span><br><span class="line"> <span class="variable language_">console</span>.<span class="title function_">log</span>(name);</span><br><span class="line"> listArray[i].<span class="title function_">addEventListener</span>(<span class="string">&quot;click&quot;</span>, <span class="function">() =&gt;</span> &#123; f.<span class="property">src</span> = name; &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>bug原因是<code>i</code> 这个变量的作用域不是在for循环内部的，在for循环结束之后<code>i</code> 又 “<code>++</code>”了，导致这些按钮绑定全都绑定乱了</p>
+<p>后来和网页设计老师汇报了这个问题，我说当时搜索发现var是全局作用域，老师回复说：</p>
+<blockquote>
+<p>在JavaScript中，使用var声明的变量会自动被添加到最接近的环境中。由for语句创建的变量，即使在for循环执行结束后，也依旧会存在于循环外部的执行环境中。</p>
+<p>看位置，var并不一定是全局作用域</p>
+<p>在函数内部，var只是函数内部局部变量</p>
+</blockquote>
+<p>我一看，对哦，怎么可能是只要一用var声明变量了就直接全局作用域了，这也太夸张了，肯定有点限制的，限制就是在函数内部。不过我当时的这个代码里，<code>i</code>也没有在函数内部，所以也就相当于是全局作用域了。</p>
+<p>但是这一点引起了我的注意，变量作用域是一个严谨的问题，我必须要把它搞清楚。于是通过写了一些代码并执行对比了一下js里的<code>var</code>了<code>let</code>的区别</p>
+<p>对比let和var之后，我忽然想到，为什么我平时写python、写java、之前写C语言的时候没有出现过这种问题？</p>
+<p>我只有在写python的时候遇到一点小问题：在py文件中写几个函数，再在最下面写一个 <code>if __name__ == &#39;__main__&#39;: </code> 然后再在这里面写东西，但是总是会发现在这里面写的变量会和函数里的一些变量重名警告提示，和java就就是不一样，但是一直都没太当回事。</p>
+<p>我感觉不对劲了，python、java、c之间的作用域它们都是怎么样的？都有什么区别？我好像快弄混了，于是我都通通测试了一番。</p>
+<h2 id="比较与分析"><a href="#比较与分析" class="headerlink" title="比较与分析"></a>比较与分析</h2><h4 id="js中用var声明的变量"><a href="#js中用var声明的变量" class="headerlink" title="js中用var声明的变量"></a>js中用var声明的变量</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// console.log(k);  //报错 k没有被定义</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(k);	<span class="comment">//打印出了 undefined</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> k = <span class="number">0</span>; k &lt; <span class="number">3</span>; k++)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(k);  </span><br><span class="line">    &#125; <span class="comment">// 打印了 0 1 2</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(k); <span class="comment">// 3  之所以增加了一个，是因为for循环在执行循环体结束的时候才会让i增加1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">test</span>();</span><br><span class="line"><span class="comment">// console.log(k);  //报错 k没有被定义</span></span><br></pre></td></tr></table></figure>
+
+<p>var只要一被声明，整个空间里就有了var这个变量，这个空间是限制在仅外面那一层函数内的所有空间，不能逃离这个函数。</p>
+<p>当然如果外面就是最外面，script标签或者js文件，没有函数包裹着var声明语句了，那这个变量作用域就是全局了。</p>
+<h4 id="js中用let声明的变量"><a href="#js中用let声明的变量" class="headerlink" title="js中用let声明的变量"></a>js中用let声明的变量</h4><p>会被限制在for循环的区域里，这里指的区域是包括小括号+大括号组成的区域，在此区域外找不到</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// console.log(j);  //报错，未找到变量</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">10</span>; j++)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(j);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// console.log(j);  //报错，未找到变量</span></span><br></pre></td></tr></table></figure>
+
+<p>for循环有区域限制，那if语句的解构呢？</p>
+<p>试了一下发现也会被限制在if的区域里，指的是大括号区域，在此区域外找不到</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> c = <span class="number">3.2</span>;</span><br><span class="line">&#125;	</span><br><span class="line"><span class="comment">// console.log(c); //报错，未找到变量</span></span><br></pre></td></tr></table></figure>
+
+<p>for有区域限制，就连一个<code>if (true)&#123;&#125;</code>顺势往下执行的方式也有区域限制，那么我直接写一个空白的大括号会怎么样呢？</p>
+<p>试了一下发现这样也会有限制，说明只要是大括号就会限制let关键字声明的变量的作用范围，真不错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(a);  </span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">//报错，未找到变量</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> b = <span class="number">8</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(b);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b); <span class="comment">//可以找到变量</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="python中声明变量"><a href="#python中声明变量" class="headerlink" title="python中声明变量"></a>python中声明变量</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># print(i)  # 报错，找不到变量</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">        <span class="built_in">print</span>(i)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;---&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(i)  <span class="comment"># 和js的for循环不一样，i还是2，没有再增加了</span></span><br><span class="line">    <span class="keyword">if</span> <span class="literal">True</span>:</span><br><span class="line">        j = <span class="number">100</span></span><br><span class="line">        <span class="built_in">print</span>(j)</span><br><span class="line">    <span class="built_in">print</span>(j)</span><br><span class="line">    <span class="keyword">while</span> j == <span class="number">100</span>:</span><br><span class="line">        k = <span class="number">10</span></span><br><span class="line">        j += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span>(k)</span><br><span class="line">    <span class="built_in">print</span>(k)  <span class="comment"># 虽然没报错可运行，但是pyCharm里给出了“局部变量可能在赋值之前被引用”的警告</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">test()</span><br><span class="line"><span class="comment"># print(i)  # 报错，找不到变量</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">---</span><br><span class="line">2</span><br><span class="line">100</span><br><span class="line">100</span><br><span class="line">10</span><br><span class="line">10</span><br></pre></td></tr></table></figure>
+
+<p>python的语法只用缩进表示块解构，没有大括号的写法，所以只能测试for循环和while循环和if结构。</p>
+<p>测试发现它居然和js里的var是一样的，但是for循环不一样，是因为python的for循环遍历的是一个数字序列，遍历结束的时候不会再增加<code>i</code>的值，<code>i</code>的值始终是<code>range(3)</code> 即 <code>[0, 1, 2]</code> 里面的值</p>
+<h4 id="C语言中声明变量"><a href="#C语言中声明变量" class="headerlink" title="C语言中声明变量"></a>C语言中声明变量</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d/n&quot;</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf(&quot;%d&quot;, i); //这句不能写，否则会报错找不到变量</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> j = <span class="number">2</span>;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;j is %d/n&quot;</span>, j);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf(&quot;%d&quot;, j);  //这句不能写，否则会报错找不到变量</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> k = <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf(&quot;%d&quot;, k);  //这句不能写，否则会报错找不到变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前面测试完 js 的<code>var</code>和 python 之后一测试C语言，就忽然感觉C语言好严格，和 js 的<code>let</code>一样，只要一出大括号就不行了。</p>
+<p>不过我感觉我好像本来意识里就知道的，只是平时没太刻意注意这个问题。</p>
+<h4 id="java中声明变量"><a href="#java中声明变量" class="headerlink" title="java中声明变量"></a>java中声明变量</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">            System.out.println(i);</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">//System.out.println(i); //报错找不到变量</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">//System.out.println(j); //报错找不到变量</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">//System.out.println(k);  //报错找不到变量</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我猜java跟c应该是差不多的，测试发现的确如此</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过测试发现：</p>
+<p>Js中的var关键字声明的变量、python声明的变量，变量作用域相对宽泛，在函数级别。</p>
+<p>而Js中的let关键字声明的变量、和C语言、Java一样，变量作用域相对更小，在代码块级别。</p>
+<table>
+<thead>
+<tr>
+<th>变量声明语言 &#x2F; 方式</th>
+<th>变量作用域</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>javaScript var关键字</td>
+<td>函数级别</td>
+</tr>
+<tr>
+<td>javaScript let关键字</td>
+<td>代码块级别</td>
+</tr>
+<tr>
+<td>python</td>
+<td>函数级别</td>
+</tr>
+<tr>
+<td>c</td>
+<td>代码块级别</td>
+</tr>
+<tr>
+<td>java</td>
+<td>代码块级别</td>
+</tr>
+</tbody></table>
+<p>有一个小发现，javaScript和python是脚本语言，c和java是编译型语言，JavaScript在ES6之前是没有let关键字的，所以个人感觉一般编译型编程语言的变量作用域范围更可能是代码块级别，而脚本语言的变量作用域范围更可能是函数级别。通常编译型语言比脚本语言给人一种更加严谨的感觉，可能这也算原因之一。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2021/01/02/%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%AF%94%E8%BE%83/">http://example.com/2021/01/02/%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%AF%94%E8%BE%83/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/js/"># js</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/C/"># C</a>
+                    
+                        <a href="/tags/java/"># java</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/03/05/js%E5%AE%9E%E7%8E%B0%E9%BC%A0%E6%A0%87%E7%82%B9%E5%87%BB%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E5%B0%8F%E7%89%A9%E4%BD%93%E4%B8%8A%E5%8D%87%E7%89%B9%E6%95%88/">js实现鼠标点击界面出现小物体上升特效</a>
+            
+            
+            <a class="next" rel="next" href="/2020/11/17/CSS%E5%AF%B9%E4%BA%94%E7%A7%8D%E9%80%89%E6%8B%A9%E5%99%A8%E7%9A%84%E7%90%86%E8%A7%A3%E4%B8%8E%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F/">CSS对五种选择器的理解与优先级排序</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
