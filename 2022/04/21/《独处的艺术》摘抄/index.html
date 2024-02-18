@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>《独处的艺术》摘抄 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《独处的艺术》摘抄</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 21, 2022&nbsp;&nbsp;2:34:20</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="独处的艺术"><a href="#独处的艺术" class="headerlink" title="独处的艺术"></a>独处的艺术</h1><hr>
+<p>积极的独处应该是：自我成长、自我修复、独立思考、发现创造</p>
+<p>独处是积攒能量，交流是释放能量。有效的独处才能积攒能量。</p>
+<p>根据马斯洛需求理论，独处是匮乏性独处。</p>
+<ol>
+<li>生存性</li>
+<li>安全性</li>
+<li>归属性</li>
+<li>尊重性</li>
+</ol>
+<p>维持性独处：基本需求都满足之后，给自己找点事情干。</p>
+<p>充实性独处：最好的独处状态，一个人开始关注如何更好的实现自我，超越自我。</p>
+<p>“我独处时从来不会感觉到厌烦，闲聊才是我这一辈子中最不能容忍的事情”——卢梭。</p>
+<h2 id="心理学的独处分类"><a href="#心理学的独处分类" class="headerlink" title="心理学的独处分类"></a>心理学的独处分类</h2><ol>
+<li>非自愿性独处</li>
+<li>建设性独处</li>
+</ol>
+<p>两个不会独处的人合在一起变成琴瑟想合的神仙眷侣的情况实际上是不会存在的</p>
+<p>一个人盲目采取各种方法赶走孤独，正是造成孤独感的原因。</p>
+<p>在独处时，不要一味地回忆那些悲伤，生活应该向前看，而不是向后看，回忆痛苦只会让自己更为痛苦，这是一个死循环。</p>
+<p>独处时，内心要变得强大起来，当成与自己的一个对抗挑战。</p>
+<h2 id="独处的境界"><a href="#独处的境界" class="headerlink" title="独处的境界"></a>独处的境界</h2><h3 id="人生境界"><a href="#人生境界" class="headerlink" title="人生境界"></a>人生境界</h3><p>第一层：想要做成大事，要有信念和追求，有远大的理想和目标，并朝着目标的方向执着的前进。</p>
+<p>第二层：在追求成功的路上没有那么容易，要有坚强的意志，废寝忘食，变得憔悴了都不后悔，人在孤独中追求需要坚持。</p>
+<p>第三层：一个人实现目标的最终阶段，追求成功的道路上要具备敏锐的思绪，专注的精神，付出了足够多之后自然就会有回报。（蓦然回首，那人正在灯火阑珊处）</p>
+<p>正因为爱因斯坦拥有了寂寞，又超越了寂寞，所以他才会有无穷的能力与精力，并取得非凡的成就，这就是人生的最高境界之一。</p>
+<p>“学会独处是重要的想象力”——美国诗人罗伯特·罗威尔</p>
+<p>“沉思的人好比一种变了样的动物”——卢梭。</p>
+<p>“当感受到孤独的那一刻，就是最不孤独的瞬间”——贝多芬。</p>
+<p>在孤独的时候应该尽可能避免丰富的情感，让自己的思绪放空。孤独的真正滋味不应该是痛苦的。</p>
+<p>实验证明：人都是不喜欢独处的，这也是为什么那么多娱乐设施存在的原因。</p>
+<p>无聊的根源就是孤独，逃避孤独感，就会花时间去娱乐</p>
+<p>当一个人是为了填补自己的空虚而选择了另一半时，实际上是因为无聊寂寞才选择了另一半，那么这个人的人生除了令自己分心、自欺欺人以外，并不会真正意义上摆脱孤独的阴影。很少有人能真正的超越孤独，但是我们不能因此而放弃，因为放弃超越就等于放弃了人生的珍宝，很难获得最大的成功。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/04/21/%E3%80%8A%E7%8B%AC%E5%A4%84%E7%9A%84%E8%89%BA%E6%9C%AF%E3%80%8B%E6%91%98%E6%8A%84/">http://example.com/2022/04/21/%E3%80%8A%E7%8B%AC%E5%A4%84%E7%9A%84%E8%89%BA%E6%9C%AF%E3%80%8B%E6%91%98%E6%8A%84/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/04/23/%E3%80%8A%E7%A9%B7%E7%88%B8%E7%88%B8%E5%AF%8C%E7%88%B8%E7%88%B8%E3%80%8B%E6%91%98%E6%8A%84/">《穷爸爸富爸爸》摘抄</a>
+            
+            
+            <a class="next" rel="next" href="/2022/04/18/%E4%B8%80%E4%BA%9B%E6%9C%89%E5%90%AF%E5%8F%91%E6%84%8F%E4%B9%89%E7%9A%84b%E7%AB%99%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E5%92%8C%E6%91%98%E6%8A%84/">一些有启发意义的b站视频记录和摘抄</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

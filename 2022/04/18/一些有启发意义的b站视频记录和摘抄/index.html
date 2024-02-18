@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>一些有启发意义的b站视频记录和摘抄 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">一些有启发意义的b站视频记录和摘抄</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 18, 2022&nbsp;&nbsp;2:19:29</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>虽已入局程序人生各不相同<br>愿你归来仍是少年<br>跃入程海,各有风雨灿烂</p>
+<p>一些好的思维</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">换位思考</span><br><span class="line">自控力、延迟满足</span><br><span class="line">逆商、心理承受能力</span><br><span class="line">耐心</span><br><span class="line">及时止损</span><br><span class="line">大局观、全局意识</span><br><span class="line">时间规划能力</span><br><span class="line">价值判断</span><br><span class="line">思辨能力</span><br><span class="line">分而治之</span><br><span class="line">深度思考、广度思考</span><br></pre></td></tr></table></figure>
+
+
+
+<p>关于生活的意义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">生活是使命：</span><br><span class="line">献给某项事业</span><br><span class="line">诗歌创作、哲学家、革命家解放人民、科学家拓展人类思维</span><br><span class="line">大多数人可能不会有唯一的使命，只是对某一件事情产生使命感。</span><br><span class="line"></span><br><span class="line">生活是欲望：</span><br><span class="line">欲望永无休止，欲望结束，还想要更多。</span><br><span class="line">没有欲望就是死亡</span><br><span class="line"></span><br><span class="line">生活是痛苦：</span><br><span class="line">来源佛教，一切都是痛苦，快乐只是痛苦的暂时。</span><br><span class="line">欲望满足不了就会痛苦，满足啦就会无聊。</span><br><span class="line">一种说法是通过禁欲和欣赏艺术达到超人状态。</span><br><span class="line"></span><br><span class="line">生活是涅槃：</span><br><span class="line">无欲无求</span><br><span class="line"></span><br><span class="line">生活是学习：</span><br><span class="line">去不同的地方，体验不同的文化和美食</span><br><span class="line">学习专业知识是为了升学工作</span><br><span class="line">旅行、哲学科普是为了什么？</span><br><span class="line">	“为什么要登山？因为山就在那里”</span><br><span class="line"></span><br><span class="line">生活的意义是爱， 没有旁人做伴的生活是没有意义的。</span><br><span class="line">幸福最重要的因素是人际关系，没有之一。</span><br><span class="line">孤独的人中年衰退更快。</span><br><span class="line"></span><br><span class="line">生活是一场游戏</span><br><span class="line">生活是艺术</span><br><span class="line">生活是悲剧</span><br><span class="line">生活是一种疾病</span><br><span class="line">生活是荣誉</span><br><span class="line">生活是利他主义</span><br><span class="line"></span><br><span class="line">真正严肃的哲学问题只有一个，那就是自杀。</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="文凭社会里，没有人是获胜者——文凭的起源和死局【阿健】"><a href="#文凭社会里，没有人是获胜者——文凭的起源和死局【阿健】" class="headerlink" title="文凭社会里，没有人是获胜者——文凭的起源和死局【阿健】"></a>文凭社会里，没有人是获胜者——文凭的起源和死局【阿健】</h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1uF411879Z">https://www.bilibili.com/video/BV1uF411879Z</a></p>
+<p>面对文凭社会，我们可以做些什么？我们什么都做不了，文凭社会还将会长期存在着</p>
+<p>没有国家可以面对文凭的通货膨胀问题，不过了解了文凭社会以后我们可以改变自己的观念</p>
+<ol>
+<li>摒弃上了大学就轻松了的观念，学历在贬值，本科学历可能会不够用，不要幻想什么东西可以一劳永逸</li>
+<li>不要仰视大学，不要幻想大学可以塑造你，学校对于学习来说是极度低效的</li>
+<li>不要觉得寒窗苦读值得骄傲，教育资源和文凭数量有限，寒窗苦读只是把其他人挤掉，利己无可非议，但请至少不要觉得骄傲，因为同时有时候只是因为考试不好而过着缺乏尊严的生活，有的努力可以创造财富，有的努力只是改变财富的分配方式，寒窗苦读属于后者，我们应该敬佩创造财富的人</li>
+</ol>
+<p>人在做某件事的时候最好能够理解为什么要做这件事</p>
+<p>真正的自由不是你想做什么就能做什么，而是你不想做什么的时候就可以不做什么。</p>
+<p>如果内心真的不能接受上述那种形式主义的996，那么就不要强迫自己，能力突出的话可以选择一家心仪的单位，若苦于工作难找那么就要最大限度的补充短板和不足的地方，让自己有能力跳到理想的公司。</p>
+<h4 id="我的二本学生"><a href="#我的二本学生" class="headerlink" title="我的二本学生"></a>我的二本学生</h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1hb4y1J7jz">https://www.bilibili.com/video/BV1hb4y1J7jz</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">永远没有必要跟别人横向比较。我考上一本，才发现原来这世界上有那么多985学生，我考上纽约大学研究生才发现，原来这个世界上有那么多吃穿不愁，但比我更努力的富二代。永远有人的起点是你想要到达的终点，普通人能做的就是今天的自己比昨天强一点，就可以了。</span><br></pre></td></tr></table></figure>
+
+<h4 id="25岁时没人告诉你的事情"><a href="#25岁时没人告诉你的事情" class="headerlink" title="25岁时没人告诉你的事情"></a>25岁时没人告诉你的事情</h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16S4y157TV/?spm_id_from=333.788.recommend_more_video.14">https://www.bilibili.com/video/BV16S4y157TV/?spm_id_from=333.788.recommend_more_video.14</a></p>
+<ul>
+<li>比起匆忙定目标，你更需要了解自己是一个什么样的人，你到底喜欢什么</li>
+<li>成年之后，你要学会做自己的父母</li>
+<li>25岁之前找一个喜欢的运动并长期坚持下去</li>
+<li>996一个月的钱不够在icu里一天</li>
+<li>即使有了爱情你也会感觉孤独</li>
+<li>人生本来就是孤独的，爱情也无法拯救</li>
+<li>失败是成功之母，只有失败加反思才能成长</li>
+</ul>
+<h4 id="关于工作、社交和自我成长"><a href="#关于工作、社交和自我成长" class="headerlink" title="关于工作、社交和自我成长"></a>关于工作、社交和自我成长</h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV19r4y1q7t9?spm_id_from=333.337.search-card.all.click">https://www.bilibili.com/video/BV19r4y1q7t9?spm_id_from=333.337.search-card.all.click</a></p>
+<ul>
+<li>专项发展 &gt; 全面发展</li>
+<li>默认设置：业余时间做什么就是差距</li>
+<li>捍卫自己的底线和权利</li>
+<li>用目的去反推要使用的情绪</li>
+</ul>
+<h4 id="关于价值观"><a href="#关于价值观" class="headerlink" title="关于价值观"></a>关于价值观</h4><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1x34y1t7S3/?spm_id_from=333.788">https://www.bilibili.com/video/BV1x34y1t7S3/?spm_id_from=333.788</a></p>
+<p>最高级的自律是，自己定义快乐，自己获得自己定义的快乐，按照自己的意愿度过一生</p>
+<p>这样才能真正精神自由，摆脱内卷、焦虑。</p>
+<p>有时候人仅仅是真实地面对自己了，就已经成长了一大步</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1TS4y157Qk">https://www.bilibili.com/video/BV1TS4y157Qk</a></p>
+<p>阿尼玛的四个阶段</p>
+<ol>
+<li>母性、安全感</li>
+<li>爱和性</li>
+<li>贤良</li>
+<li>智慧（不是智商、学历、知识、是一种难以言表的东西）</li>
+</ol>
+<p>智商是廉价品，智慧是奢侈品</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/04/18/%E4%B8%80%E4%BA%9B%E6%9C%89%E5%90%AF%E5%8F%91%E6%84%8F%E4%B9%89%E7%9A%84b%E7%AB%99%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E5%92%8C%E6%91%98%E6%8A%84/">http://example.com/2022/04/18/%E4%B8%80%E4%BA%9B%E6%9C%89%E5%90%AF%E5%8F%91%E6%84%8F%E4%B9%89%E7%9A%84b%E7%AB%99%E8%A7%86%E9%A2%91%E8%AE%B0%E5%BD%95%E5%92%8C%E6%91%98%E6%8A%84/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/04/21/%E3%80%8A%E7%8B%AC%E5%A4%84%E7%9A%84%E8%89%BA%E6%9C%AF%E3%80%8B%E6%91%98%E6%8A%84/">《独处的艺术》摘抄</a>
+            
+            
+            <a class="next" rel="next" href="/2022/04/18/2021%E5%88%B02022%E7%9C%8B%E8%BF%87%E7%9A%84%E7%94%B5%E5%BD%B1%E5%86%85%E5%AE%B9%E6%91%98%E6%8A%84/">2021到2022看过的电影内容摘抄</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

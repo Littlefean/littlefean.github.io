@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>《程序员的修炼之道》读书笔记 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《程序员的修炼之道》读书笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十二月 16, 2023&nbsp;&nbsp;1:59:12</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>软件也是有熵的，并且会有破窗效应，要及时修复破窗的代码。</p>
+<p>破窗效应、温水煮青蛙、石头汤</p>
+<p>屎山之大，非一日之积也 ————沃兹基梭德</p>
+<p>《石头汤》的故事启发，设计合里要求的东西，好好开发它，一旦完成，就拿给大家看，让大家大吃一惊，然后说：“要是我们增加。。。可能会更好”，假装哪些不重要，然后他们开始增加你本来就想要的功能。人们发现参与正在发生的成功更容易。让他们看到未来。</p>
+<p>温水煮青蛙和破窗理论不一样，破窗理论强调有人在代码里写了一坨屎，发现没有人在意。而温水煮青蛙是说没有人注意到项目逐渐在变成屎山。视角不一样。</p>
+<p>知识上的投资总能得到最好的回报，但遗憾的是，知识是有时效的资产。随着新技术和环境的出现，知识很快会过时。</p>
+<p>经营知识资产：</p>
+<p>定期投资：即使量小也要养成一些习惯。</p>
+<p>多元化：你知道的不同的事情越多，你就越有价值。要多掌握技术，赶上变化</p>
+<p>管理风险：技术上也有高风险高回报、低风险低回报的图谱，要平衡这两种东西。</p>
+<p>低买高卖：新兴的技术流行之前学习它可能就和找到被低估的股票一样困难，但是所得到的收益就和股票一样。Java刚出之前就有学习它的风险，但是对于早期学习者有更高的回报。</p>
+<p>重新评估和平衡：这是一个非常动荡的行业。</p>
+<p>目标：每年至少学习一种新语言</p>
+<p>每季度阅读一本技术书籍，也要阅读非技术书籍。</p>
+<p>上课，参加社区交流。</p>
+<p>实验不同的环境。windows、mac、linux，各种编辑器</p>
+<p>跟上潮流</p>
+<p>批判性思考：不要被媒体炒作影响，不要低估商业注意的力量，有些答案排在前面，可能是给搜索引擎交钱了。</p>
+<p>在网络时代，很多人似乎已经忘了满是研究资料和工作人员的真实图书馆。</p>
+<p>《不要重复》法则告诉我们，糟糕的代码才需要注释，要把低级的知识放在代码中，把注释保留给其他高级的说明，否则这就是在重复知识</p>
+<p> 计算机会影响人思考问题的方式和交流方式，所有的语言特性也会影响思维方式。</p>
+<p>要学会估算项目的数据量和估算项目进度。</p>
+<p>多花时间熟悉工具。</p>
+<h2 id="DRY"><a href="#DRY" class="headerlink" title="DRY"></a>DRY</h2><p>DRY（Don’t Repeat Yourself）是一种软件开发的原则，强调在编程过程中避免重复。具体而言，DRY原则鼓励开发者避免在代码中重复相同的逻辑、功能或信息。其核心思想是，任何给定的功能或信息应该在系统中有一个明确、唯一的表示，以确保代码的可维护性、可读性和可扩展性。</p>
+<p>遵循DRY原则的好处包括：</p>
+<ol>
+<li><strong>可维护性：</strong> 当系统中的某一部分需要修改时，只需在一个地方进行修改，而不必查找和修改多个副本。</li>
+<li><strong>可读性：</strong> 通过避免冗余，代码变得更加简洁和清晰，易于理解。</li>
+<li><strong>可测试性：</strong> 重复的代码通常会导致更难编写和维护的测试。通过遵循DRY原则，测试更容易编写，因为只需在一个地方验证特定的逻辑。</li>
+<li><strong>减少错误：</strong> 由于修改只需在一个地方进行，因此减少了因为漏掉某处而导致的错误的可能性。</li>
+</ol>
+<p>DRY原则与其他一些编程原则和实践（如抽象、模块化和设计模式）相辅相成，共同促使高质量、可维护的代码。在实际编程中，程序员通常会努力消除重复代码，将共享的逻辑提取为函数、类或模块，以提高代码的质量和可维护性。</p>
+<h2 id="KISS"><a href="#KISS" class="headerlink" title="KISS"></a>KISS</h2><p>KISS（Keep It Simple, Stupid）是一种软件开发和设计的原则，其核心思想是保持系统和代码的简单性。这个原则强调，设计和实现应该尽可能地简单，而不应该过度复杂。简单的设计更容易理解、维护和调试，有助于减少错误和提高系统的可靠性。</p>
+<p>KISS原则的一些关键点包括：</p>
+<ol>
+<li><strong>避免不必要的复杂性：</strong> 不要在设计中引入不必要的特性、层次或组件。保持系统结构和代码清晰简单，只添加那些真正需要的功能。</li>
+<li><strong>易于理解：</strong> 简单的设计使代码更容易理解，不仅对原始开发者而且对其他人阅读和维护代码的人来说都更为友好。</li>
+<li><strong>易于维护：</strong> 简单的系统更容易维护。当需要进行修改或修复时，理解和修改简单代码通常比复杂代码更为高效。</li>
+<li><strong>降低风险：</strong> 复杂性通常伴随着更多的潜在问题和错误。通过保持简单，可以减少引入错误的机会，从而提高系统的稳定性。</li>
+<li><strong>追求最简方案：</strong> 在设计和实现中，应该寻找最简单、最直接的解决方案。不要过度设计或过度工程化。</li>
+</ol>
+<p>总体而言，KISS原则强调在软件开发中避免过度复杂化，注重简洁、清晰和可理解的设计，以提高软件的质量和可维护性。</p>
+<h2 id="YAGNI"><a href="#YAGNI" class="headerlink" title="YAGNI"></a>YAGNI</h2><p>YAGNI（You Ain’t Gonna Need It）是一种软件开发原则，强调在开发过程中避免过度设计和实现不必要的功能。该原则的核心思想是，不要为系统添加当前不需要的功能，而应该在真正需要时再进行扩展。 YAGNI 的目标是避免浪费开发资源和时间在可能永远不会被使用的功能上。</p>
+<p>关键点包括：</p>
+<ol>
+<li><strong>只实现当前需求：</strong> 不要过度预测未来的需求，只专注于当前需要解决的问题。不要为了未来的可能性而增加不必要的复杂性。</li>
+<li><strong>避免过度设计：</strong> 不要过度设计系统以满足尚未明确的未来需求。保持简单，只为当前需求提供合适的解决方案。</li>
+<li><strong>节省开发资源：</strong> 避免在不确定的未来场景下花费过多的开发资源。等到真正需要时再进行开发，以确保资源的有效利用。</li>
+<li><strong>灵活性和敏捷性：</strong> 保持系统的灵活性，使其能够迅速适应未来的变化。不要将过多的时间和资源投入到可能永远不会发生的情况上。</li>
+</ol>
+<p>YAGNI与敏捷开发和迭代开发方法ologies密切相关，强调在整个开发过程中保持灵活性和响应能力。通过遵循YAGNI原则，开发者可以更好地应对需求的变化，减少不必要的开发工作，提高开发效率。</p>
+<p>要修正问题，而不是发出指责。</p>
+<p>调试的第一准则：不要恐慌</p>
+<h2 id="DBC"><a href="#DBC" class="headerlink" title="DBC"></a>DBC</h2><p>DBC 指的是设计者通过事先定义的规约来规定系统行为，以确保系统在任何时候都满足这些规约。DBC 是 Design by Contract（按合同设计）的缩写，由计算机科学家 Bertrand Meyer 提出。</p>
+<p>DBC 包含以下三个关键元素：</p>
+<ol>
+<li><strong>前置条件（Preconditions）：</strong> 这是指在调用一个方法或函数之前，必须满足的条件。前置条件定义了调用者在调用时需要保证的约定。</li>
+<li><strong>后置条件（Postconditions）：</strong> 这是指在方法或函数执行完毕之后，系统必须满足的条件。后置条件定义了方法或函数应该产生的结果和效果。</li>
+<li><strong>不变式（Invariants）：</strong> 这是指在整个方法或函数执行期间，系统必须保持的条件。不变式是对系统状态的限制，它在整个过程中都应该得到维护。</li>
+</ol>
+<p>虽然 DBC 在理论上是一种强大的方法，但在实际项目中的广泛应用可能有所限制。在一些编程语言和框架中，也有尝试实现 DBC 的工具和库，以帮助开发者更轻松地使用这一设计理念。</p>
+<p>耦合（Coupling）是指两个模块之间相互依赖的程度或紧密度。更高的耦合意味着模块之间的关联更紧密，而较低的耦合则表示它们更独立。耦合是软件设计中一个重要的概念，影响着系统的可维护性、可扩展性和复用性。</p>
+<p>元数据：就是数据的数据，例如一些配置信息、数据库的schema。</p>
+<p>把抽象放进代码，细节放进元数据。</p>
+<p>不要只顾的收集需求，要注意挖掘需求，有些需求背后隐藏着政策信息，政策变了，需求就变了，因此对于政策信息可以写成元数据。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2023/12/16/%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E9%81%93%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">http://example.com/2023/12/16/%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E9%81%93%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/01/02/python%E5%90%8E%E7%AB%AFDjango%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E8%AE%B0%E5%BD%95/">python后端Django使用经验记录</a>
+            
+            
+            <a class="next" rel="next" href="/2023/11/08/%E3%80%8A%E4%BB%A3%E7%A0%81%E6%95%B4%E6%B4%81%E4%B9%8B%E9%81%93%E3%80%8B%E7%AC%94%E8%AE%B0/">《代码整洁之道》读书笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

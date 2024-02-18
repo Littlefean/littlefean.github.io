@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>python后端Django使用经验记录 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">python后端Django使用经验记录</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">一月 2, 2024&nbsp;&nbsp;2:02:57</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>事务</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">correction = Correction.objects.get(<span class="built_in">id</span>=self.kwargs.get(<span class="string">&#x27;pk&#x27;</span>))</span><br><span class="line">correction.correct_at = timezone.now()</span><br><span class="line">correction.correct_user_id = self.request.user.<span class="built_in">id</span></span><br><span class="line"><span class="keyword">with</span> transaction.atomic():</span><br><span class="line">    correction.save()</span><br><span class="line">    Inbox.objects.new_notify(</span><br><span class="line">        user_id=correction.report_user.<span class="built_in">id</span>,</span><br><span class="line">        title=<span class="string">f&quot;#<span class="subst">&#123;self.kwargs.get(<span class="string">&#x27;pk&#x27;</span>)&#125;</span> 纠错已处理&quot;</span>,</span><br><span class="line">        content=<span class="string">f&quot;&lt;p&gt;您的错误反馈 #<span class="subst">&#123;self.kwargs.get(<span class="string">&#x27;pk&#x27;</span>)&#125;</span> 已处理 &lt;/p&gt;&quot;</span></span><br><span class="line">                <span class="string">f&quot;&lt;p&gt;点击&lt;a href=&#x27;/tk/question/<span class="subst">&#123;correction.question.<span class="built_in">id</span>&#125;</span>&#x27;&gt;这里&lt;/a&gt;查看对应的题目&lt;/p&gt;&quot;</span>,</span><br><span class="line">        extra_type=Inbox.EXTRA_PLATFORM</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">qs.values(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">QS&lt;&#123;a:b&#125;,&#123;a:c&#125; &gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">qs.values_list(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">QS&lt;(b,), (c,)&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">qs.values_list(<span class="string">&#x27;a&#x27;</span>, flat=<span class="literal">True</span>)</span><br><span class="line">QS&lt;[b, c]&gt;</span><br><span class="line"><span class="comment"># flat=True只能在只要看一个参数的时候使用</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_queryset</span>(<span class="params">self</span>):</span><br><span class="line">    _<span class="built_in">filter</span> = self.request.GET.get(<span class="string">&#x27;filter&#x27;</span>, <span class="string">&#x27;dashboard&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> _<span class="built_in">filter</span> == <span class="string">&#x27;dashboard&#x27;</span>:</span><br><span class="line">        qs = School.objects.<span class="built_in">filter</span>(is_active=<span class="literal">True</span>).exclude(id__in=settings.DASHBOARD_EXCLUDE_SITES)</span><br><span class="line">        <span class="keyword">if</span> site_ids := settings.STATIS_USER_SITE.get(self.request.user.<span class="built_in">id</span>):</span><br><span class="line">            qs = qs.<span class="built_in">filter</span>(id__in=site_ids)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        qs = School.objects.<span class="built_in">filter</span>(is_active=<span class="literal">True</span>).order_by(<span class="string">&#x27;site_title&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> qs</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码本来不会出问题的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_queryset</span>(<span class="params">self</span>):</span><br><span class="line">    _<span class="built_in">filter</span> = self.request.GET.get(<span class="string">&#x27;filter&#x27;</span>, <span class="string">&#x27;dashboard&#x27;</span>)</span><br><span class="line">    user_id = self.request.user.<span class="built_in">id</span></span><br><span class="line">    <span class="keyword">if</span> _<span class="built_in">filter</span> == <span class="string">&#x27;dashboard&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> self.request.user.username == <span class="string">&#x27;fljy&#x27;</span>:</span><br><span class="line">            qs = School.objects.<span class="built_in">filter</span>(is_active=<span class="literal">True</span>).exclude(</span><br><span class="line">                id__in=settings.DASHBOARD_EXCLUDE_SITES</span><br><span class="line">            )</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            qs = OperatorSchool.objects.<span class="built_in">filter</span>(</span><br><span class="line">                user_id=user_id,</span><br><span class="line">                school__is_active=<span class="literal">True</span></span><br><span class="line">            )</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        qs = School.objects.<span class="built_in">filter</span>(is_active=<span class="literal">True</span>).order_by(<span class="string">&#x27;site_title&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> qs</span><br></pre></td></tr></table></figure>
+<p>结果因为加了一个用户只能查看他所管理的学校之后，就出bug了，我发现原因是qs不在是School模型的queryset，而是变成OperatorSchool了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">OperatorSchool</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    后台管理: 运营管理的学校</span></span><br><span class="line"><span class="string">    since: 21.6.16</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">&#x27;运营&#x27;</span>, db_index=<span class="literal">False</span>, on_delete=CASCADE)</span><br><span class="line">    school = models.ForeignKey(<span class="string">&#x27;market.School&#x27;</span>, verbose_name=<span class="string">&#x27;负责学校&#x27;</span>, db_index=<span class="literal">False</span>, on_delete=CASCADE)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Meta</span>:</span><br><span class="line">        unique_together = ((<span class="string">&#x27;user&#x27;</span>, <span class="string">&#x27;school&#x27;</span>),)</span><br></pre></td></tr></table></figure>
+<p>以上是他的模型定义。我应该如何将else分支里的内容转化为School？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">school_ids = OperatorSchool.objects.<span class="built_in">filter</span>(</span><br><span class="line">    user_id=user_id,</span><br><span class="line">    school__is_active=<span class="literal">True</span></span><br><span class="line">).values_list(<span class="string">&#x27;school_id&#x27;</span>, flat=<span class="literal">True</span>)</span><br><span class="line">qs = School.objects.<span class="built_in">filter</span>(id__in=school_ids)</span><br></pre></td></tr></table></figure>
+
+<p>进一步优化成一个语句</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">qs = School.objects.<span class="built_in">filter</span>(</span><br><span class="line">    operatorschool__user_id=user_id,</span><br><span class="line">    operatorschool__school__is_active=<span class="literal">True</span></span><br><span class="line">).distinct()</span><br></pre></td></tr></table></figure>
+
+<p>双杠优化</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果这个卷子被班级练过很多次，就取班级练的最好的一次得分率</span></span><br><span class="line"><span class="comment"># max_percent = PaperClassQuestionPercent.objects.filter(</span></span><br><span class="line"><span class="comment">#     paper_question=PaperQuestion.objects.get(</span></span><br><span class="line"><span class="comment">#         paper=task_obj.paper,</span></span><br><span class="line"><span class="comment">#         question_id=question.question_id</span></span><br><span class="line"><span class="comment">#     )</span></span><br><span class="line"><span class="comment"># ).order_by(&#x27;-correct_percent&#x27;).first().correct_percent</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果这个卷子被班级练过很多次，就取班级练的最好的一次得分率</span></span><br><span class="line">max_percent = PaperClassQuestionPercent.objects.<span class="built_in">filter</span>(</span><br><span class="line">    paper_question__paper=task_obj.paper,</span><br><span class="line">    paper_question__question_id=question.question_id</span><br><span class="line">).order_by(<span class="string">&#x27;-correct_percent&#x27;</span>).first().correct_percent</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>python代码尽量不要写函数嵌套，否则影响性能</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/01/02/python%E5%90%8E%E7%AB%AFDjango%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E8%AE%B0%E5%BD%95/">http://example.com/2024/01/02/python%E5%90%8E%E7%AB%AFDjango%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C%E8%AE%B0%E5%BD%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/02/04/%E4%BD%BF%E7%94%A8tailwindcss%E5%BC%80%E5%8F%91%E5%B1%B1%E4%B9%8B%E6%B3%89%E5%9B%BD%E4%BA%A7%E5%93%81%E7%89%8C%E5%AE%98%E7%BD%91/">使用tailwindcss开发山之泉国产品牌官网</a>
+            
+            
+            <a class="next" rel="next" href="/2023/12/16/%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E9%81%93%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《程序员的修炼之道》读书笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

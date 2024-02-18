@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>科幻设定与灵感总结 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">科幻设定与灵感总结</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">二月 4, 2022&nbsp;&nbsp;2:11:30</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="科幻设定与灵感总结"><a href="#科幻设定与灵感总结" class="headerlink" title="科幻设定与灵感总结"></a>科幻设定与灵感总结</h1><hr>
+<h2 id="科幻小说"><a href="#科幻小说" class="headerlink" title="科幻小说"></a>科幻小说</h2><table>
+<thead>
+<tr>
+<th>作品名称</th>
+<th>元素</th>
+<th>核心</th>
+<th>理念</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>三体1</td>
+<td>外星人、高能粒子、智子</td>
+<td>人类发现外星文明迹象后的活动</td>
+<td></td>
+</tr>
+<tr>
+<td>三体2</td>
+<td>宇宙的黑暗森林法则、水滴、思想钢印、黑暗森林威慑</td>
+<td>人类与三体文明的威慑和博弈，认识到零道德宇宙的黑暗</td>
+<td>逃出地球的人再也不是人了</td>
+</tr>
+<tr>
+<td>三体3</td>
+<td>二向箔、反物质、高维空间、宇宙降维、子宇宙</td>
+<td>发现宇宙真相后出逃最终宇宙归零重新开始。</td>
+<td>失去兽性，失去一切</td>
+</tr>
+<tr>
+<td>超新星纪元</td>
+<td>混沌、超新星爆发</td>
+<td>全人类文明只剩下孩子的时候会发生什么</td>
+<td></td>
+</tr>
+<tr>
+<td>球状闪电</td>
+<td>量子力学、球状闪电</td>
+<td>一种量子观点的对球状闪电的解释和产生的故事</td>
+<td></td>
+</tr>
+<tr>
+<td>鲸歌</td>
+<td>生物控制</td>
+<td>发明了科技方法最后却被捕鲸船倒栽</td>
+<td>讽刺</td>
+</tr>
+<tr>
+<td>微观尽头</td>
+<td>高能粒子对撞机、微观粒子</td>
+<td>发现了微观的尽头又是整个宏观</td>
+<td></td>
+</tr>
+<tr>
+<td>宇宙坍缩</td>
+<td>宇宙膨胀、收缩</td>
+<td>宇宙膨胀结束开始收缩后时光开始倒流</td>
+<td></td>
+</tr>
+<tr>
+<td>带上她的眼睛</td>
+<td>地核</td>
+<td>地质勘探船最终跌入了地心，只留下一个小女孩在里面</td>
+<td>珍惜生活中触手可得的美</td>
+</tr>
+<tr>
+<td>地火</td>
+<td>地火</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>流浪地球</td>
+<td>地球、太阳系、逃离</td>
+<td>在地球上造发动机把地球推离太阳系躲避氦闪</td>
+<td>一种思乡情结</td>
+</tr>
+<tr>
+<td>乡村教室</td>
+<td>星际战争、文命等级</td>
+<td>星际战争者因为发现地球上选到的小孩背出了牛顿第二定律所以没有摧毁这里。</td>
+<td></td>
+</tr>
+<tr>
+<td>混沌蝴蝶</td>
+<td>混沌系统、气象预测改变</td>
+<td>用计算得到的气象敏感点改变天气从而影响战争</td>
+<td></td>
+</tr>
+<tr>
+<td>微纪元</td>
+<td>微小人类</td>
+<td>文明的反向扩张，把自己变得微小。</td>
+<td></td>
+</tr>
+<tr>
+<td>全品阻塞干扰</td>
+<td>电磁波？</td>
+<td>通过电磁干扰影响战争</td>
+<td></td>
+</tr>
+<tr>
+<td>命运</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>信使</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>纤维</td>
+<td>多重宇宙</td>
+<td>多重宇宙之间用纤维相连接，纤维出现了错乱</td>
+<td></td>
+</tr>
+<tr>
+<td>中国太阳</td>
+<td></td>
+<td>对宇宙和未知世界的探索精神</td>
+<td>人要有探索精神</td>
+</tr>
+<tr>
+<td>朝闻道</td>
+<td>粒子对撞机、外星文明</td>
+<td>外星文明介入回答科学家们的问题，但却没能回答宇宙的目的</td>
+<td></td>
+</tr>
+<tr>
+<td>天使时代</td>
+<td>DNA编程、基因工程、人长出翅膀</td>
+<td>一个人批量做出来很多带翅膀的人，产生了冲突</td>
+<td></td>
+</tr>
+<tr>
+<td>人和吞噬者</td>
+<td>文明</td>
+<td>恐龙，人，然后可能是蚂蚁。</td>
+<td>文明就是吃啊吃</td>
+</tr>
+<tr>
+<td>镜子</td>
+<td>弦论、模拟宇宙、查看过去</td>
+<td>通过超弦计算机模拟出了真实宇宙，从而看到了一切的一切的过去真相，也看到了未来</td>
+<td>一个不犯错的的社会已经死了</td>
+</tr>
+<tr>
+<td>山</td>
+<td>地核、机械文明、地核战争</td>
+<td>一个地核机械文明最终向外挖出了星球，最后开始探索宇宙</td>
+<td>探索精神</td>
+</tr>
+<tr>
+<td>诗云</td>
+<td>程序随机造诗</td>
+<td></td>
+<td>诗的魅力不够穷举展现全部</td>
+</tr>
+<tr>
+<td>地球大炮</td>
+<td>糖衣、贯穿地球</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>思想者</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="科幻电影"><a href="#科幻电影" class="headerlink" title="科幻电影"></a>科幻电影</h2><table>
+<thead>
+<tr>
+<th>名字</th>
+<th>元素</th>
+<th>核心</th>
+<th>理念</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>终结者1</td>
+<td>活体组织机械骨骼机器人、穿越时空回到过去、人工智能</td>
+<td></td>
+<td>人工智能毁灭人类</td>
+</tr>
+<tr>
+<td>终结者2</td>
+<td>活体组织机械骨骼机器人、穿越时空回到过去、液态金属机器人</td>
+<td></td>
+<td>人工智能毁灭人类</td>
+</tr>
+<tr>
+<td>终结者3</td>
+<td>活体组织机械骨骼机器人、机械内核+业态金属机器人、控制</td>
+<td></td>
+<td>人工智能毁灭人类</td>
+</tr>
+<tr>
+<td>终结者4</td>
+<td>人改造成机械骨骼强化、活体组织机械骨骼机器人</td>
+<td></td>
+<td>人不是机器，人有血有心脏</td>
+</tr>
+<tr>
+<td>终结者5</td>
+<td>活体组织机械骨骼机器人、时空穿越、磁粒子机器人</td>
+<td></td>
+<td>人工智能会毁灭人类</td>
+</tr>
+<tr>
+<td>终结者6</td>
+<td>强化人类、人工智能、骨骼液金分身机器人、活体组织机械骨骼机器人</td>
+<td></td>
+<td>人工智能又出现了，依然会毁灭人类</td>
+</tr>
+<tr>
+<td>盗梦空间</td>
+<td>梦空间、梦中梦、堕醒</td>
+<td>深层梦空间植入信念</td>
+<td></td>
+</tr>
+<tr>
+<td>黑客帝国1</td>
+<td>计算机创造虚拟世界、母体</td>
+<td></td>
+<td>面对虚拟世界还是面对现实？</td>
+</tr>
+<tr>
+<td>黑客帝国2</td>
+<td>计算机创造虚拟世界、母体</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>黑客帝国3</td>
+<td>计算机创造虚拟世界、母体</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>钢铁侠1</td>
+<td>可控核聚变技术、可以抵抗子弹的钢铁战甲</td>
+<td></td>
+<td>一种英雄主义？</td>
+</tr>
+<tr>
+<td>钢铁侠2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>钢铁侠3</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>阿凡达</td>
+<td>外星文明、生物附身控制</td>
+<td>与外星文明的冲突</td>
+<td></td>
+</tr>
+<tr>
+<td>超体</td>
+<td>脑力开发、电磁波控制、生物控制</td>
+<td></td>
+<td>知识最终是要分享的</td>
+</tr>
+<tr>
+<td>星际穿越</td>
+<td>四维时空、黑洞、爱因斯坦相对时空效应</td>
+<td></td>
+<td>爱可以跨越维度</td>
+</tr>
+<tr>
+<td>火星救援</td>
+<td>火星种植土豆、火星生存</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>地心引力</td>
+<td>空间站、航空</td>
+<td>一个人成功从太空世故中回到地球的故事</td>
+<td></td>
+</tr>
+<tr>
+<td>流浪地球</td>
+<td>行星发动机、火石、太阳系、木星、地球逃离</td>
+<td></td>
+<td>人内心深处的一种思想情节的浪漫</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/02/04/%E7%A7%91%E5%B9%BB%E8%AE%BE%E5%AE%9A%E4%B8%8E%E7%81%B5%E6%84%9F%E6%80%BB%E7%BB%93/">http://example.com/2022/02/04/%E7%A7%91%E5%B9%BB%E8%AE%BE%E5%AE%9A%E4%B8%8E%E7%81%B5%E6%84%9F%E6%80%BB%E7%BB%93/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%A7%91%E5%B9%BB/"># 科幻</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/02/07/%E3%80%8A%E5%B0%8F%E7%8E%8B%E5%AD%90%E3%80%8B%E6%91%98%E6%8A%84/">《小王子》摘抄</a>
+            
+            
+            <a class="next" rel="next" href="/2021/12/28/%E3%80%8A%E6%9C%80%E7%B3%9F%E7%9A%84%E5%AE%87%E5%AE%99%EF%BC%8C%E6%9C%80%E5%A5%BD%E7%9A%84%E5%9C%B0%E7%90%83%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《最糟的宇宙，最好的地球》读书笔记</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>《蛤蟆去看心理医生》摘抄 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《蛤蟆去看心理医生》摘抄</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">二月 19, 2022&nbsp;&nbsp;2:07:15</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="蛤蟆去看心理医生"><a href="#蛤蟆去看心理医生" class="headerlink" title="蛤蟆去看心理医生"></a>蛤蟆去看心理医生</h1><hr>
+<p>“控制好自己的情绪” </p>
+<p>蛤蟆从第一次面谈中学到了什么，那一定是这个道理：必须完成的事情，唯有靠他自己才能完成。</p>
+<h2 id="儿童自我状态"><a href="#儿童自我状态" class="headerlink" title="儿童自我状态"></a>儿童自我状态</h2><p>指他的行为和感受都像一个孩子。这不同于’幼稚’，而是 ‘像孩子一样’。”</p>
+<p>但在咨询过程中最打动蛤蟆的一点是，他能得到苍鹭全 身心的关注。蛤蟆发现，这辈子还从来没有人对他全神贯注 过。至于他有没有这样对待过别人，也得打个问号。</p>
+<p>我们的某些基本情感是与生俱来的，就好像红黄蓝三原色，对所有婴儿来说都是类似的。然而当我们作为个体开始发展的时候， 我们的情绪和反应都变得越来越个人化，就好像几种原色混合在一起就变出各式各样微妙的色调和色差来。</p>
+<ul>
+<li>快乐和深情</li>
+<li>愤怒</li>
+<li>悲伤</li>
+<li>恐惧</li>
+</ul>
+<p>所有这些情感加在一起，就构成了所谓**’自然型儿童’**， 而这是整个’儿童自我状态’的重要组成部分。</p>
+<p>人们进入儿童状态后，他们的感受和行为都和小时候的自己如出一辙，与实际年龄并没有关系。</p>
+<p>婴儿做的几乎所有事情都会引发母亲或父亲的某些反应，这些反应对孩子具有深远的影响</p>
+<p>“面对哭闹的婴儿，母亲通常的反应是给予爱和安抚。 但也有父母会做出缺乏爱心的举动。母亲可能累了，甚至病了,就会表现得很严厉。又或者，父亲的育儿观念可能非常严苛，就会故意无视婴儿的哭闹，怕’宠坏’了他。”</p>
+<p>我们在婴儿期就开始学习应对生活，我们得对自己天生的行为做出调整。</p>
+<p>如果你被迫顺从某个人，就意味着你不与他争辩。你照他们说的去做，而且同意他们的想法。</p>
+<p>“除了顺从我父母的意愿之外， 我还总是想要取悦他们。我不确定自己有没有成功过，但我记得很清楚，我想让他们对我满意，为我骄傲。”</p>
+<p>也许这就是我变得爱炫耀的原因。他们对我的所作所为从没有满意过或被打动过，所以我就放任自己用浮夸和愚蠢的行为来博得他们的关注。</p>
+<p>我想，真正让人惊讶的是我们成年后有多少行为是从童年学来的。你只要想一想，就会发现这其实非常明显。童年体验到的最强烈的情绪，不可避免地变成我们成年后经常有的感受。有诗人曾说’孩子是成年人的父亲’，或许就是这个意思。</p>
+<p>可对大多数人而言，成长的本质就是要减少并最终打破这样的依赖关系，这样才能成为一个独立自主的人。很少有人能完全达成这点，有些人能部分达成，而很多人则会依赖一辈子。</p>
+<p>你被两个仁慈的独裁者给俘虏了，他们完全掌控了你，同时，又对你倍加关心照顾。你会有什么样的感受？</p>
+<p>可能我对他们的感受会很复杂。</p>
+<p>正是这样！而这就是你小时候所体验到的。这样仁慈的独裁者，也就是你的父母，显然占了上风，而你又完全依赖着他们，你怎么能对他们生气呢？何况你还爱着他们。</p>
+<p>撒泼正是表达愤怒的一种幼稚的方式。就像孩子听到大人说“不行，你不能这样！”这让孩子非渚愤怒，同时又感到无助， 因为对那个让他生气的大人，孩子没法用暴力或者带有攻击性的行为去回应，所以唯一能做的就是躺倒在地，又踢又叫。 而当成年人也这么干的时候，我们会说他在’无理取闹’。”</p>
+<h2 id="父母自我状态"><a href="#父母自我状态" class="headerlink" title="父母自我状态"></a>父母自我状态</h2><p>虽然父母对我们影响极大，但每个人自身的独特性确保了我们不是父亲或母亲的复制品，而是独立的个体。</p>
+<p>挑剔型父母</p>
+<p>没有痛苦，就没有收获。</p>
+<p>没有一种批判比自我批判更强烈，也没有一个法官比我们自己更严苛。</p>
+<h2 id="成人自我状态"><a href="#成人自我状态" class="headerlink" title="成人自我状态"></a>成人自我状态</h2><p>指我们用理性而不是情绪化的方式来行事。它让我们能应对此时此地正在发生的现实状况。在这个状态下，我们能计划、考虑、决定、 行动，我们能理性而合理地行事。处于这个状态时，我们所有的知识和技能都能为自己所用，而不再被脑子里父母过去的声音所驱使，也不会被童年的情绪所围困。只有在这个状态下你才能思考当下的事情，评估自己的行为，或者倾听别人对你的看法而不马上驳斥</p>
+<p>每一个生命一定都得经历开始、中间和结束这三个阶段，而开始的阶段会显著地影响后来的阶段。因此你对世界的看法是在人生的最初阶段里形成的。</p>
+<h3 id="人生坐标"><a href="#人生坐标" class="headerlink" title="人生坐标"></a>人生坐标</h3><p>1.我好；你也好。 2.我好 ；你不好。 3.我不好；你好。 4.我不好 ；你也不好。</p>
+<p>心理游戏：《酗酒》《猜猜我在做什么》</p>
+<h4 id="你好，我不好"><a href="#你好，我不好" class="headerlink" title="你好，我不好"></a>你好，我不好</h4><p>《我真不幸》《PLOM（可怜弱小的我）》《不论我做什么都要爱我》</p>
+<p>极端行为：自杀</p>
+<h4 id="我好，你不好"><a href="#我好，你不好" class="headerlink" title="我好，你不好"></a>我好，你不好</h4><p>让玩家感觉到愤怒</p>
+<p>《’我抓到你了，你个坏蛋》：上司在工作中对下司批评。他们会证明别 人根本上都是无能而不可信的，接下来，他们会把斥责和惩 罚别人视为己任。他们会说：’要不然，那帮人会觉得犯了 错还能侥幸逃脱！</p>
+<p>愤怒能够非常有效地抵抗抑郁。愤怒的人从不觉得内疚，因为他们总在怪罪别人。他们自卫的方式，是把自 己内在的恐惧对外投射到别人身上，这样就能把对自己的怒 火转向别人。</p>
+<p>极端行为：谋杀</p>
+<h3 id="那么高情商的人是怎么样的？"><a href="#那么高情商的人是怎么样的？" class="headerlink" title="那么高情商的人是怎么样的？"></a>那么高情商的人是怎么样的？</h3><p>概括而言，他们都有强大的自我意识，了解自己的情感。他们能管理情绪，能从悲伤和不幸中重新振作。但也许最重要的是，他们能控制冲动，也懂得延迟满足，从而避免轻率的决定和不妥的行为</p>
+<p>情商和理解别人有关，一个高情商的人能辨识他人的感受，这种技能称为’共情’。但也许情感智力中最大的技能是通过理解和回应对方的情感，与他人建立良好的关系。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2022/02/19/%E3%80%8A%E8%9B%A4%E8%9F%86%E5%8E%BB%E7%9C%8B%E5%BF%83%E7%90%86%E5%8C%BB%E7%94%9F%E3%80%8B%E6%91%98%E6%8A%84/">http://example.com/2022/02/19/%E3%80%8A%E8%9B%A4%E8%9F%86%E5%8E%BB%E7%9C%8B%E5%BF%83%E7%90%86%E5%8C%BB%E7%94%9F%E3%80%8B%E6%91%98%E6%8A%84/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2022/03/16/%E6%B5%AE%E7%82%B9%E5%B0%8F%E6%95%B0%E7%9A%84%E6%8E%A2%E7%A9%B6/">浮点小数的探究</a>
+            
+            
+            <a class="next" rel="next" href="/2022/02/10/%E3%80%8A%E6%B2%89%E9%BB%98%E7%9A%84%E5%A4%A7%E5%A4%9A%E6%95%B0%E3%80%8B%E6%91%98%E6%8A%84/">《沉默的大多数》摘抄</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
