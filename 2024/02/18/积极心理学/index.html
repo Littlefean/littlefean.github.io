@@ -17,7 +17,7 @@
 
 
 
-<title>hexo+github搭建博客系统 | 阿岳的博客</title>
+<title>积极心理学 | 阿岳的博客</title>
 
 
 
@@ -204,7 +204,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">hexo+github搭建博客系统</h1>
+            <h1 class="post-title">积极心理学</h1>
             
                 <div class="post-meta">
                     
@@ -213,7 +213,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">二月 17, 2024&nbsp;&nbsp;3:30:12</a>
+                        Date: <a href="#">二月 18, 2024&nbsp;&nbsp;18:59:46</a>
                         </span>
                     
                     
@@ -222,35 +222,9 @@
         </header>
 
         <div class="post-content">
-            <h1 id="hexo-github搭建博客系统"><a href="#hexo-github搭建博客系统" class="headerlink" title="hexo+github搭建博客系统"></a>hexo+github搭建博客系统</h1><p>首先观看视频，视频讲的非常全面了：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.bilibili.com/video/BV1Eg41157tL</span><br></pre></td></tr></table></figure>
-
-<p>视频里用的主题挺不错的，就直接用它的主题了。</p>
-<p>要下载这个主题，就要搜到hexo的官网，然后再搜到这个主题的名字：’Chic’</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/Siricee/hexo-theme-Chic</span><br></pre></td></tr></table></figure>
-
-<p>然后就可以看到这个主题的github链接了。</p>
-<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo s  本地开启服务器（server）</span><br><span class="line">hexo d  部署到github（deploy）</span><br><span class="line">hexo n 文章名字   （新建文章）</span><br><span class="line">hexo g  生成public文件  （generate）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="删除文章"><a href="#删除文章" class="headerlink" title="删除文章"></a>删除文章</h2><p>要先执行</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-
-<p>再删除文件</p>
-<h2 id="配置图片"><a href="#配置图片" class="headerlink" title="配置图片"></a>配置图片</h2><p>记录搜到的文章</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.csdn.net/weixin_43979133/article/details/104787875</span><br></pre></td></tr></table></figure>
-
-<p>原有的视频没法看到如何设置图片。摸索了一番，发现新建文章的时候就要老老实实用指令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo n <span class="string">&#x27;文章的名字&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后就会发现，_posts 文件夹下就会多出来一个文章名字命名的md文件，里面还自动写好了标题时间等信息。同时还多出来一个文章名同名的文件夹。这个文件夹里就直接怼图片就可以了。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![机械自走棋地形](articleName/a.png)</span><br></pre></td></tr></table></figure>
-
-<p>写图片路径的时候要符合这个格式，就可以了</p>
-<h2 id="更改字体（Chic主题）"><a href="#更改字体（Chic主题）" class="headerlink" title="更改字体（Chic主题）"></a>更改字体（Chic主题）</h2><p>兰亭集序这个字体虽然看起来很优雅，但感觉还是微软雅黑读起来更顺一些。</p>
-<p>找到这个主题的css文件夹，发现有一个font.styl文件。把这个文件打开：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 非衬线体 方正兰亭</span></span><br><span class="line"><span class="keyword">@font-face</span></span><br><span class="line">  <span class="attribute">font-family</span> <span class="string">&#x27;lanting&#x27;</span></span><br><span class="line">  <span class="attribute">src</span>: <span class="built_in">url</span>(<span class="string">&#x27;../fonts/lanting/lanting.eot&#x27;</span>); <span class="comment">/* IE9 */</span></span><br><span class="line">  <span class="attribute">src</span>: <span class="built_in">url</span>(<span class="string">&#x27;../fonts/lanting/lanting.eot?#iefix&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;embedded-opentype&#x27;</span>), <span class="comment">/* IE6-IE8 */</span> <span class="built_in">url</span>(<span class="string">&#x27;../fonts/lanting/lanting.woff2&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;woff2&#x27;</span>),</span><br><span class="line">          <span class="built_in">url</span>(<span class="string">&#x27;../fonts/lanting/lanting.woff&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;woff&#x27;</span>),</span><br><span class="line">          <span class="built_in">url</span>(<span class="string">&#x27;../fonts/lanting/lanting.ttf&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;truetype&#x27;</span>); <span class="comment">/* chrome, firefox, opera, Safari, Android, iOS 4.2+ */</span></span><br><span class="line">  <span class="attribute">font-weight</span> <span class="number">300</span></span><br><span class="line">  <span class="attribute">font-display</span> swap</span><br><span class="line"></span><br><span class="line"><span class="variable">$font</span>-family = Microsoft Yahei, <span class="string">&#x27;Microsoft Jhenghei&#x27;</span>,Lantinghei SC, <span class="string">&#x27;lanting&#x27;</span>, PingFang SC, Seguo UI, Arial</span><br></pre></td></tr></table></figure>
-
-<p>看到最后一行，把微软雅黑放到最前面就可以了！</p>
+            <h1 id="积极心理学"><a href="#积极心理学" class="headerlink" title="积极心理学"></a>积极心理学</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Ka411w7qd">https://www.bilibili.com/video/BV1Ka411w7qd</a></p>
+<h2 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h2><p>每天给自己留出一定的空白时间，可以用于复盘</p>
+<p>自信+好学</p>
 
         </div>
 
@@ -265,7 +239,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/02/17/hexo-github%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/">http://example.com/2024/02/17/hexo-github%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/</a></span>
+                        <span><a href="http://example.com/2024/02/18/%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6/">http://example.com/2024/02/18/%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6/</a></span>
                     </p>
                 
                 
@@ -289,7 +263,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/github/"># github</a>
+                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
                     
                         
                 </span>
@@ -302,10 +276,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/02/18/%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6/">积极心理学</a>
             
-            
-            <a class="next" rel="next" href="/2024/02/08/%E4%BB%A3%E7%A0%81%E5%A4%A7%E5%85%A82%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《代码大全2》读书笔记</a>
+            <a class="next" rel="next" href="/2024/02/17/hexo-github%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F/">hexo+github搭建博客系统</a>
             
         </section>
 
