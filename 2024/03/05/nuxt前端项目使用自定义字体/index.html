@@ -17,7 +17,7 @@
 
 
 
-<title>面试2024总结 | 阿岳的博客</title>
+<title>&#39;nuxt前端项目使用自定义字体&#39; | 阿岳的博客</title>
 
 
 
@@ -204,7 +204,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">面试2024总结</h1>
+            <h1 class="post-title">&#39;nuxt前端项目使用自定义字体&#39;</h1>
             
                 <div class="post-meta">
                     
@@ -213,7 +213,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">二月 23, 2024&nbsp;&nbsp;14:14:23</a>
+                        Date: <a href="#">三月 5, 2024&nbsp;&nbsp;4:00:20</a>
                         </span>
                     
                     
@@ -222,55 +222,18 @@
         </header>
 
         <div class="post-content">
-            <h1 id="面试2024"><a href="#面试2024" class="headerlink" title="面试2024"></a>面试2024</h1><table>
-<thead>
-<tr>
-<th>岗位</th>
-<th>地点</th>
-<th>业务</th>
-<th>面试内容</th>
-<th>规模</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>python后端</td>
-<td>河北</td>
-<td>高中数字化教学系统</td>
-<td>python、计算机网络、树的遍历、面向对象</td>
-<td>50人</td>
-</tr>
-<tr>
-<td>Go、Vue、py</td>
-<td>河北</td>
-<td>拆迁系统、财务软件</td>
-<td>简单聊聊技术</td>
-<td>10人</td>
-</tr>
-<tr>
-<td>C#微软外包</td>
-<td>上海</td>
-<td>微软外包服务，Edge浏览器数据分析</td>
-<td>SQL、斐波那契数列求第n项</td>
-<td>初创</td>
-</tr>
-<tr>
-<td>python MySQL 数据分析</td>
-<td>河北</td>
-<td>财务、直播带货，好像什么都有</td>
-<td>简单聊聊业务和待遇</td>
-<td>30人</td>
-</tr>
-</tbody></table>
-<p>面试里可能被问道的问题：</p>
-<p>主要还是就简历展开，都学了哪些方面</p>
-<p>这些技术都是在哪里学习的？</p>
-<p>有优势的地方和不足的地方。</p>
-<p>说了很多软件架构方面的东西，有没有看过一些书</p>
-<p>http协议下一层是什么</p>
-<p>职业规划，发展方向，算法会问数学成绩怎么样。</p>
-<p>面向对象的特点</p>
-<p>建议：</p>
-<p>涉猎的比较广，刚开始可以这样，但建议深入一个方面研究个两三年。</p>
+            <h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><ol>
+<li><p>从网上下载ttf文件</p>
+</li>
+<li><p>在assets文件夹下创建一个fonts文件夹，把字体ttf文件丢进来</p>
+</li>
+<li><p>直接在app.vue里写全局style：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="keyword">@font-face</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">font-family</span>: <span class="string">&#x27;MyCustomFont&#x27;</span>;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">src</span>: <span class="built_in">url</span>(<span class="string">&#x27;~/assets/fonts/YouSheBiaoTiHei-2.ttf&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;truetype&#x27;</span>);</span></span><br><span class="line"><span class="language-css">  <span class="attribute">font-weight</span>: normal;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">font-style</span>: normal;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css"><span class="selector-class">.custom-font</span> &#123;</span></span><br><span class="line"><span class="language-css">  <span class="attribute">font-family</span>: <span class="string">&#x27;MyCustomFont&#x27;</span>, sans-serif;</span></span><br><span class="line"><span class="language-css">&#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后这个 custom-font 类名就可以到处乱用了~~。</p>
+</li>
+</ol>
+<p>非常简单。不用再安装库啥的。也不用配置修改nuxt.config.ts文件。</p>
 
         </div>
 
@@ -285,7 +248,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/02/23/%E9%9D%A2%E8%AF%952024%E6%80%BB%E7%BB%93/">http://example.com/2024/02/23/%E9%9D%A2%E8%AF%952024%E6%80%BB%E7%BB%93/</a></span>
+                        <span><a href="http://example.com/2024/03/05/nuxt%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/">http://example.com/2024/03/05/nuxt%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/</a></span>
                     </p>
                 
                 
@@ -308,6 +271,10 @@
                 <span>Tag(s):</span>
                 <span class="tag">
                     
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        
                 </span>
             </div>
             <div>
@@ -318,10 +285,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/05/nuxt%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/">'nuxt前端项目使用自定义字体'</a>
             
-            
-            <a class="next" rel="next" href="/2024/02/18/%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6/">积极心理学</a>
+            <a class="next" rel="next" href="/2024/02/23/%E9%9D%A2%E8%AF%952024%E6%80%BB%E7%BB%93/">面试2024总结</a>
             
         </section>
 
