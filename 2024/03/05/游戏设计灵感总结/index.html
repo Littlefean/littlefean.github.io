@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>游戏设计灵感总结 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">游戏设计灵感总结</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 5, 2024&nbsp;&nbsp;7:17:17</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="游戏设计灵感总结"><a href="#游戏设计灵感总结" class="headerlink" title="游戏设计灵感总结"></a>游戏设计灵感总结</h1><p>写这个博客的目的是希望再以后游戏设计的时候有用。</p>
+<p>现在从过去玩过的游戏中提取灵感，列个大表格看看。</p>
+<p>每个人玩过的游戏都是不一样的，数量和质量上也都是不一样的。</p>
+<p>还是希望能把玩过的总结一下，希望能在未来某个时候有灵感。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>接触开始时间</th>
+<th>平台&#x2F;来源</th>
+<th>特点</th>
+<th>隐喻思考、启发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Mindustry</td>
+<td>自动化 塔防 RTS</td>
+<td>2024.2</td>
+<td>Rutubet介绍，github</td>
+<td>星球地图占领、物质合成流水线、理工</td>
+<td>文明的发展</td>
+</tr>
+<tr>
+<td>CMO</td>
+<td>军事 模拟 战争</td>
+<td>2024.2</td>
+<td>Rutubet介绍，steam</td>
+<td>真实模拟现代战争、布线，加速观看</td>
+<td>了解现代战争科技</td>
+</tr>
+<tr>
+<td>推箱子？</td>
+<td>益智小游戏</td>
+<td>大三</td>
+<td>凉辰介绍，steam</td>
+<td>推箱子高级版，还有嵌套和递归</td>
+<td></td>
+</tr>
+<tr>
+<td>泰拉瑞亚</td>
+<td>沙盒 生存</td>
+<td>大二</td>
+<td>Rutubet开黑 steam</td>
+<td>侧2D</td>
+<td></td>
+</tr>
+<tr>
+<td>荒野乱斗</td>
+<td>多人对战 2D俯</td>
+<td>大一</td>
+<td>supercell</td>
+<td>简单上手快，节奏快</td>
+<td></td>
+</tr>
+<tr>
+<td>人类一败涂地</td>
+<td>多人 3D</td>
+<td>大一</td>
+<td>steam</td>
+<td>人物软软的风格</td>
+<td></td>
+</tr>
+<tr>
+<td>铁锈战争</td>
+<td>塔防 RTS</td>
+<td>高二</td>
+<td>yyx介绍，Rutubet介绍</td>
+<td>像素风格，地图编辑器</td>
+<td>发展迭代</td>
+</tr>
+<tr>
+<td>吃鸡</td>
+<td>射击 多人对战</td>
+<td>高中</td>
+<td>（看老高玩的）</td>
+<td>缩圈</td>
+<td></td>
+</tr>
+<tr>
+<td>Game Of Life</td>
+<td>（其实不是游戏）</td>
+<td>高三</td>
+<td>霍金的《大设计》</td>
+<td>规则巨简单，但实现了一个宇宙</td>
+<td>孤独和拥挤都不适合生命生存</td>
+</tr>
+<tr>
+<td>（一个星球）</td>
+<td>发展 探险</td>
+<td>高中</td>
+<td>看老肉玩的</td>
+<td>连续的像捏泥巴一样铸造修改地形</td>
+<td></td>
+</tr>
+<tr>
+<td>生老病死</td>
+<td>跑酷</td>
+<td>初高中</td>
+<td>4399</td>
+<td>具有启发意义</td>
+<td>人的一生</td>
+</tr>
+<tr>
+<td>CS2D</td>
+<td>多人对战 2D俯</td>
+<td>高二</td>
+<td>Rutubet介绍，steam</td>
+<td>cs的俯视图平面版本，地图编辑器</td>
+<td></td>
+</tr>
+<tr>
+<td>pvz 2代</td>
+<td>塔防</td>
+<td>高一</td>
+<td>手机</td>
+<td>植物多，有多人攻防</td>
+<td></td>
+</tr>
+<tr>
+<td>皇室战争</td>
+<td>卡牌 塔防 双人对战</td>
+<td>高一</td>
+<td>手机</td>
+<td>流派多，组合多</td>
+<td></td>
+</tr>
+<tr>
+<td>围攻</td>
+<td></td>
+<td></td>
+<td>龙魂推荐</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>部落冲突</td>
+<td>塔防</td>
+<td>初三</td>
+<td>手机</td>
+<td>阵型多，打法多</td>
+<td></td>
+</tr>
+<tr>
+<td>右键召唤</td>
+<td>RTS</td>
+<td>初三？</td>
+<td>快玩</td>
+<td>兵种升级</td>
+<td></td>
+</tr>
+<tr>
+<td>海岛奇兵</td>
+<td>塔防</td>
+<td>初二</td>
+<td>手机</td>
+<td>阵型多，打法多</td>
+<td></td>
+</tr>
+<tr>
+<td>英雄无敌</td>
+<td>策略</td>
+<td>初三</td>
+<td>爸</td>
+<td>各国的文化丰富</td>
+<td></td>
+</tr>
+<tr>
+<td>纪念碑谷</td>
+<td>解密 几何</td>
+<td>初二</td>
+<td>同学陈介绍</td>
+<td>意境感，视觉错位</td>
+<td>没看懂忘了</td>
+</tr>
+<tr>
+<td>Minecraft</td>
+<td>沙盒 生存 创造</td>
+<td>初一</td>
+<td>手机</td>
+<td>创造，自由度高，开放世界</td>
+<td></td>
+</tr>
+<tr>
+<td>以撒的结合</td>
+<td>射击 宫格闯关</td>
+<td>初二</td>
+<td>粉丝推荐</td>
+<td>道具多，花样巨多</td>
+<td>家庭与反宗教</td>
+</tr>
+<tr>
+<td>逆战</td>
+<td>第一人称射击</td>
+<td>六年级</td>
+<td>表弟推荐</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>捣蛋猪</td>
+<td>沙盒</td>
+<td></td>
+<td></td>
+<td>创造性高</td>
+<td></td>
+</tr>
+<tr>
+<td>圣安地列斯</td>
+<td>第三人称</td>
+<td>五六年级</td>
+<td>表弟推荐</td>
+<td>自由度高</td>
+<td>美国帮派文化</td>
+</tr>
+<tr>
+<td>盗贼的灵魂</td>
+<td>跑酷</td>
+<td>五六年级</td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CF</td>
+<td>第一人称射击</td>
+<td>五年级</td>
+<td>表弟推荐</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>洛克、奥拉</td>
+<td>探险 养宠 对战</td>
+<td>四年级</td>
+<td>4399</td>
+<td>任务剧情丰富</td>
+<td></td>
+</tr>
+<tr>
+<td>愤怒的小鸟</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>粘粘世界</td>
+<td>桥梁建筑</td>
+<td>三四年级</td>
+<td>快玩</td>
+<td>具有艺术性</td>
+<td>工业社会</td>
+</tr>
+<tr>
+<td>土地抢夺者</td>
+<td>攻城略地</td>
+<td>三四年级</td>
+<td>快玩</td>
+<td>美工不错</td>
+<td></td>
+</tr>
+<tr>
+<td>赛尔号</td>
+<td>探险 养宠 对战</td>
+<td>二三年级？</td>
+<td>4399</td>
+<td>玩法内容丰富</td>
+<td>号被盗了（</td>
+</tr>
+<tr>
+<td>怪怪水族馆</td>
+<td>养鱼</td>
+<td>一二年级</td>
+<td>宝开</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>吞食鱼RPG</td>
+<td>探险</td>
+<td>小学</td>
+<td>4399</td>
+<td>道具多，场景多</td>
+<td>食人鱼的弑父结局</td>
+</tr>
+<tr>
+<td>杀戮机器</td>
+<td>射击 宫格闯关</td>
+<td>小学</td>
+<td>4399</td>
+<td>武器多</td>
+<td></td>
+</tr>
+<tr>
+<td>地狱边境</td>
+<td>闯关</td>
+<td>初中</td>
+<td>快玩</td>
+<td></td>
+<td>没通关，不知道</td>
+</tr>
+<tr>
+<td>机械迷城</td>
+<td>解密</td>
+<td>初中</td>
+<td>快玩</td>
+<td></td>
+<td>没通关，不知道</td>
+</tr>
+<tr>
+<td>神庙逃亡</td>
+<td></td>
+<td>初中</td>
+<td>手机</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>小鳄鱼爱洗澡</td>
+<td>解密 闯关</td>
+<td>初中</td>
+<td>手机</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>狂扁小朋友</td>
+<td>闯关</td>
+<td>小学</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>坎巴拉太空计划</td>
+<td>沙盒 模拟</td>
+<td>初高中</td>
+<td>快玩</td>
+<td>真实</td>
+<td>了解航天</td>
+</tr>
+<tr>
+<td>QQ农场</td>
+<td></td>
+<td>小学</td>
+<td>太火了当时</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>暴走战士</td>
+<td>射击 闯关</td>
+<td>小学</td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>爆破高楼系列</td>
+<td>像素小游戏</td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td>不同国家不同文化背景</td>
+</tr>
+<tr>
+<td>二战前线</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>毁灭地球</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td>解压</td>
+<td></td>
+</tr>
+<tr>
+<td>大炮打蚂蚁</td>
+<td></td>
+<td>小学</td>
+<td>4399</td>
+<td>炮塔花样巨多</td>
+<td></td>
+</tr>
+<tr>
+<td>大白鲨的复仇</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>战争进化史</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>细胞入侵大战</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>雷电三</td>
+<td>机战</td>
+<td></td>
+<td></td>
+<td>画面丰富</td>
+<td></td>
+</tr>
+<tr>
+<td>挖地小子</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>双人螺旋赛车</td>
+<td>像素小游戏</td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>森林冰火人</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>忍者</td>
+<td>像素小游戏</td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>乐园过山车</td>
+<td>像素小游戏</td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>钻地小子</td>
+<td>像素小游戏</td>
+<td></td>
+<td>4399</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>泡泡坦克</td>
+<td>闯关 射击</td>
+<td></td>
+<td>4399</td>
+<td>发展花样挺多</td>
+<td></td>
+</tr>
+<tr>
+<td>生命之树</td>
+<td>成长系列</td>
+<td></td>
+<td>4399</td>
+<td>不同的选择顺序，结局很多</td>
+<td></td>
+</tr>
+<tr>
+<td>生命之岛</td>
+<td>成长系列</td>
+<td></td>
+<td>4399</td>
+<td>不同的选择顺序，结局很多</td>
+<td></td>
+</tr>
+<tr>
+<td>生命方舟</td>
+<td>成长系列</td>
+<td></td>
+<td>4399</td>
+<td>不同的选择顺序，结局很多</td>
+<td></td>
+</tr>
+<tr>
+<td>疯狂全垒打</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td>中间道具多</td>
+<td></td>
+</tr>
+<tr>
+<td>暴打老板</td>
+<td></td>
+<td></td>
+<td>4399</td>
+<td>白底黑刷子线条画风、多种道具可能性结局。好多类似系列</td>
+<td></td>
+</tr>
+<tr>
+<td>大便超人</td>
+<td>恶搞</td>
+<td></td>
+<td>4399</td>
+<td>多种可能性结局</td>
+<td></td>
+</tr>
+<tr>
+<td>（多线战争进化史）</td>
+<td></td>
+<td></td>
+<td>4399 hyz玩的</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>pvz</td>
+<td></td>
+<td></td>
+<td>太火了当时</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>保卫萝卜</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>隐喻保护环境？</td>
+</tr>
+<tr>
+<td>都市摩天楼</td>
+<td></td>
+<td></td>
+<td>诺基亚手机</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>暗黑破坏神</td>
+<td></td>
+<td></td>
+<td>诺基亚手机</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>彩球滑梯</td>
+<td></td>
+<td></td>
+<td>诺基亚手机</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="促使人想玩下去的要素是什么？"><a href="#促使人想玩下去的要素是什么？" class="headerlink" title="促使人想玩下去的要素是什么？"></a>促使人想玩下去的要素是什么？</h3><p>看到结局、看看其他的情况、期待感、后面还会出现什么、如果这样下去会怎么样</p>
+<p>可能出现的未知事物带来的激动</p>
+<p>多种组合的可能性、多种可能的结局</p>
+<h3 id="促使人还想再上线继续玩的要素是？"><a href="#促使人还想再上线继续玩的要素是？" class="headerlink" title="促使人还想再上线继续玩的要素是？"></a>促使人还想再上线继续玩的要素是？</h3>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/03/05/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%81%B5%E6%84%9F%E6%80%BB%E7%BB%93/">http://example.com/2024/03/05/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%81%B5%E6%84%9F%E6%80%BB%E7%BB%93/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%B8%B8%E6%88%8F/"># 游戏</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/05/nuxt%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93/">'nuxt前端项目使用自定义字体'</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
