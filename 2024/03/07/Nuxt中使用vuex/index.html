@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Nuxt中使用vuex | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Nuxt中使用vuex</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 7, 2024&nbsp;&nbsp;20:39:53</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Nuxt-中使用vuex"><a href="#Nuxt-中使用vuex" class="headerlink" title="Nuxt 中使用vuex"></a>Nuxt 中使用vuex</h1><p>2024年3月7日，使用的是nuxt3 </p>
+<p>首先得创建一个nuxt项目。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx nuxi@latest init my-nuxt-app</span><br></pre></td></tr></table></figure>
+
+<p>结果直接报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[18:47:58]  ERROR  Error: Failed to download template from registry: Failed to download https://raw.githubusercontent.com/nuxt/starter/templates/templates/v3.json: TypeError: fetch failed</span><br></pre></td></tr></table></figure>
+
+<p>查了一下要改hosts文件，这是查到的stackoverflow</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://stackoverflow.com/questions/74283819/error-while-creating-nuxt3-project-failed-to-download-template-from-registry</span><br></pre></td></tr></table></figure>
+
+<p>改hosts发现win11改不了。改了就让另存为一个新地方。</p>
+<p>然后又查了一下win11如何改hosts文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.zhihu.com/question/638848882</span><br></pre></td></tr></table></figure>
+
+<p>不能用右键打开记事本。应该直接用管理员打开记事本程序，然后再在记事本程序里打开hosts文件。</p>
+<p>然后就可以开始创建nuxt项目了。</p>
+<p>结果第一步询问使用npm还是yarn</p>
+<p>我选了yarn，然后开始安装依赖，结果等了二十多分钟还是卡住不动了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://blog.csdn.net/qq_16036197/article/details/109553400</span><br></pre></td></tr></table></figure>
+
+<p>修改了一下C盘里的文件。</p>
+<p>途中报了一些警告</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">warning vscode-languageclient@7.0.0: The engine &quot;vscode&quot; appears to be invalid.</span><br><span class="line">[3/4] Linking dependencies...</span><br><span class="line">warning &quot;nuxt &gt; @nuxt/devtools@1.0.8&quot; has unmet peer dependency &quot;vite@*&quot;.</span><br><span class="line">warning &quot;nuxt &gt; @nuxt/devtools &gt; vite-plugin-inspect@0.8.3&quot; has unmet peer dependency &quot;vite@^3.1.0 || ^4.0.0 || ^5.0.0-0&quot;.</span><br><span class="line">warning &quot;nuxt &gt; @nuxt/devtools &gt; @nuxt/devtools-kit@1.0.8&quot; has unmet peer dependency &quot;vite@*&quot;.</span><br><span class="line">warning &quot;nuxt &gt; @nuxt/devtools &gt; vite-plugin-vue-inspector@4.0.2&quot; has unmet peer dependency &quot;vite@^3.0.0-0 || ^4.0.0-0 || ^5.0.0-0&quot;.</span><br></pre></td></tr></table></figure>
+
+<p>不过还是创建成功了。</p>
+<p>启动成功之后有一个文档可以看，里面就有状态的使用方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://nuxt.com/docs/getting-started/state-management</span><br></pre></td></tr></table></figure>
+
+<p>好像比Vuex方便</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/03/07/Nuxt%E4%B8%AD%E4%BD%BF%E7%94%A8vuex/">http://example.com/2024/03/07/Nuxt%E4%B8%AD%E4%BD%BF%E7%94%A8vuex/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/05/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%81%B5%E6%84%9F%E6%80%BB%E7%BB%93/">游戏设计灵感总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
