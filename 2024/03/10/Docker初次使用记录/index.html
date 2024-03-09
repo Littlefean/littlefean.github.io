@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>Docker初次使用记录 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Docker初次使用记录</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 10, 2024&nbsp;&nbsp;4:27:49</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Docker学习记录"><a href="#Docker学习记录" class="headerlink" title="Docker学习记录"></a>Docker学习记录</h1><h1 id="学习使用Docker做代码执行器"><a href="#学习使用Docker做代码执行器" class="headerlink" title="学习使用Docker做代码执行器"></a>学习使用Docker做代码执行器</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>比特山项目卡在实现一个代码运行器上了。这是比特山的核心。如果有了代码运行器，比特山就有了一切。任何CodingGame都需要使用代码运行器。</p>
+<p>以前尝试了fastAPI，用ulimit指令来运行python代码和编译C++代码。但是发现总是过一会，服务器上的进程就被kill掉了。并且没有实现沙箱环境。一个qq好友和我说，你用关键词检测禁用C++的一些东西，是禁不完的。</p>
+<p>接下来我打算尝试Docker来做沙箱环境了。顺便一提的是：早该学Docker了！不管做不做比特山。Docker肯定是有用的。</p>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><p>首先直接搜Docker，在官网下载了桌面版，然后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -v</span><br></pre></td></tr></table></figure>
+
+<p>看到了版本号，安装成功了。</p>
+<p>实现一个helloword</p>
+<p>首先创建一个项目文件夹，在项目文件夹中创建一个 app.py，里面写一个helloword。尝试在docker中运行这个helloword。</p>
+<p>就需要在项目根目录下创建一个 ‘Dockerfile’ 文件，没有后缀名。然后在里面写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM python:3</span><br><span class="line">COPY app.py /app.py</span><br><span class="line">CMD [&quot;python&quot;, &quot;/app.py&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>然后在项目文件夹的控制台下，构建docker镜像。 ‘my-python-app’是可以自定义一个项目名字，docker镜像名字</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t my-python-app .</span><br></pre></td></tr></table></figure>
+
+<p>构建的过程花了90多秒</p>
+<p>然后执行这个镜像</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run my-python-app</span><br></pre></td></tr></table></figure>
+
+<p>就可以看到helloword被打印出来了。</p>
+<p>如果忘了镜像名字了，可以用指令来查看所有的镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p>发现刚刚构建的python小镜像有一个G多。</p>
+<p>查看所有容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<p>docker run指令会创建一个容器，结果我好像发现我创建了三个。。。</p>
+<p>原来是我弄混了镜像和容器的概念。</p>
+<h2 id="镜像与容器"><a href="#镜像与容器" class="headerlink" title="镜像与容器"></a>镜像与容器</h2><p>镜像创建容器。</p>
+<p>一个镜像可以创建多个容器的主要原因是，镜像本身是只读的，而容器是可写的。</p>
+<p>一个镜像可能有一个多G，但是一个容器可能会很小。</p>
+<h2 id="据已有的镜像，创建一个容器"><a href="#据已有的镜像，创建一个容器" class="headerlink" title="据已有的镜像，创建一个容器"></a>据已有的镜像，创建一个容器</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>[OPTIONS]</code> 是可选的参数，用于指定容器的配置，如端口映射、挂载卷、环境变量等。</li>
+<li><code>IMAGE</code> 是要使用的镜像的名称或ID。</li>
+<li><code>[COMMAND] [ARG...]</code> 是容器内部要执行的命令及其参数。</li>
+</ul>
+<p>于是，我执行了这个命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name py-test1 docker-test-py</span><br></pre></td></tr></table></figure>
+
+<p>根据镜像【docker-test-py】创建了一个【py-test1】的容器</p>
+<h2 id="启动已经创建的容器"><a href="#启动已经创建的容器" class="headerlink" title="启动已经创建的容器"></a>启动已经创建的容器</h2><p>my-container 替换为刚刚创建的容器的名字或者id</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start my-container</span><br></pre></td></tr></table></figure>
+
+<p>这个指令输入完了之后，会打印容器名称或者id。并不会打印程序print的内容。</p>
+<p>要查看程序print的内容，需要</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs my-container</span><br></pre></td></tr></table></figure>
+
+<p>结果我发现我运行了三次，就会打印三行</p>
+<h2 id="修改容器中的代码"><a href="#修改容器中的代码" class="headerlink" title="修改容器中的代码"></a>修改容器中的代码</h2><p>直接覆盖文件，写入</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">cp</span> app.py py-test1:/app.py</span><br></pre></td></tr></table></figure>
+
+<p>可以把容器当成一个硬盘，盘符就是容器名</p>
+<p>所以右边两个部分换一下，就是从容器中往本地复制文件。</p>
+<p>然后还需要重新启动一下容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart my-container</span><br></pre></td></tr></table></figure>
+
+<p>实际上发现不执行上面的命令也是可以的。因为我的代码是运行一下瞬间就结束了的程序。</p>
+<p>重新启动已经停止的容器时，Docker 引擎会再次执行容器中的默认命令，从而重新运行你的代码</p>
+<h2 id="给容器加限制"><a href="#给容器加限制" class="headerlink" title="给容器加限制"></a>给容器加限制</h2><p>创建一个具有内存限制的容器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name my-container --memory=512m my-image</span><br></pre></td></tr></table></figure>
+
+<p>不能直接修改已经创建的容器的参数。可能要删了重新创建。</p>
+<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm my-container</span><br></pre></td></tr></table></figure>
+
+<p>在给容器里放入了一个可能会超过内存限制的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python_script.py</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># 申请一个很大的列表，以占用大量内存</span></span><br><span class="line">    big_list = [<span class="number">0</span>] * (<span class="number">1024</span> * <span class="number">1024</span> * <span class="number">128</span>)  <span class="comment"># 占用128MB内存</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;List size:&quot;</span>, <span class="built_in">len</span>(big_list), <span class="string">&quot;elements&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>但是这时候又遇到了坑，运行了一下容器，然后发现logs里并没有输出内容。可能需要手动进入容器，手动运行代码。</p>
+<p>因为可能是报错信息导致程序退出，并没有进入docker的logs</p>
+<p>这时候可能需要用到创建并进入临时容器了。</p>
+<h2 id="临时容器"><a href="#临时容器" class="headerlink" title="临时容器"></a>临时容器</h2><p>根据镜像创建临时容器，代价非常低也非常迅速</p>
+<p>创建一个临时容器，并在其中启动一个 Bash 终端：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm your_image_name /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p> <code>-it</code> 参数来分配一个交互式的终端</p>
+<p> <code>--rm</code> 表示容器结束退出的时候自动删除</p>
+<h2 id="使用挂载卷或临时文件"><a href="#使用挂载卷或临时文件" class="headerlink" title="使用挂载卷或临时文件"></a>使用挂载卷或临时文件</h2><p>创建临时容器又遇到了问题：直接进入了临时容器就不能使用docker指令了，也就不能把用户代码放到临时容器了。这个时候用一点小操作把用户代码放进来。</p>
+<p>在刚才创建临时容器并携带交互式控制台的命令上，再加点参数</p>
+<p>-v 就是用来挂载临时文件用的</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> -v /path/to/host/file:/path/to/container/file your_image_name /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>将宿主机上的 <code>/path/to/host/file</code> 文件挂载到容器内部的 <code>/path/to/container/file</code> 路径</p>
+<p>于是我执行了</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> -v ./tmp/test.py:/test.py docker-test-py /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>不出意外，出意外了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker: Error response from daemon: create tmp/test.py: &quot;tmp/test.py&quot; includes invalid characters for a local volume name, only &quot;[a-zA-Z0-9][a-zA-Z0-9_.-]&quot; are allowed. If you intended to pass a host directory, use absolute path.</span><br><span class="line">See &#x27;docker run --help&#x27;.</span><br></pre></td></tr></table></figure>
+
+<p>原来发现挂载的不是文件，而是文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;/tmp:/tmp&quot; docker-test-py /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>改成挂载文件</p>
+<p>结果发现成功了，但是进入tmp文件发现里面是空的。</p>
+<p>发现原来不能用相对路径，原来就得老老实实用绝对路径来挂载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;D:\Projects\Project-Test\docker-test\tmp:\tmp_my&quot; docker-te</span><br><span class="line">st-py /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>发现在windows的资源管理器的导航栏复制的路径全都是反斜杠，不是正斜杠。用上面的指令创建。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># ls</span></span><br><span class="line"><span class="string">&#x27;\tmp_my&#x27;</span>   bin    dev   home   lib64   mnt   proc   run    srv   tmp   var</span><br><span class="line"> app.py     boot   etc   lib    media   opt   root   sbin   sys   usr</span><br></pre></td></tr></table></figure>
+
+<p>创建出来一个这么抽象的文件夹名字。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># cd &#x27;\tmp_my&#x27;</span></span><br><span class="line">root@d9ae1d00f583:/\tmp_my<span class="comment"># ls</span></span><br><span class="line">test.py</span><br></pre></td></tr></table></figure>
+
+<p>再进入这个文件夹，发现文件终于存在了！</p>
+<p>很好，再继续增加内存的限制使用情况。（吃一堑长一智，冒号后面的部分一定要用正斜杠）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> -m 128m --memory-swap 128m -v <span class="string">&quot;D:\Projects\Project-Test\docker-test\tmp:/tmp_my&quot;</span> docker-test-py /bin/bash</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-m 128m</code>：表示限制容器的内存使用量为 128MB。</li>
+<li><code>--memory-swap 128m</code>：表示限制容器的虚拟内存交换空间为 128MB。这个参数通常设置为与 <code>--memory</code> 相同的值，以避免容器使用虚拟内存。</li>
+</ul>
+<p>可以看到控制台直接出现了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Killed</span><br></pre></td></tr></table></figure>
+
+<p>表示超内存了。</p>
+<p>再加一个10秒的限制时间</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--<span class="built_in">ulimit</span> cpu=10:10</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果执行了死循环代码，在屏幕上不停的输出东西，可以用ctrl + C来</p>
+<p>先记录到这里，——2024年3月10日</p>
+<h2 id="临时容器中的异常情况"><a href="#临时容器中的异常情况" class="headerlink" title="临时容器中的异常情况"></a>临时容器中的异常情况</h2><p>在临时容器的交互式控制台中不小心输入了python，进入了python的控制台对话，结果就卡住了</p>
+<p>可以狂按ctrlC，退出。这样就直接退出到底，销毁临时容器了。目前只知道这个方法解决卡住不动的问题。</p>
+<h2 id="退出临时容器"><a href="#退出临时容器" class="headerlink" title="退出临时容器"></a>退出临时容器</h2><p>用exit指令</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/03/10/Docker%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">http://example.com/2024/03/10/Docker%E5%88%9D%E6%AC%A1%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/07/Nuxt%E4%B8%AD%E4%BD%BF%E7%94%A8vuex/">Nuxt中使用vuex</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
