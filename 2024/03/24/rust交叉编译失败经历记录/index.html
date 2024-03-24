@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>rust交叉编译失败经历记录 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">rust交叉编译失败经历记录</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 24, 2024&nbsp;&nbsp;23:12:40</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>正在使用windows11作为开发，但是编译出来的rust程序是exe，只能在windows上运行。不能在linux服务器上运行。</p>
+<p>这时候要想在windows上编译linux服务器上能运行的程序，就要<strong>交叉编译</strong></p>
+<p>之前安装过rust，rust直接装在了D盘根目录下。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>鉴于 MSYS2 主要设计用于提供 Windows 下的 Unix 风格开发环境，并不直接适用于进行复杂的交叉编译任务，推荐使用 WSL 或 Docker 作为进行交叉编译的环境。这些方法能提供更一致的 Linux 环境，简化交叉编译的过程。</p>
+<p>下面的步骤不用看了，最终失败了，这些步骤都是临时性的记录。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>目标平台（CentOS 8 使用的 Linux 版本）添加对应的工具链</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<p>添加toml文件</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[target.x86_64-unknown-linux-gnu]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">&quot;x86_64-w64-mingw32-gcc&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>编译的时候输入指令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --target x86_64-unknown-linux-gnu --release</span><br></pre></td></tr></table></figure>
+
+<p>但是报错了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error: linker `cc` not found</span><br><span class="line">  |</span><br><span class="line">  = note: program not found</span><br><span class="line"></span><br><span class="line">error: could not compile `core-rust-axum` (bin <span class="string">&quot;core-rust-axum&quot;</span>) due to 1 previous error</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可能是因为没有安装 MinGW-w64</p>
+<h3 id="使用-MSYS2-安装-MinGW-w64"><a href="#使用-MSYS2-安装-MinGW-w64" class="headerlink" title="使用 MSYS2 安装 MinGW-w64"></a>使用 MSYS2 安装 MinGW-w64</h3><p>MSYS2 是一个软件包管理系统，提供了一个类似于 Unix 的命令行环境，它可以让你方便地安装和管理 MinGW-w64 工具链和其他 Unix 工具。</p>
+<p><strong>下载 MSYS2 安装器：</strong> 访问 MSYS2 的官方网站 <a target="_blank" rel="noopener" href="https://www.msys2.org/">msys2.org</a> 并下载安装器</p>
+<p>下载过程还是非常慢的</p>
+<p>下载好之后出来个窗口。居然像一个小小的linux虚拟机。</p>
+<p>在 MSYS2 MSYS 终端，输入以下命令更新系统</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syu</span><br></pre></td></tr></table></figure>
+
+<p>输入完成后会关闭，需要手动重新打开。</p>
+<p>输入下面的指令继续更新</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Su</span><br></pre></td></tr></table></figure>
+
+<p>安装工具链</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S mingw-w64-x86_64-toolchain</span><br></pre></td></tr></table></figure>
+
+<p>上面的过程可能最好开一下vpn，要不然会报错。就像下面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">:: Retrieving packages...</span><br><span class="line"> wget-1.24.5-1-x86_64            772.4 KiB  74.5 KiB/s 00:10 [###############################] 100%</span><br><span class="line"> curl-8.6.0-1-x86_64             716.3 KiB   132 KiB/s 00:05 [###############################] 100%</span><br><span class="line"> libgnutls-3.8.3-1-x86_64       1386.0 KiB  80.2 KiB/s 00:17 [###############################] 100%</span><br><span class="line"> libopenssl-3.2.1-1-x86_64      1790.2 KiB  23.8 KiB/s 01:15 [###############################] 100%</span><br><span class="line"> xz-5.6.1-1-x86_64               541.5 KiB   102 KiB/s 00:05 [###############################] 100%</span><br><span class="line"> libsqlite-3.45.1-1-x86_64       678.1 KiB  10.4 KiB/s 01:05 [###############################] 100%</span><br><span class="line"> libxml2-2.12.6-1-x86_64         508.8 KiB  21.3 KiB/s 00:24 [###############################] 100%</span><br><span class="line"> openssl-3.2.1-1-x86_64          625.6 KiB  10.1 KiB/s 01:02 [###############################] 100%</span><br><span class="line"> pacman-contrib-1.10.5-1-x86_64    4.6 MiB  39.2 KiB/s 02:01 [###############################] 100%</span><br><span class="line"> gnupg-2.4.5-1-x86_64              2.5 MiB  19.2 KiB/s 02:13 [###############################] 100%</span><br><span class="line"> Total (10/25)                    16.1 MiB   124 KiB/s 02:13 [###############################] 100%</span><br><span class="line">error: failed retrieving file &#x27;libgnutls-3.8.3-1-x86_64.pkg.tar.zst&#x27; from mirror.msys2.org : SSL connection timeout</span><br><span class="line">error: failed retrieving file &#x27;libgnutls-3.8.3-1-x86_64.pkg.tar.zst&#x27; from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">error: failed retrieving file &#x27;libsqlite-3.45.1-1-x86_64.pkg.tar.zst.sig&#x27; from mirrors.ustc.edu.cn : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">warning: failed to retrieve some files</span><br><span class="line">error: failed to commit transaction (unexpected error)</span><br><span class="line">Errors occurred, no packages were upgraded.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>还是出现了一些报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">error: failed retrieving file &#x27;mingw-w64-x86_64-zstd-1.5.5-1-any.pkg.tar.zst&#x27; from mirror.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">error: failed retrieving file &#x27;mingw-w64-x86_64-sqlite3-3.45.2-1-any.pkg.tar.zst.sig&#x27; from mirrors.bfsu.edu.cn : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">error: failed retrieving file &#x27;mingw-w64-x86_64-zstd-1.5.5-1-any.pkg.tar.zst&#x27; from repo.msys2.org : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">error: failed retrieving file &#x27;mingw-w64-x86_64-binutils-2.42-1-any.pkg.tar.zst.sig&#x27; from mirrors.bfsu.edu.cn : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">error: failed retrieving file &#x27;mingw-w64-x86_64-gdb-multiarch-14.2-1-any.pkg.tar.zst.sig&#x27; from mirrors.bfsu.edu.cn : Operation too slow. Less than 1 bytes/sec transferred the last 10 seconds</span><br><span class="line">warning: too many errors from mirrors.bfsu.edu.cn, skipping for the remainder of this transaction</span><br><span class="line">warning: failed to retrieve some files</span><br><span class="line">error: failed to commit transaction (unexpected error)</span><br><span class="line">Errors occurred, no packages were upgraded.</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在MSYS2 MSYS 终端里安装好了MinGW-w64 工具链，如何编译rust项目？</p>
+<p>实际上这个终端里连rust环境都没有，所以要安装一个rust。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://sh.rustup.rs | sh</span><br></pre></td></tr></table></figure>
+
+<p>结果安装的时候卡住了，可以这样：</p>
+<p>先下载安装脚本：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://sh.rustup.rs -o rustup-init.sh</span><br></pre></td></tr></table></figure>
+
+<p>然后再执行安装脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x rustup-init.sh</span><br><span class="line">./rustup-init.sh</span><br></pre></td></tr></table></figure>
+
+<p>安装过程中，遇到第一个选择：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Rust Visual C++ prerequisites</span><br><span class="line"></span><br><span class="line">Rust requires a linker and Windows API libraries but they don&#x27;t seem to be</span><br><span class="line">available.</span><br><span class="line"></span><br><span class="line">These components can be acquired through a Visual Studio installer.</span><br><span class="line"></span><br><span class="line">1) Quick install via the Visual Studio Community installer</span><br><span class="line">   (free for individuals, academic uses, and open source).</span><br><span class="line"></span><br><span class="line">2) Manually install the prerequisites</span><br><span class="line">   (for enterprise and advanced users).</span><br><span class="line"></span><br><span class="line">3) Don&#x27;t install the prerequisites</span><br><span class="line">   (if you&#x27;re targeting the GNU ABI).</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>选3</p>
+<p>又遇到一个选择：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Rust Visual C++ prerequisites</span><br><span class="line">  D:\Rust\cargo_home\bin</span><br><span class="line"></span><br><span class="line">This path will then be added to your PATH environment variable by</span><br><span class="line">modifying the HKEY_CURRENT_USER/Environment/PATH registry key.</span><br><span class="line"></span><br><span class="line">You can uninstall at any time with rustup self uninstall and</span><br><span class="line">these changes will be reverted.</span><br><span class="line"></span><br><span class="line">Current installation options:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   default host triple: x86_64-pc-windows-msvc</span><br><span class="line">     default toolchain: stable (default)</span><br><span class="line">               profile: default</span><br><span class="line">  modify PATH variable: yes</span><br><span class="line"></span><br><span class="line">1) Proceed with standard installation (default - just press enter)</span><br><span class="line">2) Customize installation</span><br><span class="line">3) Cancel installation</span><br></pre></td></tr></table></figure>
+
+<p>选1</p>
+<p>然后就进入了漫长的等待。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">error: component download failed for rust-docs-x86_64-pc-windows-gnu: error decoding response body: operation timed out</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>安装docs的失败了</p>
+<p>再重新来。然后又是缓慢的安装过程，等了快一个小时了。终于装好了</p>
+<p>出现了新的问题：</p>
+<p>明明rust已经在MSYS2 MSYS 终端里安装好了，但是输入 cargo -v 显示</p>
+<p>-bash: cargo: command not found</p>
+<p>下面是AI给出的解决步骤：</p>
+<h3 id="解决步骤"><a href="#解决步骤" class="headerlink" title="解决步骤"></a>解决步骤</h3><h4 id="1-手动检查和添加-Rust-的路径到-MSYS2-MSYS-的-PATH"><a href="#1-手动检查和添加-Rust-的路径到-MSYS2-MSYS-的-PATH" class="headerlink" title="1. 手动检查和添加 Rust 的路径到 MSYS2 MSYS 的 PATH"></a>1. 手动检查和添加 Rust 的路径到 MSYS2 MSYS 的 <code>PATH</code></h4><ol>
+<li><p><strong>首先确认 Rust 的安装路径</strong>。根据你的选择，<code>cargo</code> 应该安装在了 <code>D:\Rust\cargo_home\bin</code>。</p>
+</li>
+<li><p>**在 MSYS2 MSYS 终端中添加 Rust 的路径到 <code>PATH</code>**。你可以通过在 MSYS2 MSYS 终端中执行下面的命令来临时添加 Rust 的安装路径到 <code>PATH</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/d/Rust/cargo_home/bin</span><br></pre></td></tr></table></figure>
+
+<p>注意：MSYS2 MSYS 终端中的路径使用 POSIX 风格，所以 Windows 路径 <code>D:\Rust\cargo_home\bin</code> 在 MSYS2 中应当写作 <code>/d/Rust/cargo_home/bin</code>。</p>
+</li>
+<li><p><strong>验证 <code>rustup</code> 和 <code>cargo</code> 是否现在可用</strong>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rustup -V</span><br><span class="line">cargo -V</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="2-永久添加-Rust-的路径到-MSYS2-MSYS-的-PATH"><a href="#2-永久添加-Rust-的路径到-MSYS2-MSYS-的-PATH" class="headerlink" title="2. 永久添加 Rust 的路径到 MSYS2 MSYS 的 PATH"></a>2. 永久添加 Rust 的路径到 MSYS2 MSYS 的 <code>PATH</code></h4><p>为了使这一变更永久生效，你应该将上述 <code>export PATH...</code> 命令添加到你的 <code>~/.bashrc</code> 或 <code>~/.bash_profile</code> 文件中。</p>
+<p>其中波浪号代表当前用户主目录的快捷表示 <code>~/.bashrc</code> 代指  <code>/home/用户名/.bashrc</code></p>
+<ol>
+<li><p>打开 <code>~/.bashrc</code> 或 <code>~/.bash_profile</code> 文件，如果文件不存在，你可以创建一个。</p>
+</li>
+<li><p>在文件末尾添加以下行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/d/Rust/cargo_home/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>保存并关闭文件。</p>
+</li>
+<li><p>具体操作如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$PATH:/d/Rust/cargo_home/bin&#x27;</span> &gt; ~/.bashrc</span><br><span class="line"><span class="comment"># 验证看里面的内容是否已经写入</span></span><br><span class="line"><span class="built_in">cat</span> ~/.bashrc</span><br><span class="line"><span class="comment"># 使更改生效</span></span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>这时候关掉这个控制台工具再打开，就能看到 cargo命令依然永久生效了。</p>
+<p>这时候确认一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-gnu</span><br></pre></td></tr></table></figure>
+
+<p>结果是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info: component &#x27;rust-std&#x27; for target &#x27;x86_64-unknown-linux-gnu&#x27; is up to date</span><br></pre></td></tr></table></figure>
+
+<p>说明已经好了</p>
+<h3 id="安装交叉编译工具链"><a href="#安装交叉编译工具链" class="headerlink" title="安装交叉编译工具链"></a>安装交叉编译工具链</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S mingw-w64-x86_64-gcc</span><br></pre></td></tr></table></figure>
+
+<p>在项目中的toml文件添加内容：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[target.x86_64-unknown-linux-gnu]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">&quot;x86_64-linux-gnu-gcc&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --target=x86_64-unknown-linux-gnu --release</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终居然报了和最开始同样的错误</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">error: linker `cc` not found</span><br><span class="line">  |</span><br><span class="line">  = note: program not found</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>去网上搜了搜，搜到一个文章</p>
+<p><a target="_blank" rel="noopener" href="https://note.qidong.name/2023/03/rust-universal-bin/">Rust编译Linux通用可执行文件 · 零壹軒·笔记 (qidong.name)</a></p>
+<p>先安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-musl</span><br></pre></td></tr></table></figure>
+
+<p>好像又等了快10分钟</p>
+<p>然后编译</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build -r --target=x86_64-unknown-linux-musl</span><br></pre></td></tr></table></figure>
+
+<p>还是不行</p>
+<p>直接搜报错结果信息，</p>
+<p>又搜到一个文章</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/ask/sof/1118758">使用cargo将rust项目从windows交叉编译到linux时出现错误：”linker ‘cc‘not found“。-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+<p>试了，还是一样。</p>
+<p>之后又搜了其他方法，还是不成功。已经耗费了好几个小时了。</p>
+<p>后续的尝试方法：</p>
+<p>WSL</p>
+<p>在Docker容器中编译</p>
+<p>搞个虚拟机。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/03/24/rust%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%A4%B1%E8%B4%A5%E7%BB%8F%E5%8E%86%E8%AE%B0%E5%BD%95/">http://example.com/2024/03/24/rust%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%A4%B1%E8%B4%A5%E7%BB%8F%E5%8E%86%E8%AE%B0%E5%BD%95/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        <a href="/tags/rust/"># rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/18/%E4%B8%93%E9%97%A8%E5%8D%A1Oj%E6%B5%8B%E8%AF%84%E6%9C%BA%E7%9A%84%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81Python%E7%89%88/">专门卡Oj测评机的测试代码Python版</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
