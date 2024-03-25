@@ -248,22 +248,23 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/.cargo/env</span><br></pre></td></tr></table></figure>
 
 <p>添加一下编译工具</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-gnu</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-gnu</span><br><span class="line"></span><br><span class="line">rustup target add x86_64-unknown-linux-musl  <span class="comment"># 还是这个靠谱</span></span><br></pre></td></tr></table></figure>
 
-<p>切换到对应的路径下，直接编译</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build</span><br></pre></td></tr></table></figure>
+<p>开始编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release --target x86_64-unknown-linux-musl</span><br></pre></td></tr></table></figure>
 
-<p>然后会发现</p>
-<p><code>\target\debug</code> 文件夹里，有一个没有后缀名的文件，这个文件就是最终编译的那个可执行文件。</p>
-<p>要在linux环境下运行这个文件，就</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./my_app</span><br></pre></td></tr></table></figure>
+<p>注意要用 musl 这个来编译。不能用gnu的那个，因为现在服务器是centos8，wsl里的linux是Ubantu，两个系统的Glibc 版本不一样。</p>
+<p>等服务器过期了以后打算直接换Ubantu了。之前因为看鱼皮的视频买的Centos8，现在有点后悔。</p>
+<p>编译好了之后直接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target/x86_64-unknown-linux-musl/release/</span><br></pre></td></tr></table></figure>
 
-<p>（假设他叫 my_app）</p>
-<p>就发现可以运行了。</p>
-<p>经过测试发现，这个方法不需要在toml中写类似</p>
-<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[target.x86_64-unknown-linux-musl]</span></span><br><span class="line"><span class="attr">linker</span> = <span class="string">&quot;rust-lld&quot;</span></span><br><span class="line"><span class="attr">rustflags</span> = [<span class="string">&quot;-C&quot;</span>, <span class="string">&quot;linker-flavor=ld.lld&quot;</span>]</span><br></pre></td></tr></table></figure>
-
-<p>这样的东西</p>
+<p>在这个文件夹里面找到没有后缀名的，名称和项目名称一样的linux可执行文件。</p>
+<p>直接把可执行文件丢到服务器上就可以了。</p>
+<p>这时候还是有要注意的一点：</p>
+<ul>
+<li>静态链接 Musl 而非 Glibc 意味着你的程序将不依赖于任何特定版本的 Glibc，而是自带了所有必需的C库函数实现。</li>
+<li>不是所有的 Rust 库都能很好地与 Musl 兼容，特别是在涉及系统调用或者依赖特定 glibc 行为的情况下。在编译前，确保你的项目和依赖的第三方库都可以在 Musl 上正常工作。</li>
+</ul>
 
         </div>
 
