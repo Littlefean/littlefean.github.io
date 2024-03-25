@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+
+<title>设计一套自己的快乐分层体系 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">设计一套自己的快乐分层体系</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">三月 25, 2024&nbsp;&nbsp;14:28:34</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>曾经对悲伤做过一些分类，目的是希望在遇到难过的时候能够快速看清楚是怎么回事。从情绪中走出来，找到解决的办法。</p>
+<p>现在对快乐进行一些分类，设计一个快乐体系，也许能有助于成长。</p>
+<h2 id="各种大模型AI的回答"><a href="#各种大模型AI的回答" class="headerlink" title="各种大模型AI的回答"></a>各种大模型AI的回答</h2><p>阿里的通义千问：</p>
+<blockquote>
+<p>当然可以，快乐是一种复杂且多元的情绪体验，我们可以从不同维度对其进行分类：</p>
+<ol>
+<li><strong>即时快乐与持久快乐</strong>：即时快乐通常是指短暂、直接的愉悦感受，如品尝美食、欣赏美景或收到一份礼物等。而持久快乐，也称为深层次的幸福感，更多来自于长期的生活满足感、个人成就感、良好的人际关系和有意义的工作等。</li>
+<li><strong>感官快乐与精神快乐</strong>：感官快乐源自于五感（视觉、听觉、嗅觉、味觉、触觉）带来的直接享受，如音乐、美食、舒适的环境等。精神快乐则源于内心的满足和充实，如知识的增长、艺术欣赏、实现自我价值、道德完善等。</li>
+<li><strong>社交快乐与独处快乐</strong>：社交快乐是在与他人的交往互动中获得，如朋友聚会、团队协作成功后的喜悦等；独处快乐则是通过独自阅读、冥想、创作等活动，享受内心世界的平静和丰富。</li>
+<li><strong>外在激励快乐与内在驱动快乐</strong>：外在激励快乐是来自外部的认可、奖励或成就，例如获得表扬、升职加薪等。内在驱动快乐则源自个体内心的驱动力，如自我提升、自我实现的过程中的满足感。</li>
+<li><strong>简单快乐与复杂快乐</strong>：简单快乐常见于日常生活的小事，如一杯咖啡的香浓、阳光下的散步等；复杂快乐则可能涉及更深入的情感体验和人生理解，比如克服困难后的成就感，或者经历挫折后对生活有更深领悟的喜悦。</li>
+</ol>
+<p>以上是对快乐的一些基本分类，理解这些分类可以帮助我们更好地追求全面、健康和持久的幸福。</p>
+</blockquote>
+<p>评价：独处快乐似乎和精神快乐有交叉。这个分类有那么一点点像MBTI了。</p>
+<p>ChatGPT</p>
+<blockquote>
+<ol>
+<li><strong>喜悦（Joy）</strong>：<ul>
+<li><strong>由于某种事件或情况引起的高兴和愉快感。</strong></li>
+<li>例如：取得成就、获得认可、与亲朋好友相聚等。</li>
+</ul>
+</li>
+<li><strong>满足感（Contentment）</strong>：<ul>
+<li><strong>对当前生活状态或环境感到满意和满足的心态。</strong></li>
+<li>例如：享受平静的时刻、感恩拥有的一切、对所做选择感到肯定等。</li>
+</ul>
+</li>
+<li><strong>幸福（Happiness）</strong>：<ul>
+<li><strong>内心产生的愉悦、满足和快乐的持久感受。</strong></li>
+<li>例如：做自己喜欢的事情、与心爱的人一起度过美好时光、感受到内在平静和平衡等。</li>
+</ul>
+</li>
+<li><strong>兴奋（Excitement）</strong>：<ul>
+<li><strong>通过刺激或期待的事物而引起的兴奋和充满活力的情绪。</strong></li>
+<li>例如：期待旅行、追求个人目标、尝试新鲜事物等。</li>
+</ul>
+</li>
+<li><strong>感恩（Gratitude）</strong>：<ul>
+<li><strong>对周围的人、事、物心存感激和感恩的心态。</strong></li>
+<li>例如：感谢他人的帮助、感激自己的成长经历、珍惜每一个美好瞬间等。</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p>文心一言</p>
+<blockquote>
+<p>成就快乐：这种快乐来自于我们实现目标、取得成就时的满足感。它体现了我们的努力得到了回报，增强了我们的自信和自我价值感。比如，完成一项挑战性的任务、在学习或工作中取得优异成绩等。</p>
+<p>人际快乐：这种快乐源于我们与他人的互动和关系。当我们与亲朋好友相处融洽、分享快乐、互相帮助时，会感受到人际关系的温暖和美好。人际快乐能够增进我们的社交能力，提升生活质量。</p>
+<p>探索快乐：这种快乐来自于我们对新事物、新知识的好奇心和探索欲。当我们尝试新事物、学习新技能、探索新领域时，会感受到一种成长的快乐。探索快乐能够激发我们的创造力和创新精神。</p>
+<p>自然快乐：这种快乐源于我们与大自然的亲近和互动。当我们置身于美丽的自然风光中，感受大自然的恩赐和和谐时，会感受到一种宁静和喜悦。自然快乐有助于我们放松身心，恢复精力。</p>
+<p>精神快乐：这种快乐来自于我们内心的平和、满足和宁静。当我们拥有积极的心态、正确的价值观和人生观时，会感受到一种内在的快乐。精神快乐是我们在面对困难和挑战时能够保持坚定和乐观的重要支撑。</p>
+</blockquote>
+<h2 id="个人快乐穷举"><a href="#个人快乐穷举" class="headerlink" title="个人快乐穷举"></a>个人快乐穷举</h2><table>
+<thead>
+<tr>
+<th>领域</th>
+<th>事情</th>
+<th>快乐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编程</td>
+<td>用程序实现了想看到的东西，bp神经网络用js前端可视化</td>
+<td>实现功能</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>做的音乐被甲方认可说还不错</td>
+<td>认可 创作成功</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>学会一门新的编程语言rust</td>
+<td>能力提升</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>又写出了一首自己感觉不错的曲子</td>
+<td>创作成功</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>加入了一个博客圈子</td>
+<td>认可</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>游戏通关了</td>
+<td>解脱</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>用程序实现了功能，克服了困难</td>
+<td>克服困难</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>想一件事情，有了新的思考和收获</td>
+<td>思维提升</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>用js做了一个小钢琴</td>
+<td>实现功能</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>过年和家里人打麻将</td>
+<td>切磋互动</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>看到网易云后台界面自己作品播放量挺多</td>
+<td>认可 创作成功</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>看到chatGPT4生成了很多震撼的图片，也许能用在游戏剧情配图之类的地方</td>
+<td>发现可能性</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>看完了一本书《代码大全2》很充实。</td>
+<td>思维提升</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>掌握了tailwindcss。一项技能。</td>
+<td>能力提升</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>发现了一本不错的好书《代码大全2》</td>
+<td>发现可能性</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>看脱缰凯的搞笑视频</td>
+<td>单纯搞笑</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>看小潮院长的搞笑视频</td>
+<td>单纯搞笑</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>发现Vue网站还是能被百度蜘蛛抓到的</td>
+<td>实现功能 发现可能性</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>在网站做了一个后台管理日志，发现了很多用户细节。</td>
+<td>实现功能 发现可能性</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>看到Alan震撼的火柴人动画作品</td>
+<td>震撼</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>改造自己的房间，让自己的房间变得更好。</td>
+<td>环境改善</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>过完充实的一个月</td>
+<td>能力提升</td>
+</tr>
+<tr>
+<td>自媒体</td>
+<td>干掉了一个盗视频的</td>
+<td>正义报复</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>解决了socket部署技术上的障碍，实现了功能</td>
+<td>克服困难</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>前端开发，只有在领到钱的那一刻和做成的那一刻是开心的。</td>
+<td>实现功能 认可 赚到钱</td>
+</tr>
+<tr>
+<td>生活</td>
+<td>豁然开朗：既然生活是没有意义的，何必在意别人的评价。</td>
+<td>思维提升</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>把一首曲子写到了五分钟</td>
+<td>能力提升</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>找到了程序的bug</td>
+<td>克服困难 实现功能</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>发现了AI生成midi旋律。</td>
+<td>发现可能性</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>学会了alpha-beta剪枝，又可以出新视频了。</td>
+<td>能力提升 发现可能性</td>
+</tr>
+<tr>
+<td>编程</td>
+<td>发现了很好的工具软件</td>
+<td>能力提升</td>
+</tr>
+<tr>
+<td>音乐</td>
+<td>发现musescore4可以打开midi转成五线谱</td>
+<td>发现可能性 能力提升</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>自我建议：</p>
+<p>调整搞笑视频快乐和其他事情之间的比例。不要轻易入坑一个游戏。</p>
+<p>通义千问的建议：</p>
+<p>持续关注编程和音乐领域。参与实际项目。</p>
+<p>尝试跨领域项目，比如结合编程与音乐，制作一款音乐应用或利用AI技术辅助创作</p>
+<p>确保有足够的休闲时光来放松身心，同时保持积极的社交活动，这对于创造力和灵感的培养也是至关重要的。</p>
+<p>根据兴趣和长短期目标制定合理的学习计划和职业规划，将技能提升与具体任务相结合</p>
+<p>无论是编程技巧还是音乐作品，都可以更多地分享给他人，通过社区互动获取反馈，进一步提升自身影响力和满足感。</p>
+<h2 id="基于前面的穷举列表，设计一个快乐体系"><a href="#基于前面的穷举列表，设计一个快乐体系" class="headerlink" title="基于前面的穷举列表，设计一个快乐体系"></a>基于前面的穷举列表，设计一个快乐体系</h2><p><img src="/2024/03/25/%E8%AE%BE%E8%AE%A1%E4%B8%80%E5%A5%97%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BF%AB%E4%B9%90%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB/%E5%BF%AB%E4%B9%90%E5%AE%9A%E4%B9%89.jpg" alt="快乐定义"></p>
+<p>上图是我设计的快乐体系，这是我第一次思考这个。就叫他快乐体系1.0吧。</p>
+<p>一级快乐：<strong>思维提升</strong></p>
+<p>是最高级的快乐，因为思维是一切行为的总指挥。思维提升了也许能指导自己更好的判断技能的价值，能决策其他快乐。</p>
+<p>二级快乐：<strong>能力提升</strong></p>
+<p>能力提升的快乐是创作、实现功能、克服困难的来源和基础。</p>
+<p>所以如果我因为学成了某个能力，我就会很快乐，就能够非常满足。</p>
+<p>介于一级和二级之间的快乐：<strong>发现可能性</strong></p>
+<p>这个发现可能性的快乐比较复杂，也充满不确定性，他可能直接导致思维提升，也可能导致能力提升。并且与这两种快乐有着不太确定的联系。</p>
+<p>三级快乐：<strong>创作、克服困难、实现功能</strong></p>
+<p>这些三个放到平级的，因为感觉他们给我的体验等级似乎是差不多的。</p>
+<p>音乐的创作、编程的实现功能、解决bug克服困难是第三级别的快乐。也是比较具体的直接的快乐。</p>
+<p>四级快乐：<strong>被认可、赚到钱</strong></p>
+<p>通常通过创作本身、实现的功能、做出来的东西本身才能获得别人的认可。所以被认可的快乐被我放在第四层。也是在告诉自己，不要为了盲目的获得别人的认可、证明自己而去着急做一些事情。这样可能反而会忘记做事情的一些初衷。</p>
+<p>被认可约等于赚到钱，从功利的角度想，可能有利于后期进一步合作。赚到钱约等于被认可。</p>
+<p>五级快乐：<strong>精神娱乐、生理快乐</strong></p>
+<p>本来想着精神娱乐和生理快乐分个高低，</p>
+<p>精神娱乐高于生理快乐：很自然而然就这样想，因为动物也有生理快乐。生理快乐好像就应该是最低级的快乐，比如吃喝睡。</p>
+<p>生理快乐高于精神快乐：可能这是从唯物主义的角度想了。吃好喝好睡好了，才能去更好的实现一二三级快乐。精神娱乐带来的副作用可能比生理快乐带来的副作用更大。这是考虑到可能看短视频碎片化的思维可能会影响自己。</p>
+<p>介于这两个冲突，干脆不分上下了，直接放在同一层，第五层。</p>
+<p>右边互动的可能更多的涉及到和其他人交往的快乐，近一年来和其他人互动较少，打算以后再补充完善这部分内容。</p>
+<p>值得注意的是，有一些事情带来的快乐是多元的和多层的。比如考证成功，那就是二级能力提升快乐和四级被认可快乐。</p>
+<p>这个快乐体系也不是一成不变的，随着后续经历的丰富，可能会继续完善和修改。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://example.com/2024/03/25/%E8%AE%BE%E8%AE%A1%E4%B8%80%E5%A5%97%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BF%AB%E4%B9%90%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB/">http://example.com/2024/03/25/%E8%AE%BE%E8%AE%A1%E4%B8%80%E5%A5%97%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BF%AB%E4%B9%90%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>你好我好大家好</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/24/rust%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%A4%B1%E8%B4%A5%E7%BB%8F%E5%8E%86%E8%AE%B0%E5%BD%95/">rust交叉编译失败经历记录</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
