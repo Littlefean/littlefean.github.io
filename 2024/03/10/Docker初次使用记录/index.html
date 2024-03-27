@@ -323,17 +323,17 @@
 <p>改成挂载文件</p>
 <p>结果发现成功了，但是进入tmp文件发现里面是空的。</p>
 <p>发现原来不能用相对路径，原来就得老老实实用绝对路径来挂载</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;D:\Projects\Project-Test\docker-test\tmp:\tmp_my&quot; docker-te</span><br><span class="line">st-py /bin/bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v &quot;D:/Projects/Project-Test/docker-test/tmp:/tmp_my&quot; docker-te</span><br><span class="line">st-py /bin/bash</span><br></pre></td></tr></table></figure>
 
 <p>发现在windows的资源管理器的导航栏复制的路径全都是反斜杠，不是正斜杠。用上面的指令创建。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># ls</span></span><br><span class="line"><span class="string">&#x27;\tmp_my&#x27;</span>   bin    dev   home   lib64   mnt   proc   run    srv   tmp   var</span><br><span class="line"> app.py     boot   etc   lib    media   opt   root   sbin   sys   usr</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># ls</span></span><br><span class="line"><span class="string">&#x27;/tmp_my&#x27;</span>   bin    dev   home   lib64   mnt   proc   run    srv   tmp   var</span><br><span class="line"> app.py     boot   etc   lib    media   opt   root   sbin   sys   usr</span><br></pre></td></tr></table></figure>
 
 <p>创建出来一个这么抽象的文件夹名字。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># cd &#x27;\tmp_my&#x27;</span></span><br><span class="line">root@d9ae1d00f583:/\tmp_my<span class="comment"># ls</span></span><br><span class="line">test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@d9ae1d00f583:/<span class="comment"># cd &#x27;/tmp_my&#x27;</span></span><br><span class="line">root@d9ae1d00f583://tmp_my<span class="comment"># ls</span></span><br><span class="line">test.py</span><br></pre></td></tr></table></figure>
 
 <p>再进入这个文件夹，发现文件终于存在了！</p>
 <p>很好，再继续增加内存的限制使用情况。（吃一堑长一智，冒号后面的部分一定要用正斜杠）</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> -m 128m --memory-swap 128m -v <span class="string">&quot;D:\Projects\Project-Test\docker-test\tmp:/tmp_my&quot;</span> docker-test-py /bin/bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> -m 128m --memory-swap 128m -v <span class="string">&quot;D:/Projects/Project-Test/docker-test/tmp:/tmp_my&quot;</span> docker-test-py /bin/bash</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><code>-m 128m</code>：表示限制容器的内存使用量为 128MB。</li>
