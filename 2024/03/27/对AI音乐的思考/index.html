@@ -17,7 +17,7 @@
 
 
 
-<title>在WSL中交叉编译Rust | 阿岳的博客</title>
+<title>对AI音乐的思考 | 阿岳的博客</title>
 
 
 
@@ -208,7 +208,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">在WSL中交叉编译Rust</h1>
+            <h1 class="post-title">对AI音乐的思考</h1>
             
                 <div class="post-meta">
                     
@@ -217,7 +217,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">三月 25, 2024&nbsp;&nbsp;16:59:22</a>
+                        Date: <a href="#">三月 27, 2024&nbsp;&nbsp;12:42:06</a>
                         </span>
                     
                     
@@ -226,45 +226,55 @@
         </header>
 
         <div class="post-content">
-            <h2 id="在WSL中交叉编译rust"><a href="#在WSL中交叉编译rust" class="headerlink" title="在WSL中交叉编译rust"></a>在WSL中交叉编译rust</h2><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>用rust的axum库做了一个简单的小后端系统。需要在linux服务器上部署。</p>
-<p>本地开发环境是windows11 经过测试交叉编译相当麻烦，各种报错。今天尝试使用WSL环境进行编译。</p>
-<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>首先安装wsl，安装的链接：</p>
-<p><a target="_blank" rel="noopener" href="https://docs.eesast.com/docs/tools/wsl#%E5%AE%89%E8%A3%85-wsl-2">WSL 安装与使用 | EESΛST Docs (eesast.com)</a></p>
-<p>直接在这个文档中找到“&lt;二&gt; 在其他磁盘中安装 WSL 2（推荐）”</p>
-<p>安装完成后，打开cmd，输入指令。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl --list</span><br></pre></td></tr></table></figure>
-
-<p>查看所有的linux。看到一个Ubantu</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl -d Ubantu</span><br></pre></td></tr></table></figure>
-
-<p>进入wsl中Ubantu系统的控制台。</p>
-<p>然后发现 在这个系统中， 根目录有一个 &#x2F;mnt （他是mount的缩写，挂载了其他的盘）文件夹，里面有c文件夹和d文件夹。恰好就是自己的c盘和d盘。</p>
-<p>相当于linux系统中自动挂载了自己的windows系统的磁盘卷。</p>
-<p>接下来就又需要在这个Ubantu中安装rust编译器了。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新包索引列表：</span></span><br><span class="line">sudo apt update</span><br><span class="line"><span class="comment"># 安装必要的构建工具和依赖项：</span></span><br><span class="line">sudo apt install curl build-essential</span><br><span class="line"><span class="comment"># 使用官方推荐的方法安装rustup，这是管理和安装Rust编译器及其工具链的工具：</span></span><br><span class="line">curl --proto <span class="string">&#x27;=https&#x27;</span> --tlsv1.2 -sSf https://sh.rustup.rs | sh</span><br></pre></td></tr></table></figure>
-
-<p>在安装过程中会出现一个询问，我当时直接回车。</p>
-<p>安装好了之后用一下这个指令。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> <span class="variable">$HOME</span>/.cargo/env</span><br></pre></td></tr></table></figure>
-
-<p>添加一下编译工具</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-unknown-linux-gnu</span><br><span class="line"></span><br><span class="line">rustup target add x86_64-unknown-linux-musl  <span class="comment"># 还是这个靠谱</span></span><br></pre></td></tr></table></figure>
-
-<p>开始编译</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release --target x86_64-unknown-linux-musl</span><br></pre></td></tr></table></figure>
-
-<p>注意要用 musl 这个来编译。不能用gnu的那个，因为现在服务器是centos8，wsl里的linux是Ubantu，两个系统的Glibc 版本不一样。</p>
-<p>等服务器过期了以后打算直接换Ubantu了。之前因为看鱼皮的视频买的Centos8，现在有点后悔。</p>
-<p>编译好了之后直接</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target/x86_64-unknown-linux-musl/release/</span><br></pre></td></tr></table></figure>
-
-<p>在这个文件夹里面找到没有后缀名的，名称和项目名称一样的linux可执行文件。</p>
-<p>直接把可执行文件丢到服务器上就可以了。</p>
-<p>这时候还是有要注意的一点：</p>
-<ul>
-<li>静态链接 Musl 而非 Glibc 意味着你的程序将不依赖于任何特定版本的 Glibc，而是自带了所有必需的C库函数实现。</li>
-<li>不是所有的 Rust 库都能很好地与 Musl 兼容，特别是在涉及系统调用或者依赖特定 glibc 行为的情况下。在编译前，确保你的项目和依赖的第三方库都可以在 Musl 上正常工作。</li>
-</ul>
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>今天，2024年3月25日，我的一个叫残梦霓虹的好友发来了两个音频文件，是最近新出的AI音乐模型sono生成的。</p>
+<p>听了一下，还有点东西，非常像人做的了。只是有两个缺点：</p>
+<ol>
+<li>不能导出midi</li>
+<li>只能生成两分钟</li>
+</ol>
+<p>于是我开始想：工具、软件的出现让创作音乐的过程变得更加高效了，但随着AI生成技术的发展，创作音乐的快乐是不是会被AI取缔？</p>
+<p>先设想一下，假如效率高到极限，这样的音乐创作过程是什么样的？</p>
+<p>坐着不用动，脑子里想，你的想法像电波一样传递给一个高科技程序，自动识别你的想法和意图，一瞬间就出来了一个工程文件，你可以听一遍。然后当有一些地方感觉不对，和自己想的不太一样的时候，这个高科技程序立刻识别到了你的想法，并按照你的意图修改了某个地方。</p>
+<p>重复上述过程，直到作品满意了为止。</p>
+<p>所以，音乐创作的本质实际上就是将心里的意图，转化为了实际可以听到的声音。</p>
+<p>如今突飞猛进的创作工具和AI工具，让这个转化的过程不断的缩短。</p>
+<p>但AI始终是没有意识的AI，否则那相当于是创造了一种生命体了。所以意图始终是在人心里的，AI不能自发的创作，AI只能根据人的意图来产出音乐。</p>
+<p>但经常可能会有这样一种情况，人本身的创作意图和需求都是不清晰的，仅仅只是概括和标签化的描述给AI。AI在它所有标签的可能性的结果中产生了一个音乐给你。你恰好认为这个不错，所以就拿来当你创作的作品了。</p>
+<p>这似乎也无可非议。</p>
+<p>音乐是给人服务的，听众听着好听，就没问题。严肃音乐除外。（严肃音乐是……）</p>
+<p>观众的审美等级可能是会变化和提高的。</p>
+<p>如果认为，音乐的目的就是为了剧情、故事服务，那么AI音乐的发展就是一种帮助，帮助我们更快的做动画和电影，游戏。效率更高了。</p>
+<p>所以最核心的还是人所要表达的故事。</p>
+<p>那么故事的目的又是什么？</p>
+<p>还是先看看音乐的目的是什么，或者说音乐有什么用吧：</p>
+<p>穷举音乐的目的：</p>
+<ol>
+<li>提供氛围，烘托气氛。</li>
+<li>熟悉的旋律承载个人记忆、民族记忆和文化：中国的京剧、西方的歌剧、非洲的鼓乐等。</li>
+<li>提供一种合作的事情，比如共同创作，共同演唱，增进人与人之间的联系和友谊</li>
+<li>不同国家的语言也许不通，但音乐表达的情感是国际互通的。</li>
+<li>修复社会情绪的一剂良药。一些人通过音乐被治愈，在逆境中获得力量。</li>
+</ol>
+<p>第一点：找AI音乐烘托气氛也不是不可以。</p>
+<p>第二点：不排除现在经历的事情可能被人用AI写成AI音乐，被后人所流传和保存。</p>
+<p>第三点：共同创作音乐可能会变成共同用AI创作音乐。设想AI变得顶级强悍，这样的合作可能有点无趣。甚至有可能这件合作事情因为AI的出现而瓦解，人们通过其他事情来寻找合作和互动的乐趣。</p>
+<p>第四点：第四点表达的目的大概可能和第一点重叠了。如果音乐用于一种语言作为国际交流，这似乎不太可能。这似乎只出现在科幻小说中“歌者文明”。</p>
+<p>第五点：这个AI应该替代不了，因为人肯定希望被真正的温暖治愈，这个真正的温暖可能是听者喜欢的偶像。或者具有相同经历的，能够共情的确确实实存在的人。除非这个AI歌手、数字人、以及它所构建的背景故事太逼真了，把别人给骗了，以为是真实存在的人。</p>
+<p>所以我认为AI音乐对音乐创作本身产生重大影响。会减少学习和关注音乐本身的人的数量。</p>
+<p>但关于AI音乐的出现会减少音乐学习的人数和关注人数有相反意见：</p>
+<p>AI也可能激发更多人对音乐的兴趣，因为它降低了创作门槛，让更多人有机会接触和尝试音乐创作。同时，高质量的音乐教育和对音乐艺术深层次追求的重要性仍然不可忽视，因为音乐不仅仅关乎创作，还包括欣赏、理论、表演和文化理解等多个维度。因此，AI音乐的影响可能是双面的，既有挑战也有机遇。</p>
+<p>对AI音乐创新性的质疑：</p>
+<p>有一些音乐听起来不怎么好听，但是是具有颠覆和创新意义存在的，比如全程静音的“四分三十三秒”、比如德彪西的音乐、还有用拼接主义创新出来的音乐、还有用一些微分音和其他体系做出来的音乐，比如宝可梦的紫苑镇背景音乐，作曲家在乐理和音色上进行了极为细节的精心设计。这些极具创新性的音乐虽然不会出现在市场上，但这可能AI学不来，目前的AI只能根据数据集中的数据来学习模式，生成风格类似的音乐。但数据集里的音乐还是人们创作的音乐。所以AI很难做出这种令人意想不到的创新。AI的创新只是旧有数据集中的模式里学习来的音乐内容变化。除非这些意想不到的音乐已经在数据集中了，被AI学习到了。</p>
+<p>具体来说是这样：</p>
+<p>目前AI的数据集中都是流行、古典、爵士、等各种音乐，突然人类在数据集中添加了一个“四分三十三秒”，此时此刻，AI开始有小概率生成一些全是静音或者前半段有音乐后半段静音，或者中间、前半段静音的奇怪音乐了。</p>
+<p>这时候，人类又往数据集中添加了一个含有微分音的音乐，这个时候AI学习的时候知道了，原来音乐还可以脱离十二平均律的体系了，于是，AI生成的音乐开始有些特殊异样的听感了。</p>
+<p>这时候人类又往数据集中添加了一些录音，摩擦的噪音……AI生成的音乐种类又多了。</p>
+<p>从这个角度看，还是人类在引领音乐的创新。</p>
+<p>这种意想不到的音乐始终还得是由人来创造，然后放入AI的训练集供AI学习。形成一种新的风格，所以最终引领音乐创新的还是人，不是AI。除非AI学习到了元思维，能够像人一样思考如何对音乐创新。不过貌似让音乐AI有这样的元思维也不是不可能，毕竟大语言模型有可能有这种创新思维。</p>
+<p>AI的缺点：无法实践、实验、检验。</p>
+<p>音乐最终是给人听的。不是给机器人听的。</p>
+<p>一个音乐是否好听，得要有人去听，检验。在乐理逻辑上虽然能做出一些机器自主的判断，计算音程距离、听感和谐程度、整体结构的复杂度，但人是主观的，人类的审美和喜好是随时变化的。</p>
+<p>经过一番思考，很难得出一些好的结论来帮我自己做出一些抉择，目前只能对AI音乐的发展保持持续的关注。</p>
 
         </div>
 
@@ -279,7 +289,7 @@
                 
                     <p class="copyright-item">
                         <span>Permalink:</span>
-                        <span><a href="http://example.com/2024/03/25/%E5%9C%A8WSL%E4%B8%AD%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91Rust/">http://example.com/2024/03/25/%E5%9C%A8WSL%E4%B8%AD%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91Rust/</a></span>
+                        <span><a href="http://example.com/2024/03/27/%E5%AF%B9AI%E9%9F%B3%E4%B9%90%E7%9A%84%E6%80%9D%E8%80%83/">http://example.com/2024/03/27/%E5%AF%B9AI%E9%9F%B3%E4%B9%90%E7%9A%84%E6%80%9D%E8%80%83/</a></span>
                     </p>
                 
                 
@@ -303,9 +313,11 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                        <a href="/tags/AI/"># AI</a>
                     
-                        <a href="/tags/rust/"># rust</a>
+                        <a href="/tags/%E9%9F%B3%E4%B9%90/"># 音乐</a>
+                    
+                        <a href="/tags/%E6%B7%B1%E5%BA%A6%E6%80%9D%E8%80%83/"># 深度思考</a>
                     
                         
                 </span>
@@ -318,10 +330,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/03/27/%E5%AF%B9AI%E9%9F%B3%E4%B9%90%E7%9A%84%E6%80%9D%E8%80%83/">对AI音乐的思考</a>
             
-            
-            <a class="next" rel="next" href="/2024/03/25/%E8%AE%BE%E8%AE%A1%E4%B8%80%E5%A5%97%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BF%AB%E4%B9%90%E5%88%86%E5%B1%82%E4%BD%93%E7%B3%BB/">设计一套自己的快乐分层体系</a>
+            <a class="next" rel="next" href="/2024/03/25/%E5%9C%A8WSL%E4%B8%AD%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91Rust/">在WSL中交叉编译Rust</a>
             
         </section>
 
