@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>关于SunoAI，不同up主的观点总结 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">关于SunoAI，不同up主的观点总结</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 5, 2024&nbsp;&nbsp;21:48:09</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="总结不同领域的音乐UP主对SunoAI的观点"><a href="#总结不同领域的音乐UP主对SunoAI的观点" class="headerlink" title="总结不同领域的音乐UP主对SunoAI的观点"></a>总结不同领域的音乐UP主对SunoAI的观点</h1><h2 id="硬核麻将"><a href="#硬核麻将" class="headerlink" title="硬核麻将"></a>硬核麻将</h2><p>BV1Jr421b7Si</p>
+<p>对SunoAI对音乐的影响持<strong>悲观态度</strong></p>
+<p>0几年~1几年，还能接到扒带的工作，但现在早已被工具取代，该up认为作曲，编曲也同样会被取代，包括人声也会被取代，虽然Suno在很多音质上面做的不够好，但up认为它很快就能进化</p>
+<p>up假设如果神经网络研究路径是正确的，很大部分音乐人将会被取代，顶尖以下的音乐人会被淘汰，最快被取代的不在于工种，而是人格魅力和技术水平，最后剩下的是个人魅力十分出众的音乐人，或者和AI的综合实力不相上下。</p>
+<p>玩音乐的门槛会非常低，但是入行门槛无比高，会导致本来有天赋的人因为风险太高，不敢涉足这个行业。因为学到一半，可能AI又进化了。</p>
+<p><strong>反对认为AI不具有情感的观点</strong></p>
+<p>up认为“AI不具有情感，所以不可能胜过人类”，这种想法非常危险，因为人类至今自己都没有搞清楚什么是情感。</p>
+<p>音乐是有数学模型的，数学模型容易复现，只要这个数学模型让人感受到情感，我们就没有办法说AI创作的音乐没有情感。人类的感受会欺骗自己。</p>
+<p><strong>反对AI的创新性不如人</strong></p>
+<p>人类可以想象出AI想象不出来的奇怪音乐，但一旦进入AI的训练集，AI就能根据这个风格进行重组，生成无数首风格类似但实际不一样的音乐。即使人一直创新，让AI一直追在人的尾巴后面，人的穷举能力也不比机器强。</p>
+<p>如果只是做奇怪的音乐的话，音乐本身的社会作用也变了。从娱乐商品变成和AI竞争的工具，不再具有欣赏价值。也许会有其他方面价值，但这不是长久之计。</p>
+<p>假设神经网络的路是正确的，音乐人的终局将会逼近。</p>
+<p>如果终局来临：要么和AI竞争，要么让音乐回归它原有的用途：求偶和社交。</p>
+<p>up认为音乐并没有多么高雅，只是后来的社会把它宗教化了。</p>
+<h2 id="叨叨冯聊音乐"><a href="#叨叨冯聊音乐" class="headerlink" title="叨叨冯聊音乐"></a>叨叨冯聊音乐</h2><p>第二期：BV1yM4m1R7R4</p>
+<p>经过详细的测试，无法满足叨叨冯的具体需求，up认为<strong>AI音乐取代人类要走的路还很长</strong>。</p>
+<p>SunoAI的语言模型训练的不够，对输入的详细需求信息理解有待提高</p>
+<p><strong>未来专业领域AI的结构可能是不同模型的组合</strong></p>
+<p>该up根据他的了解，认为所有功能性的AI本身存在困境，深度神经网络模型是否是AI发展方向的最优解，根据up的了解，在行业内也不确定，还是在摸索阶段，类似赋格的音乐需要很多逻辑推理，这是目前SunoAI所缺少的。未来的音乐AI可能是不同模型的组合。</p>
+<p><strong>AI音乐在创作小众风格音乐可能不如人类</strong></p>
+<p>基于神经网络的模型需要大数据来喂养，各个AI公司的数据数量和质量至关重要。在实际的音乐领域，有些音乐非常小众，例如马林巴独奏曲，可能全世界只有300首，和流行歌曲成千万的体量无法比拟，这可能会影响AI的学习效果，但是对于人来说影响不大。</p>
+<p><strong>AI不具有真正的意识和智能，无法创新</strong></p>
+<p>音乐最怕的不是不难听，艺术最怕的不是丑。艺术最怕的是无聊、无趣、没有创意没有创新，现在的AI没有真正的智能和意识，所以他不能自己创新。只能依靠人输入的数据集来学习。AI创作的音乐是有滞后性的。</p>
+<h2 id="阿张RayZhang"><a href="#阿张RayZhang" class="headerlink" title="阿张RayZhang"></a>阿张RayZhang</h2><p>BV1ft421g7pb</p>
+<p>可以取代很纯粹的商品性质和粗制滥造的音乐，缺乏音乐人自己的表达，对于人格魅力明显，很吸引人的音乐人影响不大。</p>
+<p>音乐不仅是一个音频，可以承载文化、精神、时间记忆</p>
+<p><strong>AI始终是一个工具</strong></p>
+<p>对自己音乐有态度的音乐人不会用AI作为创作的主导，最多可能只是一个辅助</p>
+<p>up认为词曲编的部分还是更喜欢自己做，因为这个很有成就感</p>
+<p>一些评论的观点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其实流水线工作早就可以代替了，只是比人工成本更高，所以一直没有大范围投入使用，而在艺术性工作里面，AI成本比人工便宜，所以才能大规模投入使用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">拥抱变化永远要比义愤填膺要好的多的多，希望大家都做好的音乐，做自己喜欢的音乐。市场可能不再需要你制作公式化歌曲了，在这个强行逼迫你进化的时代，作为音乐人一定会带来更好更惊艳的作品！</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="园长不再小清新"><a href="#园长不再小清新" class="headerlink" title="园长不再小清新"></a>园长不再小清新</h2><p>BV1SH4y1n74q</p>
+<p>结论：越能被标签化、越原型化的风格，以及越具有功能化属性的音乐形式，就越容易被AI替代</p>
+<p>该up认为AI最大的缺点在于无法生成midi轨道。</p>
+<p>但也有其他观点的弹幕：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果他的最终目标就是直接出成品，为啥要白盒</span><br><span class="line">就好像AI做视频一样，很多人也想要图层和3D模型，可是一步到位的话就没必要了</span><br></pre></td></tr></table></figure>
+
+<p>但凡涉及定制化需求，AI就很难实现</p>
+<p>up认为演出行业会因为AI的出现逆势上涨，因为最终歌曲还是要人来演唱和演奏，在家里永远不可能还原演出现场100多分贝的声压。</p>
+<h2 id="PM玩乐志"><a href="#PM玩乐志" class="headerlink" title="PM玩乐志"></a>PM玩乐志</h2><p>BV1gJ4m1775A</p>
+<p>乐观态度</p>
+<p>AI无法替代真人表演</p>
+<p>弹幕提出“洛天依”</p>
+<p>up主用围棋和足球举例，指出：</p>
+<p>人们所执着的并不是机器或者AI能够替人类做事情，自己就不需要做了，人们真正执着的是亲自参与这项活动中所感受到的乐趣和成就感，人们痴迷的是文化体验。</p>
+<p>有弹幕说：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这种体验是属于音乐人的，而不是属于听众的，从这个角度来看，对于音乐人来说，音乐人不会被取代，但对于听众来说，音乐人有可能被取代</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="王大文-音乐制作人"><a href="#王大文-音乐制作人" class="headerlink" title="王大文-音乐制作人"></a>王大文-音乐制作人</h2><p>BV1qm411d7he</p>
+<p>该up对AI的效果非常震惊，感觉自己多年的成果被AI打败了</p>
+<p>未来可能人人都是产品经理，需要自己提高审美，多去学习了解不同的东西，专注于自己创意部分的提升，这样被AI取代的可能性会大大降低。</p>
+<p>评论：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我一直认为工作大体上可以分成三种，权力性工作、技术性工作、一般性工作，很显然，AI对技术性工作影响最大，会把很多技术性工作转变成一般性工作，而权力性工作不会受影响。</span><br><span class="line"></span><br><span class="line">举个简单的例子，司机在8090年代那是技术性工作，地位高收入高，后来会开车的人越来越多，再加上地图app的出现，司机已经沦为一般性工作，就差远了。</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">正如同我之前担忧AI绘画一样，AI的出现，不是为了挑战业内大牛或者是高端艺术家。AI的出现，是奔着颠覆行业去的。</span><br><span class="line">AI的高效和模仿微调能力，让行业的初级从业者失去了价值，每一个大牛都是从初级从业者成长起来的，土壤断了，根基断了，业内的高级人才，就变成了绝唱。</span><br><span class="line"></span><br><span class="line">不敢想多少年之后。。。反正现在我这个行业估计没人想入行了，游戏原画这块被ai爆破了。</span><br><span class="line"></span><br><span class="line">可能未来有一天，当我们谈到“音乐家”或“画家”的时候，第一反应想到的，是某种软件或AI，而非一种职业……就像当今谈到computer这个单词，我们理所当然地想到的是一种机器，而非一种职业</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我是搞产品的，要懂供应链，管理，产品，画图，各种机器设备操作，力学，结构学，材料学，未来考验人的是解决复杂问题的能力。就是问题叠着问题，要解决问题方程式，分辨真问题和假问题</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/AI/"># AI</a>
+                    
+                        <a href="/tags/%E9%9F%B3%E4%B9%90/"># 音乐</a>
+                    
+                        <a href="/tags/%E6%80%9D%E8%80%83/"># 思考</a>
+                    
+                        <a href="/tags/b%E7%AB%99/"># b站</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/03/27/%E5%8E%9F%E7%A0%81%E3%80%81%E5%8F%8D%E7%A0%81%E3%80%81%E8%A1%A5%E7%A0%81%E3%80%81%E7%A7%BB%E7%A0%81%E7%9A%84%E6%A6%82%E5%BF%B5%E5%8C%BA%E5%88%86%E5%92%8C%E7%90%86%E8%A7%A3/">原码、反码、补码、移码的概念区分和理解</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
