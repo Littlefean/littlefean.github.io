@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>Rust的GUI库摸索 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Rust的GUI库摸索</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 6, 2024&nbsp;&nbsp;8:07:34</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/rust/">rust</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Rust-GUI库的摸索"><a href="#Rust-GUI库的摸索" class="headerlink" title="Rust GUI库的摸索"></a>Rust GUI库的摸索</h1><h2 id="tauri"><a href="#tauri" class="headerlink" title="tauri"></a>tauri</h2><p>最开始用的</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">tauri</span> = <span class="string">&quot;latest&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是环境配置似乎需要msvc，我用的gnu，导致编译总是报错</p>
+<p>这个tauri最开始是做 perf-in 项目打算用的。</p>
+<h2 id="iced"><a href="#iced" class="headerlink" title="iced"></a>iced</h2><p>目前我在考虑鼠标轨迹记录程序用rust重写。</p>
+<p>尝试使用</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">iced</span> = <span class="string">&quot;0.3&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个库，看上去写法和代码很现代化，跨平台。</p>
+<p>但是编译还是报错，似乎还是要msvc，可能有点复杂了</p>
+<h2 id="fltk"><a href="#fltk" class="headerlink" title="fltk"></a>fltk</h2><p>于是又换了一个更简单轻量级的</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">fltk</span> = <span class="string">&quot;1.2&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>结果编译又报错了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">D:\Projects\Project-Test\rust-ui-test&gt;cargo build</span><br><span class="line">   Compiling cc v1.0.90</span><br><span class="line">   Compiling crossbeam-utils v0.8.19</span><br><span class="line">   Compiling <span class="built_in">paste</span> v1.0.14</span><br><span class="line">   Compiling ttf-parser v0.20.0</span><br><span class="line">   Compiling bitflags v2.5.0</span><br><span class="line">   Compiling cmake v0.1.50</span><br><span class="line">   Compiling crossbeam-channel v0.5.12</span><br><span class="line">   Compiling fltk-sys v1.4.28</span><br><span class="line">The following warnings were emitted during compilation:</span><br><span class="line"></span><br><span class="line">warning: fltk-sys@1.4.28: Could not find invokable cmake!</span><br><span class="line"></span><br><span class="line">error: failed to run custom build <span class="built_in">command</span> <span class="keyword">for</span> `fltk-sys v1.4.28`</span><br><span class="line"></span><br><span class="line">Caused by:</span><br><span class="line">  process didn<span class="string">&#x27;t exit successfully: `D:\Projects\Project-Test\rust-ui-test\target\debug\build\fltk-sys-13537af21141788d\build-script-main` (exit code: 101)</span></span><br><span class="line"><span class="string">  --- stdout</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/android.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/bundled.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/link.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/main.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/source.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/utils.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/fltk_config.rs</span></span><br><span class="line"><span class="string">  cargo:rerun-if-changed=build/pkg_config.rs</span></span><br><span class="line"><span class="string">  cargo:warning=Could not find invokable cmake!</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  --- stderr</span></span><br><span class="line"><span class="string">  thread &#x27;</span>main<span class="string">&#x27; panicked at D:\Rust\cargo_home\registry\src\index.crates.io-6f17d22bba15001f\fltk-sys-1.4.28\build/main.rs:57:13:</span></span><br><span class="line"><span class="string">  CMake was not found. It&#x27;</span>s needed to build fltk and cfltk.</span><br><span class="line">  Perhaps you would prefer to use a bundled version of fltk.</span><br><span class="line">              You would need to <span class="built_in">enable</span> the fltk-bundled feature.</span><br><span class="line">              Or <span class="keyword">if</span> you have an installation of FLTK 1.4 and a working fltk-config executable, you can use the fltk-config feature.</span><br><span class="line">              Features can be enabled <span class="keyword">in</span> your Cargo.toml or from the <span class="built_in">command</span> line using the --features=fltk/fltk-bundled argument to cargo.</span><br><span class="line">  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace</span><br></pre></td></tr></table></figure>
+
+<p>尝试的解决方法：</p>
+<p>先去安装cmake</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://cmake.org/download/#latest</span><br></pre></td></tr></table></figure>
+
+<p>需要保证camke在环境变量PATH里，所以安装的时候要勾选一下。</p>
+<p>装好cmake之后再编译，报错更猛烈了。</p>
+<p>改用</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[dependencies]</span></span><br><span class="line"><span class="attr">fltk</span> = &#123; version = <span class="string">&quot;1.2&quot;</span>, features = [<span class="string">&quot;fltk-bundled&quot;</span>] &#125;</span><br></pre></td></tr></table></figure>
+
+<p>试了之后还是报错：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">error: linking with `x86_64-w64-mingw32-gcc` failed: <span class="built_in">exit</span> code: 1</span><br><span class="line">  |</span><br><span class="line">  = note: <span class="string">&quot;x86_64-w64-mingw32-gcc&quot;</span> <span class="string">&quot;-fno-use-linker-plugin&quot;</span> <span class="string">&quot;-Wl,--dynamicbase&quot;</span> <span class="string">&quot;-Wl,--disable-auto-image-base&quot;</span> <span class="string">&quot;-m64&quot;</span> <span class="string">&quot;-Wl,--high-entropy-va&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\self-contained\\crt2.o&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\rsbegin.o&quot;</span> <span class="string">&quot;C:\\Users\\LITTLE~1\\AppData\\Local\\Temp\\rustceJbft8\\symbols.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.2hxomignw9av32oe.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.35wuskz0ujdg8ofw.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.3njzyxeemufjkbjh.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.57m53vg1i8qf42vw.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.gpt4vpsukvw7qn7.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.kcy654qlb68m32.rcgu.o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.3aesmvo6ri36sp96.rcgu.o&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\build&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\build\\Release&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\lib&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\lib64&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\lib\\Release&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\build\\fltk-sys-801ec5ed56cc55d5\\out\\lib64\\Release&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib&quot;</span> <span class="string">&quot;-Wl,-Bstatic&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libfltk-bafc1f02a1ee050a.rlib&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libttf_parser-6099efa460895059.rlib&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libcrossbeam_channel-1a87bdd8137c2f8b.rlib&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libcrossbeam_utils-2f9295815a767419.rlib&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libbitflags-8d49c2622a3eb446.rlib&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\libfltk_sys-6a22e22e50d322ef.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libstd-3e14f4bf03bac47e.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libpanic_unwind-0902473778f72000.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libobject-1b52c822b74fcbd9.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libmemchr-7772d0b3d7a42076.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libaddr2line-c4d17796ffdb8a64.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libgimli-231ca6dff5410129.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\librustc_demangle-538065827e97d512.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libstd_detect-6cfc059822cc9268.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libhashbrown-f2d107dcc77a6f57.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\librustc_std_workspace_alloc-79a2ce77960c2d1e.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libminiz_oxide-533e07c20e1f803f.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libadler-13bc5119a1c7f0d1.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libunwind-da22f62c3fb90c0f.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libcfg_if-2633f2be5fc303b2.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\liblibc-a541fda2cb9d9bba.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\liballoc-1ae8a2ec2312c402.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\librustc_std_workspace_core-7c0b778b66e448b5.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libcore-f0b90fc8b3af3496.rlib&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\libcompiler_builtins-68a81561333edfd5.rlib&quot;</span> <span class="string">&quot;-Wl,-Bdynamic&quot;</span> <span class="string">&quot;-lws2_32&quot;</span> <span class="string">&quot;-lcomctl32&quot;</span> <span class="string">&quot;-lgdi32&quot;</span> <span class="string">&quot;-loleaut32&quot;</span> <span class="string">&quot;-lole32&quot;</span> <span class="string">&quot;-luuid&quot;</span> <span class="string">&quot;-lshell32&quot;</span> <span class="string">&quot;-ladvapi32&quot;</span> <span class="string">&quot;-lcomdlg32&quot;</span> <span class="string">&quot;-lwinspool&quot;</span> <span class="string">&quot;-luser32&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-lodbc32&quot;</span> <span class="string">&quot;-lgdiplus&quot;</span> <span class="string">&quot;-lsupc++&quot;</span> <span class="string">&quot;-lgcc&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-ladvapi32&quot;</span> <span class="string">&quot;-lbcrypt&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-lntdll&quot;</span> <span class="string">&quot;-luserenv&quot;</span> <span class="string">&quot;-lws2_32&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-lws2_32&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-lntdll&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-lgcc_eh&quot;</span> <span class="string">&quot;-l:libpthread.a&quot;</span> <span class="string">&quot;-lmsvcrt&quot;</span> <span class="string">&quot;-lmingwex&quot;</span> <span class="string">&quot;-lmingw32&quot;</span> <span class="string">&quot;-lgcc&quot;</span> <span class="string">&quot;-lmsvcrt&quot;</span> <span class="string">&quot;-luser32&quot;</span> <span class="string">&quot;-lkernel32&quot;</span> <span class="string">&quot;-Wl,--nxcompat&quot;</span> <span class="string">&quot;-nostartfiles&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib&quot;</span> <span class="string">&quot;-L&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\self-contained&quot;</span> <span class="string">&quot;-o&quot;</span> <span class="string">&quot;D:\\Projects\\Project-Test\\rust-ui-test\\target\\debug\\deps\\rust_ui_test-158b451f6cadf32d.exe&quot;</span> <span class="string">&quot;-Wl,--gc-sections&quot;</span> <span class="string">&quot;-no-pie&quot;</span> <span class="string">&quot;-nodefaultlibs&quot;</span> <span class="string">&quot;D:\\Rust\\rustup_home\\toolchains\\stable-x86_64-pc-windows-gnu\\lib\\rustlib\\x86_64-pc-windows-gnu\\lib\\rsend.o&quot;</span></span><br><span class="line">  = note: ld: cannot find -lgdiplus: No such file or directory</span><br><span class="line">          ld: cannot find -lsupc++: No such file or directory</span><br></pre></td></tr></table></figure>
+
+
+
+<p>先</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup update</span><br></pre></td></tr></table></figure>
+
+<p>更新一下，但没有效果，报错还是一样的，暂时先到这里。</p>
+<p>记录一下。</p>
+<p>2024年4月6日早晨八点。mouse-tracker的python项目我还是先用算法技巧来性能优化一下吧，不一定非要用rust重写。后面还会有很多用到rust的机会。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/rust/"># rust</a>
+                    
+                        <a href="/tags/gui/"># gui</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/04/05/%E5%85%B3%E4%BA%8ESunoAI%EF%BC%8C%E4%B8%8D%E5%90%8Cup%E4%B8%BB%E7%9A%84%E8%A7%82%E7%82%B9%E6%80%BB%E7%BB%93/">关于SunoAI，不同up主的观点总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
