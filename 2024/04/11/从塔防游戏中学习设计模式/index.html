@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>从塔防游戏中学习设计模式 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">从塔防游戏中学习设计模式</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 11, 2024&nbsp;&nbsp;7:26:49</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h1><p>@FCPS 在这个对话中， 我们聊聊设计模式。我想知道工厂模式有哪些有点，它设计之初是为了解决什么问题？</p>
+<p>我想的是解决直接用构造方法导致参数太多的问题，还有没有别的</p>
+<h1 id="Answer"><a href="#Answer" class="headerlink" title="Answer"></a>Answer</h1><p>Searching………………工厂模式（Factory Pattern）是一种创建型设计模式，它解决了多种问题，并带来了若干优点。以下是工厂模式的设计初衷及其优点的详细解释。</p>
+<h3 id="工厂模式的设计初衷"><a href="#工厂模式的设计初衷" class="headerlink" title="工厂模式的设计初衷"></a>工厂模式的设计初衷</h3><ol>
+<li><strong>减少代码与类之间的耦合度：</strong> 工厂模式通过引入一个中间层（即工厂类）来创建实例，这样做可以降低调用者与具体产品类之间的耦合度，提高系统的灵活性和扩展性。</li>
+<li><strong>支持代码的封装性和可维护性：</strong> 将对象的创建过程封装在工厂中，可以使对象创建的细节对调用者隐藏，从而使代码更易于维护和理解。</li>
+<li><strong>提供一种替代直接实例化对象的方法：</strong> 在一些场合下，直接实例化对象会带来一些问题，如需要实例化的对象类型依赖于外部条件，或者对象创建过程较为复杂等情况。工厂模式提供了一个创建对象的接口，允许系统在不直接指定对象类型的情况下创建对象。</li>
+<li><strong>控制产品的生产：</strong> 工厂可以决定何时创建产品，控制产品的生产过程和质量，便于实现权限控制和资源重用等功能。</li>
+</ol>
+<h3 id="工厂模式的优点"><a href="#工厂模式的优点" class="headerlink" title="工厂模式的优点"></a>工厂模式的优点</h3><ol>
+<li><strong>降低耦合度：</strong> 工厂模式有助于减少调用代码与对象创建逻辑之间的直接依赖，从而降低系统的耦合度。</li>
+<li><strong>增强代码的扩展性：</strong> 当需要引入新的产品类时，无需修改已有代码，只需添加一个新的具体产品类和相应的工厂类即可，遵循开闭原则。</li>
+<li><strong>增强代码的灵活性：</strong> 工厂模式可以在运行时更改创建逻辑，动态地决定创建哪一种产品实例。</li>
+<li><strong>隐藏创建逻辑：</strong> 用户不需要知道具体的创建细节，只需通过工厂即可得到所需的对象，降低了使用产品的复杂度。</li>
+<li><strong>支持产品的规范性和安全性：</strong> 工厂模式使产品的创建过程标准化，同时也更易于加入权限控制等安全性控制机制。</li>
+</ol>
+<p>总之，工厂模式不仅可以解决由直接使用构造方法可能带来的参数过多等问题，还提供了代码组织和管理上的多方面优势，如降低耦合度、提升系统的扩展性与灵活性等。</p>
+<h1 id="Question-1"><a href="#Question-1" class="headerlink" title="Question"></a>Question</h1><p>一定要引入工厂类才算工厂模式吗？只在一个类里写一个静态方法，比如 getInstance(…) 算用到工厂模式了吗</p>
+<h1 id="Answer-1"><a href="#Answer-1" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…不一定要引入专门的工厂类才能算作使用了工厂模式。在一个类中通过静态方法创建实例的做法，实际上也是工厂模式的一种体现，尽管它可能不那么显而易见。这种方法有时被称为“静态工厂方法”模式，它是工厂方法模式的一个特殊情况。</p>
+<h3 id="静态工厂方法模式"><a href="#静态工厂方法模式" class="headerlink" title="静态工厂方法模式"></a>静态工厂方法模式</h3><p>静态工厂方法模式使用一个类的静态方法来创建和返回实例，而不是直接使用<code>new</code>关键字。这种方法的优点包括：</p>
+<ol>
+<li><strong>控制实例化过程：</strong> 静态工厂方法可以包含额外的逻辑来决定何时或如何创建实例，甚至可以返回一个已经存在的实例（例如实现单例模式）。</li>
+<li><strong>返回类型的灵活性：</strong> 静态工厂方法的返回类型可以是其创建的对象的任意超类型，这为接口返回类型提供了灵活性，可以有助于增强API的抽象性和灵活性。</li>
+<li><strong>参数化实例的创建：</strong> 通过接受不同的参数，静态工厂方法可以根据不同的需求返回不同类型的实例，增加了方法的可用性。</li>
+</ol>
+<p>静态工厂方法模式的一个典型例子是Java标准库中的<code>valueOf</code>方法，如<code>Integer.valueOf(int)</code>。</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>假设我们有一个配置类，我们希望这个类是单例的，并且可以根据不同的配置文件创建实例。以下是使用静态工厂方法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Configuration</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Configuration instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Configuration</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 私有构造器，阻止外部实例化</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Configuration <span class="title function_">getInstance</span><span class="params">(String configFile)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="title class_">Configuration</span>();</span><br><span class="line">            <span class="comment">// 假设这里有一些根据configFile读取和设置配置的逻辑</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>getInstance</code>方法是一个静态工厂方法。它根据传入的配置文件名参数创建或返回配置类的实例。这既实现了单例模式，又保留了静态工厂方法的优点，比如灵活性和控制实例化过程的能力。</p>
+<p>综上所述，即使不引入专门的工厂类，通过在类内部提供静态工厂方法也是工厂模式的一种有效使用方式。</p>
+<h1 id="Question-2"><a href="#Question-2" class="headerlink" title="Question"></a>Question</h1><p>给我写一个引入工厂类来实现工厂模式的例子</p>
+<h1 id="Answer-2"><a href="#Answer-2" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…为了更好地演示引入工厂类来实现工厂模式的例子，让我们构建一个简单的例子。假设我们有一个软件，需要根据不同的文件类型（如文本文件、图像文件等）来处理不同的文件。我们可以为每种文件类型创建一个处理器，并使用工厂模式来根据文件类型的不同选择合适的处理器。</p>
+<h3 id="步骤-1：定义产品接口"><a href="#步骤-1：定义产品接口" class="headerlink" title="步骤 1：定义产品接口"></a>步骤 1：定义产品接口</h3><p>首先，我们定义一个<code>FileProcessor</code>接口，它将是所有文件处理器的基类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">FileProcessor</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">processFile</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-2：创建具体产品"><a href="#步骤-2：创建具体产品" class="headerlink" title="步骤 2：创建具体产品"></a>步骤 2：创建具体产品</h3><p>接下来，我们为不同的文件类型创建具体的处理器类。这些类实现了<code>FileProcessor</code>接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TextFileProcessor</span> <span class="keyword">implements</span> <span class="title class_">FileProcessor</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processFile</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;处理文本文件&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ImageFileProcessor</span> <span class="keyword">implements</span> <span class="title class_">FileProcessor</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">processFile</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;处理图像文件&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-3：创建工厂类"><a href="#步骤-3：创建工厂类" class="headerlink" title="步骤 3：创建工厂类"></a>步骤 3：创建工厂类</h3><p>然后，我们创建一个工厂类<code>FileProcessorFactory</code>，用于根据文件类型创建合适的文件处理器实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileProcessorFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> FileProcessor <span class="title function_">getFileProcessor</span><span class="params">(String fileType)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fileType == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (fileType.equalsIgnoreCase(<span class="string">&quot;TEXT&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TextFileProcessor</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (fileType.equalsIgnoreCase(<span class="string">&quot;IMAGE&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ImageFileProcessor</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-4：使用工厂类"><a href="#步骤-4：使用工厂类" class="headerlink" title="步骤 4：使用工厂类"></a>步骤 4：使用工厂类</h3><p>最后，我们可以使用<code>FileProcessorFactory</code>来根据文件类型获取并使用合适的文件处理器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FactoryPatternDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">FileProcessor</span> <span class="variable">fileProcessor1</span> <span class="operator">=</span> FileProcessorFactory.getFileProcessor(<span class="string">&quot;TEXT&quot;</span>);</span><br><span class="line">        fileProcessor1.processFile();</span><br><span class="line"></span><br><span class="line">        <span class="type">FileProcessor</span> <span class="variable">fileProcessor2</span> <span class="operator">=</span> FileProcessorFactory.getFileProcessor(<span class="string">&quot;IMAGE&quot;</span>);</span><br><span class="line">        fileProcessor2.processFile();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在这个例子中，<code>FileProcessorFactory</code>是一个工厂类，它根据输入的文件类型动态创建并返回合适的文件处理器对象。这样，我们就成功地使用了工厂模式来解耦客户端代码和具体产品类，提高了系统的灵活性和可扩展性。</p>
+<h1 id="Question-3"><a href="#Question-3" class="headerlink" title="Question"></a>Question</h1><p>讲讲什么是抽象工厂模式</p>
+<h1 id="Answer-3"><a href="#Answer-3" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…抽象工厂模式（Abstract Factory Pattern）是一种创建型设计模式，它允许你生产系列相关或相互依赖的对象，而无需指定它们具体的类。这个模式是工厂方法模式的一种扩展，其提供了一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。</p>
+<h3 id="抽象工厂模式的核心组成"><a href="#抽象工厂模式的核心组成" class="headerlink" title="抽象工厂模式的核心组成"></a>抽象工厂模式的核心组成</h3><ol>
+<li><strong>抽象工厂（Abstract Factory）：</strong> 提供一个接口，用于创建相关或依赖对象的家族，而不需要明确指定具体类。</li>
+<li><strong>具体工厂（Concrete Factory）：</strong> 实现抽象工厂的操作，生产具体的产品。</li>
+<li><strong>抽象产品（Abstract Product）：</strong> 为一类产品对象声明一个接口。</li>
+<li><strong>具体产品（Concrete Product）：</strong> 抽象产品的具体子类。具体工厂负责创建具体的产品对象。</li>
+<li><strong>客户端（Client）：</strong> 只需使用抽象工厂和抽象产品提供的接口就可以创建一系列相关或依赖的对象。</li>
+</ol>
+<h3 id="抽象工厂模式的目的"><a href="#抽象工厂模式的目的" class="headerlink" title="抽象工厂模式的目的"></a>抽象工厂模式的目的</h3><p>抽象工厂模式的目的是提供一种封装一组具有共同目标的单个工厂的方式，使其创建的对象具有某种共同点。它支持增加新的工厂和产品，而不影响原有系统，提高了系统的灵活性和可扩展性。</p>
+<h3 id="抽象工厂模式的优点"><a href="#抽象工厂模式的优点" class="headerlink" title="抽象工厂模式的优点"></a>抽象工厂模式的优点</h3><ul>
+<li><strong>隔离具体类的生成：</strong> 客户端不需要知道它使用的具体产品的类名，只需要知道相应的工厂即可。</li>
+<li><strong>增加新的具体工厂和产品族很方便：</strong> 无需改变现有代码，符合开闭原则。</li>
+<li><strong>提高系统的灵活性：</strong> 换用不同的产品族或产品组合可以提供不同行为的实例。</li>
+<li><strong>促进了高内聚低耦合的设计思想。</strong></li>
+</ul>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>假设有一个家具店，需要生产并销售不同风格（如现代和维多利亚风格）的家具，包括椅子和桌子。每种风格的家具制作细节不同，因此需要使用抽象工厂模式来处理这个问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义椅子和桌子的抽象接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Chair</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Table</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义具体产品</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ModernChair</span> <span class="keyword">implements</span> <span class="title class_">Chair</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;This is a modern chair.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VictorianChair</span> <span class="keyword">implements</span> <span class="title class_">Chair</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;This is a Victorian chair.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ModernTable</span> <span class="keyword">implements</span> <span class="title class_">Table</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;This is a modern table.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VictorianTable</span> <span class="keyword">implements</span> <span class="title class_">Table</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">describe</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;This is a Victorian table.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义抽象工厂接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">FurnitureFactory</span> &#123;</span><br><span class="line">    Chair <span class="title function_">createChair</span><span class="params">()</span>;</span><br><span class="line">    Table <span class="title function_">createTable</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义具体工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ModernFurnitureFactory</span> <span class="keyword">implements</span> <span class="title class_">FurnitureFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Chair <span class="title function_">createChair</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ModernChair</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Table <span class="title function_">createTable</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ModernTable</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VictorianFurnitureFactory</span> <span class="keyword">implements</span> <span class="title class_">FurnitureFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Chair <span class="title function_">createChair</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">VictorianChair</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Table <span class="title function_">createTable</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">VictorianTable</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">FurnitureFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModernFurnitureFactory</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">Chair</span> <span class="variable">chair</span> <span class="operator">=</span> factory.createChair();</span><br><span class="line">        chair.describe();</span><br><span class="line"></span><br><span class="line">        <span class="type">Table</span> <span class="variable">table</span> <span class="operator">=</span> factory.createTable();</span><br><span class="line">        table.describe();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>FurnitureFactory</code>是抽象工厂，定义了创建家具的接口。<code>ModernFurnitureFactory</code>和<code>VictorianFurnitureFactory</code>是具体的工厂，分别生产现代风格和维多利亚风格的家具。通过切换不同的工厂，可以很方便地生产不同风格的家具，从而展示了抽象工厂模式的灵活性和扩展性。</p>
+<h1 id="Question-4"><a href="#Question-4" class="headerlink" title="Question"></a>Question</h1><p>能不能用塔防游戏的场景举个抽象工厂的例子，比如炮塔，敌方单位，传统炮塔，雷击炮塔，之类的</p>
+<h1 id="Answer-4"><a href="#Answer-4" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…在塔防游戏的场景中使用抽象工厂模式，可以非常方便地管理和扩展游戏中的各种单位和建筑，比如炮塔和敌方单位。游戏中可能有不同类型的炮塔（如传统炮塔、雷击炮塔等）以及不同类型的敌方单位（如普通敌人、装甲敌人等）。我们可以为每种类型的炮塔和敌方单位创建不同的工厂，然后使用抽象工厂模式来统一管理这些工厂。</p>
+<h3 id="步骤-1-定义抽象产品"><a href="#步骤-1-定义抽象产品" class="headerlink" title="步骤 1: 定义抽象产品"></a>步骤 1: 定义抽象产品</h3><p>首先，我们定义两个抽象产品接口：<code>Tower</code> 和 <code>Enemy</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Enemy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-2-创建具体产品"><a href="#步骤-2-创建具体产品" class="headerlink" title="步骤 2: 创建具体产品"></a>步骤 2: 创建具体产品</h3><p>然后，为每种类型的炮塔和敌方单位创建具体的实现类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">TraditionalTower</span> <span class="keyword">implements</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;传统炮塔进行攻击&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LightningTower</span> <span class="keyword">implements</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;雷击炮塔进行攻击，造成范围伤害&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NormalEnemy</span> <span class="keyword">implements</span> <span class="title class_">Enemy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;普通敌人向前移动&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ArmoredEnemy</span> <span class="keyword">implements</span> <span class="title class_">Enemy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;装甲敌人缓慢向前移动&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-3-定义抽象工厂"><a href="#步骤-3-定义抽象工厂" class="headerlink" title="步骤 3: 定义抽象工厂"></a>步骤 3: 定义抽象工厂</h3><p>接着，定义一个抽象工厂接口，包含创建炮塔和敌方单位的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">GameElementFactory</span> &#123;</span><br><span class="line">    Tower <span class="title function_">createTower</span><span class="params">()</span>;</span><br><span class="line">    Enemy <span class="title function_">createEnemy</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-4-创建具体工厂"><a href="#步骤-4-创建具体工厂" class="headerlink" title="步骤 4: 创建具体工厂"></a>步骤 4: 创建具体工厂</h3><p>为不同游戏关卡或地图创建具体的工厂类，每个工厂类可以生产一种类型的炮塔和敌人。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Level1Factory</span> <span class="keyword">implements</span> <span class="title class_">GameElementFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Tower <span class="title function_">createTower</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">TraditionalTower</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Enemy <span class="title function_">createEnemy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">NormalEnemy</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Level2Factory</span> <span class="keyword">implements</span> <span class="title class_">GameElementFactory</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> Tower <span class="title function_">createTower</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LightningTower</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Enemy <span class="title function_">createEnemy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArmoredEnemy</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="步骤-5-客户端使用"><a href="#步骤-5-客户端使用" class="headerlink" title="步骤 5: 客户端使用"></a>步骤 5: 客户端使用</h3><p>最后，在游戏逻辑中，根据当前的游戏级别或场景，选择对应的工厂来创建炮塔和敌人。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Game</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">GameElementFactory</span> <span class="variable">factory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Level1Factory</span>(); <span class="comment">// 或者 Level2Factory 根据实际场景选择</span></span><br><span class="line"></span><br><span class="line">        <span class="type">Tower</span> <span class="variable">tower</span> <span class="operator">=</span> factory.createTower();</span><br><span class="line">        <span class="type">Enemy</span> <span class="variable">enemy</span> <span class="operator">=</span> factory.createEnemy();</span><br><span class="line"></span><br><span class="line">        tower.attack();</span><br><span class="line">        enemy.move();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过使用抽象工厂模式，我们可以容易地为游戏添加新的炮塔和敌方单位类型，只需要新增具体的产品类和对应的工厂类即可。这种方式使得游戏的扩展性大大增强，同时也保持了代码的整洁和可维护性。</p>
+<h1 id="Question-5"><a href="#Question-5" class="headerlink" title="Question"></a>Question</h1><p>什么是原型模式</p>
+<h1 id="Answer-5"><a href="#Answer-5" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…原型模式（Prototype Pattern）是一种创建型设计模式，它允许通过复制现有的对象来创建新的对象，而无需知道创建的细节。简单来说，原型模式就是对象的克隆。</p>
+<h3 id="原型模式的核心"><a href="#原型模式的核心" class="headerlink" title="原型模式的核心"></a>原型模式的核心</h3><p>原型模式的核心是实现一个可以克隆自身的接口。在Java中，这通常通过实现<code>Cloneable</code>接口并重写<code>Object</code>类的<code>clone()</code>方法来实现。</p>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><p>当直接创建对象的成本较高时，比如对象的创建需要消耗较多的资源（时间、CPU资源等），或对象的构造函数复杂时，可以使用原型模式进行优化。使用原型模式可以：</p>
+<ul>
+<li>避免构造函数的约束。</li>
+<li>避开复杂的对象创建过程。</li>
+<li>提高应用程序的性能。</li>
+</ul>
+<h3 id="原型模式的优点"><a href="#原型模式的优点" class="headerlink" title="原型模式的优点"></a>原型模式的优点</h3><ul>
+<li><strong>性能提高：</strong> 通过对象克隆避免了构造函数的调用，可以比直接新建对象性能更佳。</li>
+<li><strong>逃避构造过程的限制：</strong> 克隆过程并不通过常规的构造函数，有时构造函数可能有访问权限的限制，或者构造过程较为复杂。</li>
+</ul>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><p>假设我们有一个图形界面的<code>Rectangle</code>类，需要快速创建一个与之完全相同的实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Rectangle</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> width;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> height;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Rectangle</span><span class="params">(<span class="type">int</span> width, <span class="type">int</span> height)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.width = width;</span><br><span class="line">        <span class="built_in">this</span>.height = height;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">display</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Rectangle [Width: &quot;</span> + width + <span class="string">&quot;, Height: &quot;</span> + height + <span class="string">&quot;]&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PrototypeDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Rectangle</span> <span class="variable">rect1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Rectangle</span>(<span class="number">3</span>, <span class="number">6</span>);</span><br><span class="line">            <span class="type">Rectangle</span> <span class="variable">rect2</span> <span class="operator">=</span> (Rectangle) rect1.clone();</span><br><span class="line"></span><br><span class="line">            rect1.display();</span><br><span class="line">            rect2.display();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>Rectangle</code>类实现了<code>Cloneable</code>接口，并重写了<code>clone()</code>方法来允许对象自我复制。客户端代码创建了一个<code>Rectangle</code>对象的副本，而无需知道对象构造和初始化的细节。</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>实现原型模式时，需要注意深拷贝与浅拷贝的区别。浅拷贝只复制对象的基本数据类型和引用，不复制引用指向的对象；而深拷贝则会连同引用指向的对象一起复制。在使用<code>clone()</code>方法时，默认是浅拷贝，如果需要实现深拷贝，需要在<code>clone()</code>方法中手动复制对象的引用类型成员。</p>
+<h1 id="Question-6"><a href="#Question-6" class="headerlink" title="Question"></a>Question</h1><p>举个单例模式的代码例子</p>
+<h1 id="Answer-6"><a href="#Answer-6" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…单例模式（Singleton Pattern）是一种确保一个类只有一个实例，并提供一个全局访问点的创建型设计模式。这个模式是用来避免对资源的多重占用，比如写操作时对文件的共享使用。</p>
+<h3 id="实现单例模式的步骤如下："><a href="#实现单例模式的步骤如下：" class="headerlink" title="实现单例模式的步骤如下："></a>实现单例模式的步骤如下：</h3><ol>
+<li>将该类的构造函数设为私有，防止外部通过<code>new</code>关键字创建对象实例。</li>
+<li>在类内部创建一个该类的实例。</li>
+<li>提供一个公共的静态方法，返回这个类内部创建的实例。</li>
+</ol>
+<h3 id="懒汉式单例示例"><a href="#懒汉式单例示例" class="headerlink" title="懒汉式单例示例"></a>懒汉式单例示例</h3><p>懒汉式单例模式指的是在真正需要使用对象实例时才会创建该实例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LazySingleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> LazySingleton instance;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">LazySingleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> LazySingleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> <span class="title class_">LazySingleton</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong> 在多线程环境下，为了防止多个线程同时访问<code>getInstance</code>方法时可能会创建多个实例的问题，需要将<code>getInstance</code>方法设置为同步（synchronized）。</p>
+<h3 id="饿汉式单例示例"><a href="#饿汉式单例示例" class="headerlink" title="饿汉式单例示例"></a>饿汉式单例示例</h3><p>饿汉式单例模式指的是在类加载时就完成了实例的初始化，因此类加载较慢，但获取对象的速度快。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EagerSingleton</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">EagerSingleton</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EagerSingleton</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">EagerSingleton</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> EagerSingleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式基于classloader机制避免了多线程的同步问题，不过，<code>instance</code>在类装载时就实例化，虽然导致类装载的原因有很多种，在单例模式中大多数都是调用<code>getInstance</code>方法，但是也不能确定有其他的方式（或者其他的静态方法）导致类装载，这时候初始化<code>instance</code>明显没有达到懒加载的效果。</p>
+<h1 id="Question-7"><a href="#Question-7" class="headerlink" title="Question"></a>Question</h1><p>构造器 builder 模式，你能不能讲一讲，举一个例子。可以用塔防游戏的塔防来举例子。</p>
+<h1 id="Answer-7"><a href="#Answer-7" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…构造器模式（Builder Pattern）是一种创建型设计模式，它允许你分步骤构造复杂对象，而不将不同构造过程集中在一个构造函数中，以避免构造函数参数列表过长，以及增加构造过程的灵活性和清晰度。</p>
+<h3 id="构造器（Builder）模式的优点"><a href="#构造器（Builder）模式的优点" class="headerlink" title="构造器（Builder）模式的优点"></a>构造器（Builder）模式的优点</h3><ul>
+<li><strong>分离复杂对象的构造和表示：</strong> 允许用户通过指定复杂对象的类型和内容就可以构建它们，用户不需要知道内部的具体构建细节。</li>
+<li><strong>更好的控制构造过程：</strong> 构建过程被分步骤执行，这意味着构造过程可以更加精细和控制。</li>
+<li><strong>提供清晰的构造API：</strong> 相对于将所有参数放在同一个构造函数中，使用Builder模式可以使得参数设置更加直观和方便理解。</li>
+</ul>
+<h3 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h3><p>当一个类的构造函数参数过多，导致构造函数变得难以管理，或者当一个类有多种表现形式和创建过程时，可以使用Builder模式。</p>
+<h3 id="塔防游戏的塔防构造例子"><a href="#塔防游戏的塔防构造例子" class="headerlink" title="塔防游戏的塔防构造例子"></a>塔防游戏的塔防构造例子</h3><p>假设在一个塔防游戏中，我们需要创建不同类型的塔（如箭塔、炮塔、魔法塔等），并且每种类型的塔都有不同的属性（如攻击力、攻击范围、攻击速度等）。我们可以使用Builder模式来构造这些塔。</p>
+<p>定义塔的类和它的Builder接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 塔的类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String type;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> attackPower;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> range;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> attackSpeed;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Tower</span><span class="params">(TowerBuilder builder)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.type = builder.type;</span><br><span class="line">        <span class="built_in">this</span>.attackPower = builder.attackPower;</span><br><span class="line">        <span class="built_in">this</span>.range = builder.range;</span><br><span class="line">        <span class="built_in">this</span>.attackSpeed = builder.attackSpeed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 塔的Builder接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">TowerBuilder</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String type;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> attackPower;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">int</span> range;</span><br><span class="line">        <span class="keyword">private</span> <span class="type">float</span> attackSpeed;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> TowerBuilder <span class="title function_">setType</span><span class="params">(String type)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.type = type;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> TowerBuilder <span class="title function_">setAttackPower</span><span class="params">(<span class="type">int</span> attackPower)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.attackPower = attackPower;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> TowerBuilder <span class="title function_">setRange</span><span class="params">(<span class="type">int</span> range)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.range = range;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> TowerBuilder <span class="title function_">setAttackSpeed</span><span class="params">(<span class="type">float</span> attackSpeed)</span> &#123;</span><br><span class="line">            <span class="built_in">this</span>.attackSpeed = attackSpeed;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Tower <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Tower</span>(<span class="built_in">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用该Builder来创建不同种类的塔：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerDefenseGame</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Tower</span> <span class="variable">arrowTower</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Tower</span>.TowerBuilder()</span><br><span class="line">                .setType(<span class="string">&quot;箭塔&quot;</span>)</span><br><span class="line">                .setAttackPower(<span class="number">50</span>)</span><br><span class="line">                .setRange(<span class="number">10</span>)</span><br><span class="line">                .setAttackSpeed(<span class="number">1.5f</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="type">Tower</span> <span class="variable">cannonTower</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Tower</span>.TowerBuilder()</span><br><span class="line">                .setType(<span class="string">&quot;炮塔&quot;</span>)</span><br><span class="line">                .setAttackPower(<span class="number">100</span>)</span><br><span class="line">                .setRange(<span class="number">8</span>)</span><br><span class="line">                .setAttackSpeed(<span class="number">2.0f</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 现在你有了两种类型的塔，且具有不同的属性</span></span><br><span class="line">        System.out.println(<span class="string">&quot;已创建箭塔和炮塔&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过使用Builder模式，我们能够以清晰、灵活的方式构造出不同属性的塔，而无需记念复杂的构造函数参数列表，同时还能轻松地添加新的属性和类型的塔。</p>
+<h1 id="Question-8"><a href="#Question-8" class="headerlink" title="Question"></a>Question</h1><p>我看这个构造者类是写在炮塔类的内部的一个内部类，实际上构造者模式一定要写在类的内部作为内部类吗？</p>
+<h1 id="Answer-8"><a href="#Answer-8" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…在构造者模式中，构造者（Builder）不一定要作为内部类来实现。构造者可以是内部类，也可以是与产品类相分离的独立类。选择使用哪种方式取决于具体的设计需求和偏好。</p>
+<h3 id="使用内部类的优势："><a href="#使用内部类的优势：" class="headerlink" title="使用内部类的优势："></a>使用内部类的优势：</h3><ul>
+<li><strong>封装性好。</strong> 将Builder作为内部类可以更好地封装构造过程，而外部类的用户无需获知构造的细节。</li>
+<li><strong>访问方便。</strong> 内部类可以访问外部类的私有成员，这使得编写Builder的构造过程更加方便，特别是当构造过程需要访问外部类的私有属性时。</li>
+</ul>
+<h3 id="使用独立类的情况："><a href="#使用独立类的情况：" class="headerlink" title="使用独立类的情况："></a>使用独立类的情况：</h3><ul>
+<li><strong>解耦合。</strong> 当构造器（或Builder）的实现可能在未来变得非常复杂，或者需要在多个类之间共享构造逻辑时，将Builder作为一个独立的类实现可以更好地解耦。</li>
+<li><strong>重用性。</strong> 如果构造逻辑需要在不同的上下文中重用，独立的Builder类可以更容易地被重用。</li>
+</ul>
+<h3 id="示例：独立的Builder类"><a href="#示例：独立的Builder类" class="headerlink" title="示例：独立的Builder类"></a>示例：独立的Builder类</h3><p>假设我们有一个<code>Tower</code>类，此时我们将<code>TowerBuilder</code>实现为一个独立的类而不是内部类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 塔的类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String type;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> attackPower;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> range;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> attackSpeed;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Tower</span><span class="params">(TowerBuilder builder)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.type = builder.getType();</span><br><span class="line">        <span class="built_in">this</span>.attackPower = builder.getAttackPower();</span><br><span class="line">        <span class="built_in">this</span>.range = builder.getRange();</span><br><span class="line">        <span class="built_in">this</span>.attackSpeed = builder.getAttackSpeed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Getter方法略...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 独立的Builder类</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerBuilder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String type;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> attackPower;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> range;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">float</span> attackSpeed;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TowerBuilder <span class="title function_">setType</span><span class="params">(String type)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.type = type;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TowerBuilder <span class="title function_">setAttackPower</span><span class="params">(<span class="type">int</span> attackPower)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.attackPower = attackPower;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TowerBuilder <span class="title function_">setRange</span><span class="params">(<span class="type">int</span> range)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.range = range;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> TowerBuilder <span class="title function_">setAttackSpeed</span><span class="params">(<span class="type">float</span> attackSpeed)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.attackSpeed = attackSpeed;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Getter方法略...</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Tower <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Tower</span>(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>无论选择哪种实现方式，关键是要使得构造过程清晰、灵活且易于维护。选择是否将Builder作为内部类，主要取决于具体的应用场景和设计需求。</p>
+<h1 id="Question-9"><a href="#Question-9" class="headerlink" title="Question"></a>Question</h1><p>什么是适配器模式</p>
+<h1 id="Answer-9"><a href="#Answer-9" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…适配器模式（Adapter Pattern），也称为包装器（Wrapper），是一种结构型设计模式。它允许将一个类的接口转换成客户端期望的另外一个接口，使原本接口不兼容的类可以一起工作。适配器模式主要用于解决新旧系统或新旧接口之间的兼容问题，而无需修改原有的代码。</p>
+<h3 id="适配器模式的角色"><a href="#适配器模式的角色" class="headerlink" title="适配器模式的角色"></a>适配器模式的角色</h3><ul>
+<li><strong>目标（Target）接口：</strong> 当前系统业务所期待的接口，它可以是具体的或抽象的类，也可以是接口。</li>
+<li><strong>需要适配的类（Adaptee）：</strong> 需要适配的类或适配者类。</li>
+<li><strong>适配器（Adapter）：</strong> 适配器类是一个转换器，通过继承或引用适配者的对象，将适配者接口转换成目标接口，让客户按目标接口的格式访问适配者。</li>
+</ul>
+<h3 id="适配器模式的两种实现方式"><a href="#适配器模式的两种实现方式" class="headerlink" title="适配器模式的两种实现方式"></a>适配器模式的两种实现方式</h3><ol>
+<li><strong>类适配器模式：</strong> 通过继承来实现适配器功能。</li>
+<li><strong>对象适配器模式：</strong> 通过组合来实现适配器功能。</li>
+</ol>
+<h3 id="示例：塔防游戏中的适配器模式"><a href="#示例：塔防游戏中的适配器模式" class="headerlink" title="示例：塔防游戏中的适配器模式"></a>示例：塔防游戏中的适配器模式</h3><p>假设在一个塔防游戏中，有一个旧的敌人接口<code>OldEnemy</code>和一个新的敌人接口<code>NewEnemy</code>。现在我们有一些旧的敌人类，它们实现了<code>OldEnemy</code>接口，但是系统是按<code>NewEnemy</code>接口来设计的。我们需要一个适配器让旧的敌人类能够在新的系统中工作。</p>
+<p>定义<code>NewEnemy</code>接口和<code>OldEnemy</code>接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新的敌人接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">NewEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 旧的敌人接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">OldEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">goForward</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fireWeapon</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个旧的敌人实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 旧的敌人实现类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OldEnemyRobot</span> <span class="keyword">implements</span> <span class="title class_">OldEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">goForward</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;OldEnemyRobot going Forward&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fireWeapon</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;OldEnemyRobot firing weapon&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现适配器类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 适配器类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EnemyAdapter</span> <span class="keyword">implements</span> <span class="title class_">NewEnemy</span> &#123;</span><br><span class="line">    OldEnemy oldEnemy;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">EnemyAdapter</span><span class="params">(OldEnemy oldEnemy)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.oldEnemy = oldEnemy;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span> &#123;</span><br><span class="line">        oldEnemy.goForward();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        oldEnemy.fireWeapon();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>EnemyAdapter</code>类实现了新的敌人接口，但它实际上内部使用了旧的敌人实现。这样，即使是旧的敌人实现，也可以在期望使用新敌人接口的系统中工作，而无需改动旧的敌人类的代码。</p>
+<p>使用适配器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerDefenseGame</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">OldEnemy</span> <span class="variable">oldEnemyRobot</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OldEnemyRobot</span>();</span><br><span class="line">        <span class="type">NewEnemy</span> <span class="variable">adaptedEnemy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EnemyAdapter</span>(oldEnemyRobot);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 现在可以使用新敌人接口操作旧的敌人实例了</span></span><br><span class="line">        adaptedEnemy.move();</span><br><span class="line">        adaptedEnemy.attack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>适配器模式通过引入一个中间层（即适配器类），使得原本因接口不兼容而不能一起工作的类可以一起工作，增强了系统的灵活性和可扩展性。</p>
+<h1 id="Question-10"><a href="#Question-10" class="headerlink" title="Question"></a>Question</h1><p>上面这个是类的，能不能举一个对象适配器模式</p>
+<h1 id="Answer-10"><a href="#Answer-10" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…当然可以。对象适配器模式与类适配器模式的主要区别在于，对象适配器模式使用组合来连接适配者类的接口与目标接口，而不是继承。这种方式提供了更好的灵活性，因为它可以适配多个适配者的类而不是仅一个。</p>
+<h3 id="对象适配器模式示例"><a href="#对象适配器模式示例" class="headerlink" title="对象适配器模式示例"></a>对象适配器模式示例</h3><p>在塔防游戏场景中，让我们继续使用之前的<code>NewEnemy</code>和<code>OldEnemy</code>接口，以及<code>OldEnemyRobot</code>类的示例。我们将创建一个对象适配器使得<code>OldEnemyRobot</code>能够像<code>NewEnemy</code>那样工作。</p>
+<p>定义<code>NewEnemy</code>接口和<code>OldEnemy</code>接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 新的敌人接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">NewEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 旧的敌人接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">OldEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">goForward</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">fireWeapon</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个旧的敌人实现类<code>OldEnemyRobot</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 旧的敌人实现类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OldEnemyRobot</span> <span class="keyword">implements</span> <span class="title class_">OldEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">goForward</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;OldEnemyRobot going Forward&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">fireWeapon</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;OldEnemyRobot firing weapon&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现一个对象适配器类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对象适配器类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EnemyRobotAdapter</span> <span class="keyword">implements</span> <span class="title class_">NewEnemy</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> OldEnemy oldEnemyRobot;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">EnemyRobotAdapter</span><span class="params">(OldEnemy oldEnemyRobot)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.oldEnemyRobot = oldEnemyRobot;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">move</span><span class="params">()</span> &#123;</span><br><span class="line">        oldEnemyRobot.goForward();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        oldEnemyRobot.fireWeapon();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里，<code>EnemyRobotAdapter</code>类不再继承<code>OldEnemyRobot</code>，而是通过构造函数接收一个<code>OldEnemy</code>实例，并将其存储在一个私有成员变量中。然后，<code>EnemyRobotAdapter</code>类实现了<code>NewEnemy</code>接口，通过调用其内部<code>oldEnemyRobot</code>的方法来满足接口要求，从而使老式的机器人敌人可以像新的敌人一样被使用。</p>
+<p>使用适配器的示例代码可以是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerDefenseGame</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">OldEnemy</span> <span class="variable">oldEnemyRobot</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OldEnemyRobot</span>();</span><br><span class="line">        <span class="type">NewEnemy</span> <span class="variable">adaptedRobotEnemy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EnemyRobotAdapter</span>(oldEnemyRobot);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用适配器后，旧的机器人敌人就能够像新的敌人一样移动和攻击了</span></span><br><span class="line">        adaptedRobotEnemy.move();</span><br><span class="line">        adaptedRobotEnemy.attack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>EnemyRobotAdapter</code>是一个对象适配器，它适配了<code>OldEnemyRobot</code>使其可以按照<code>NewEnemy</code>接口进行操作。与类适配器不同，对象适配器模式允许一个适配器与多个不同的适配者工作，只要适配者遵循相同的接口。这增加了代码的重用性和灵活性。</p>
+<h1 id="Question-11"><a href="#Question-11" class="headerlink" title="Question"></a>Question</h1><p>能不能再介绍一下继承模式的类适配器？</p>
+<h1 id="Answer-11"><a href="#Answer-11" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…当然可以。类适配器模式通过继承（扩展）需要适配的类（Adaptee）和目标接口（Target）来实现适配功能。这种方式直接继承了适配者类，因此可以在适配器中重写适配者的方法以适配目标接口。</p>
+<h3 id="类适配器模式的特点："><a href="#类适配器模式的特点：" class="headerlink" title="类适配器模式的特点："></a>类适配器模式的特点：</h3><ol>
+<li><strong>单继承限制：</strong> 由于Java等语言不支持多重类继承，类适配器模式使用继承的方式实现适配，因此每个适配器只能适配一个适配者类。</li>
+<li><strong>覆盖行为：</strong> 适配器类可以重写适配者类的方法，提供更加符合目标接口期望行为的实现。</li>
+<li><strong>直接访问适配者：</strong> 适配器可以直接访问适配者类的所有公共方法和属性。</li>
+</ol>
+<h3 id="类适配器模式示例："><a href="#类适配器模式示例：" class="headerlink" title="类适配器模式示例："></a>类适配器模式示例：</h3><p>假设我们有一个现有的旧式打印机接口<code>OldPrinter</code>和一个新的打印接口<code>NewPrinter</code>，我们的目标是使旧式打印机能够适配到新的打印系统。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 旧的打印机接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">OldPrinter</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">printString</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 适配者类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SpecificPrinter</span> <span class="keyword">implements</span> <span class="title class_">OldPrinter</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">printString</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Print from SpecificPrinter&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新的打印接口</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">NewPrinter</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现类适配器："><a href="#实现类适配器：" class="headerlink" title="实现类适配器："></a>实现类适配器：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过继承SpecificPrinter并实现NewPrinter接口来创建适配器</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PrinterAdapter</span> <span class="keyword">extends</span> <span class="title class_">SpecificPrinter</span> <span class="keyword">implements</span> <span class="title class_">NewPrinter</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 调用适配者类SpecificPrinter的方法</span></span><br><span class="line">        printString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用适配器："><a href="#使用适配器：" class="headerlink" title="使用适配器："></a>使用适配器：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ClassAdapterDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">NewPrinter</span> <span class="variable">newPrinter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PrinterAdapter</span>();</span><br><span class="line">        newPrinter.print(); <span class="comment">// 将输出: Print from SpecificPrinter</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中，<code>PrinterAdapter</code>通过继承<code>SpecificPrinter</code>类，并实现<code>NewPrinter</code>接口，达到了适配器的目的。这样一来，尽管<code>SpecificPrinter</code>本身是按照<code>OldPrinter</code>的方式实现的，但现在可以在期望使用<code>NewPrinter</code>接口的地方使用它。</p>
+<p>通过类适配器模式，我们可以在不修改旧式打印机类<code>SpecificPrinter</code>的前提下，使其适合新的打印系统。这种方式非常直接且易于实现，是解决接口不兼容问题的一种有效方法。</p>
+<h1 id="Question-12"><a href="#Question-12" class="headerlink" title="Question"></a>Question</h1><p>介绍一下桥接模式</p>
+<h1 id="Answer-12"><a href="#Answer-12" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…桥接模式（Bridge Pattern）是一种结构型设计模式，用于将抽象部分与其实现部分分离，使它们都可以独立地变化。通过使用组合的方式，桥接模式能够连接抽象与实现的界面，进而让这两者的变化更加独立。</p>
+<h3 id="桥接模式的核心组成"><a href="#桥接模式的核心组成" class="headerlink" title="桥接模式的核心组成"></a>桥接模式的核心组成</h3><ol>
+<li><strong>抽象类（Abstraction）：</strong> 定义抽象类的接口，并维护一个指向实现部分（Implementor）的引用。</li>
+<li><strong>扩展抽象类（Refined Abstraction）：</strong> 扩展由抽象类定义的接口。</li>
+<li><strong>实现类接口（Implementor）：</strong> 定义实现类的接口，这个接口并不一定要与抽象类的接口完全一致，事实上两者可以完全不同。一般来说，实现类接口提供基本操作，而抽象类则定义基于这些基本操作的较高层次的操作。</li>
+<li><strong>具体实现类（Concrete Implementor）：</strong> 实现Implementor接口的具体类。</li>
+</ol>
+<h3 id="桥接模式的目的"><a href="#桥接模式的目的" class="headerlink" title="桥接模式的目的"></a>桥接模式的目的</h3><p>目的在于使得抽象与实现可以独立扩展，不从而互相影响，实现系统可能有多角度分类，每一种分类都可能变化。</p>
+<h3 id="桥接模式的优势"><a href="#桥接模式的优势" class="headerlink" title="桥接模式的优势"></a>桥接模式的优势</h3><ul>
+<li><strong>分离抽象与实现部分：</strong> 提高了系统的可扩展性。</li>
+<li><strong>提高系统的灵活性：</strong> 抽象部分和实现部分可以独立地进行变化，而不会相互影响。</li>
+<li><strong>符合开闭原则：</strong> 桥接模式通过组合的方式建立一个抽象和实现的联系，而非继承。</li>
+</ul>
+<h3 id="桥接模式示例：塔防游戏的武器与塔"><a href="#桥接模式示例：塔防游戏的武器与塔" class="headerlink" title="桥接模式示例：塔防游戏的武器与塔"></a>桥接模式示例：塔防游戏的武器与塔</h3><p>假设你正在开发一个塔防游戏，游戏中的每个塔可以使用不同的武器。使用桥接模式，我们可以将“塔”和“武器”的实现分离，让它们可以独立变化。</p>
+<h4 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现类接口（Implementor）</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Weapon</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 具体实现类（Concrete Implementor）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Cannon</span> <span class="keyword">implements</span> <span class="title class_">Weapon</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Cannon fire!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Laser</span> <span class="keyword">implements</span> <span class="title class_">Weapon</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Laser shoot!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 抽象类（Abstraction）</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> Weapon weapon;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Tower</span><span class="params">(Weapon weapon)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.weapon = weapon;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 扩展抽象类（Refined Abstraction）</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DefenseTower</span> <span class="keyword">extends</span> <span class="title class_">Tower</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DefenseTower</span><span class="params">(Weapon weapon)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(weapon);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.print(<span class="string">&quot;Defense Tower &quot;</span>);</span><br><span class="line">        weapon.attack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerDefenseGame</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">Tower</span> <span class="variable">tower1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefenseTower</span>(<span class="keyword">new</span> <span class="title class_">Cannon</span>());</span><br><span class="line">        <span class="type">Tower</span> <span class="variable">tower2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefenseTower</span>(<span class="keyword">new</span> <span class="title class_">Laser</span>());</span><br><span class="line"></span><br><span class="line">        tower1.attack();  <span class="comment">// 输出：Defense Tower Cannon fire!</span></span><br><span class="line">        tower2.attack();  <span class="comment">// 输出：Defense Tower Laser shoot!</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例中，<code>Tower</code>类是“抽象类”（Abstraction），<code>Weapon</code>是“实现类接口”（Implementor），“Cannon”和“Laser”是具体的实现类（Concrete Implementor），<code>DefenseTower</code>是扩展了抽象类的“扩展抽象类”（Refined Abstraction）。这样，塔和武器可以独立地变化和扩展，而不会相互影响。</p>
+<h1 id="Question-13"><a href="#Question-13" class="headerlink" title="Question"></a>Question</h1><p>再介绍一下组合模式吧（composite）</p>
+<h1 id="Answer-13"><a href="#Answer-13" class="headerlink" title="Answer"></a>Answer</h1><p>Searching…组合模式（Composite Pattern）是一种结构型设计模式，它允许你将对象组合成树形结构来表示“整体&#x2F;部分”的层次结构。通过这种模式，客户端可以统一对待个别对象和组合对象。</p>
+<h3 id="组合模式的核心组成"><a href="#组合模式的核心组成" class="headerlink" title="组合模式的核心组成"></a>组合模式的核心组成</h3><ol>
+<li><strong>组件（Component）：</strong> 定义了叶子和容器对象的共同接口，使得客户端代码可以统一对待叶子节点和容器节点。</li>
+<li><strong>叶节点（Leaf）：</strong> 没有子节点的对象，实现或继承了组件接口。</li>
+<li><strong>容器（Composite）：</strong> 容器对象包含一个或多个叶子对象和容器对象，实现或继承了组件接口，并可以添加或移除其中的子节点。</li>
+</ol>
+<h3 id="组合模式的目的"><a href="#组合模式的目的" class="headerlink" title="组合模式的目的"></a>组合模式的目的</h3><p>组合模式的主要目的是让叶节点和容器节点具有一致性，从而让客户端代码可以相同地对待单个对象和组合对象。</p>
+<h3 id="组合模式的优势"><a href="#组合模式的优势" class="headerlink" title="组合模式的优势"></a>组合模式的优势</h3><ul>
+<li><strong>简化客户端代码：</strong> 客户端代码可以一致地对待单个对象和组合对象，无需关心它们在内部的组合层次。</li>
+<li><strong>更容易扩展：</strong> 可以更容易地添加新类型的组件，因为新增加的类型不会改变已有代码的运作方式。</li>
+</ul>
+<h3 id="示例：塔防游戏中的组合模式"><a href="#示例：塔防游戏中的组合模式" class="headerlink" title="示例：塔防游戏中的组合模式"></a>示例：塔防游戏中的组合模式</h3><p>假设在塔防游戏中，我们有不同类型的炮塔，同时也可以创建炮塔组合，将多个炮塔组合成一组进行统一管理和操作。</p>
+<h4 id="具体实现-1"><a href="#具体实现-1" class="headerlink" title="具体实现"></a>具体实现</h4><p>定义组件接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">TowerComponent</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现叶节点：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SingleTower</span> <span class="keyword">implements</span> <span class="title class_">TowerComponent</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> power;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">SingleTower</span><span class="params">(String name, <span class="type">int</span> power)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.power = power;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(name + <span class="string">&quot; 发动攻击，攻击力 &quot;</span> + power);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现容器：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TowerComposite</span> <span class="keyword">implements</span> <span class="title class_">TowerComponent</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;TowerComponent&gt; children = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(TowerComponent component)</span> &#123;</span><br><span class="line">        children.add(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(TowerComponent component)</span> &#123;</span><br><span class="line">        children.remove(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attack</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (TowerComponent child : children) &#123;</span><br><span class="line">            child.attack();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TowerDefenseGame</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建单个炮塔</span></span><br><span class="line">        <span class="type">SingleTower</span> <span class="variable">tower1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleTower</span>(<span class="string">&quot;箭塔&quot;</span>, <span class="number">50</span>);</span><br><span class="line">        <span class="type">SingleTower</span> <span class="variable">tower2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SingleTower</span>(<span class="string">&quot;炮塔&quot;</span>, <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建炮塔组合</span></span><br><span class="line">        <span class="type">TowerComposite</span> <span class="variable">composite</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TowerComposite</span>();</span><br><span class="line">        composite.add(tower1);</span><br><span class="line">        composite.add(tower2);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 单个炮塔攻击</span></span><br><span class="line">        tower1.attack();</span><br><span class="line">        tower2.attack();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 炮塔组合发动攻击</span></span><br><span class="line">        composite.attack();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例中，使用组合模式允许客户端统一对待单个炮塔和炮塔组合。客户端可以通过相同的接口调用<code>attack</code>方法，而不必关心是对单个炮塔还是炮塔组合发起的操作。这样大大简化了客户端代码的复杂度，并提高了代码的可扩展性和灵活性。</p>
+<h1 id="Question-14"><a href="#Question-14" class="headerlink" title="Question"></a>Question</h1><p>很好，再来介绍一下装饰模式</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"># 设计模式</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/04/06/Rust%E7%9A%84GUI%E5%BA%93%E6%91%B8%E7%B4%A2/">Rust的GUI库摸索</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
