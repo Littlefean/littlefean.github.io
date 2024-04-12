@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>使用四叉树做碰撞检测 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">使用四叉树做碰撞检测</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 12, 2024&nbsp;&nbsp;10:50:32</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>一个链接：</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/search?type=content&q=%E5%9B%9B%E5%8F%89%E6%A0%91">(99+ 封私信 &#x2F; 5 条消息) 四叉树 - 搜索结果 - 知乎 (zhihu.com)</a></p>
+<p>但这个太水了，经过我一番仔细思考，还是有很多细节值得记录的</p>
+<p>首先写一个平面四叉树类，提供三个API：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Tree</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将一个对象添加到树中</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">addObject</span>(<span class="params"><span class="built_in">Object</span></span>) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 从一个树种移除一个对象，如果对象不在树中，返回false。</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">removeObject</span>(<span class="params"><span class="built_in">Object</span></span>) -&gt; bool &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 获取和这个对象相碰撞的所有对象。</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">getCollishObjects</span>(<span class="params">ObjectNode</span>) -&gt; <span class="title class_">Object</span>[] &#123;</span><br><span class="line"></span><br><span class="line">    &#125;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面是伪代码，什么语言都不是</p>
+<p>四叉树有节点。四叉树是完美四叉树，要么有孩子，要么没有孩子，一旦有孩子，就是四个孩子。</p>
+<p>每个节点都能容纳N个物体。树高度H层，这两个参数可以自定义调节。</p>
+<p>但是当物体在当前框框的十字线相接触了，那么只能塞到当前节点里了，不能再往下赛了。这个情况超过N也无所谓。</p>
+<p>一开始树里面没有什么物品，对象，所以第一个进来的对象会直接塞到根节点上，而不是细化到某个非常小的区域所对应的节点上。</p>
+<p>可以设计一个挂载物品对象类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">interface NodeObjectCircle &#123;</span><br><span class="line">   x: float</span><br><span class="line">   y: float</span><br><span class="line">   r: float</span><br><span class="line">   object: Object</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可能要挂载的敌人对象或者子弹对象本身内部有xyr属性，但是为了统一类型格式，外面又包上了三个属性，自己自身绑定到了object字段上，形成一个新的对象。</p>
+<p>然后，四叉树里的每个节点可能 是这样定义的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">treeNode</span> &#123;</span><br><span class="line">	leftTop: NodeObjectCircle[],</span><br><span class="line">	rightTop: NodeObjectCircle[],</span><br><span class="line">	leftDown: NodeObjectCircle[],</span><br><span class="line">	rightDown: NodeObjectCircle[],</span><br><span class="line">	</span><br><span class="line">	current: NodeObjectCircle[],  <span class="comment">// 如果和十字线交叉了，或者第一次来到这里，会进入到这里。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上可以考虑优化性能，把数组改成集合，或者字典类型，优化的是remove方法。</p>
+<h2 id="add方法"><a href="#add方法" class="headerlink" title="add方法"></a>add方法</h2><p>一开始啥都没有，肯定放在根节点的current里。满了才往下新创建四个子节点。兜住了就不创建，撑爆了才创建。</p>
+<p>add的时候首先判断一下当前方框里的十字线是否和自己这个对象相交，相交了就只能放在current里。即使超过了N。</p>
+<p>然后写四个if或者两个两个嵌套的if，判断四个子框。</p>
+<p>然后一直深入下去，直到到底。或者触碰到十字。</p>
+<h2 id="remove方法"><a href="#remove方法" class="headerlink" title="remove方法"></a>remove方法</h2><p>用递归来写。因为可能涉及到删除回收节点，防止长时间使用整个树里节点过多占用内存过多。并且这个删除回收节点不是只删除一个，可能是多层的链式的，删除好几个。只要把删除写在递归口的下面就行。</p>
+<p>如果四个子节点都是空的，就删除所有的子节点。将他们设置为null。</p>
+<p>在删除之前肯定要先找到。对于一个父节点和四个子节点，先看父节点的current里是否有当前这个对象，如果用哈希优化了，O1就能看到是否存在。然后判断一下要删除对象的位置处于哪个子框中。继续深入下去递归。</p>
+<h2 id="getCollish方法"><a href="#getCollish方法" class="headerlink" title="getCollish方法"></a>getCollish方法</h2><p>传入一个对象，获取和这个对象碰撞的所有对象。</p>
+<p>最理想情况：</p>
+<p>如果所有的对象都没有和十字相交，那好说了，就看传入的这个对象所在的框框里，直接和所有其他的对象一一配对，看看是否发生相交，例如就调用圆和圆的相交的方法就行了。</p>
+<p>但是还是要把这个节点所在的所有子孙节点的current里的对象都扫描一一检测一下碰撞。</p>
+<p>还要考虑其他上层十字上的或者current上的对象。</p>
+<p>如果传入的对象是在框里的，但是有其他对象和框框相交。那就看，在一路找下来，树上经过的节点，所有节点的current里，是否有节点和当前对象相碰。</p>
+<p>也就是看所有上层的current里的所有对象是否和自己碰撞。因为这是一个递归过程，可以在找到之后返回的过程中进行一一比较。</p>
+<p>缺点：</p>
+<p>当节点本来就在根节点上的current里的时候，这无异于和全部对象都一一比了一下。</p>
+<p>当圆形对象半径太大了的时候，那几乎是必定触碰最大的十字线的。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/"># 游戏开发</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/04/11/%E4%BB%8E%E5%A1%94%E9%98%B2%E6%B8%B8%E6%88%8F%E4%B8%AD%E5%AD%A6%E4%B9%A0%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">从塔防游戏中学习设计模式</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
