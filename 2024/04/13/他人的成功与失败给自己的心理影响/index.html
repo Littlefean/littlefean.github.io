@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>他人的成功与失败给自己的心理影响 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">他人的成功与失败给自己的心理影响</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">四月 13, 2024&nbsp;&nbsp;10:19:26</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%BF%83%E7%90%86%E5%AD%A6/">心理学</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="他人的成功与失败给自己的情绪影响"><a href="#他人的成功与失败给自己的情绪影响" class="headerlink" title="他人的成功与失败给自己的情绪影响"></a>他人的成功与失败给自己的情绪影响</h1><p>总结出来一张表格就是：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>朋友成功</th>
+<th>朋友失败</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自己开心</td>
+<td>共鸣、归属认同感、帮助了别人、积极的共同未来、激励自己</td>
+<td>对他人优越感的报复心理、对不公的维护、自我优越感、嫉妒心的反转：解气、对自身处境的暂时安慰：庆幸、自身负面情绪转移、反向认同与心理补偿：提前拿到失败经验</td>
+</tr>
+<tr>
+<td>自己难过</td>
+<td>嫉妒、自我价值怀疑、可能的抛弃感与孤独、社会比较、自我否定</td>
+<td>将自己失败代入的共鸣、亲密关系、无法提供有效帮助的无力感、社会群体认同、自我投射焦虑、不公平感</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>注：上面的<strong>朋友</strong>可能是很好的朋友，也可能只是一般朋友，也可以代指认识的人。</p>
+<h2 id="一些灵感"><a href="#一些灵感" class="headerlink" title="一些灵感"></a>一些灵感</h2><ol>
+<li>没人愿意分享失败，但似乎失败贴比成功经验贴更有价值。成功经验贴很可能有幸存者偏差的存在。</li>
+<li>社会倡导我们为别人的成功感到高兴，为别人的失败感到难过，但真实社会中，大部分人真的是这样吗？</li>
+</ol>
+<h2 id="记录"><a href="#记录" class="headerlink" title="记录"></a>记录</h2><p>记录一下通义千问的回答内容：感觉比chatGPT3.5厉害不少。</p>
+<p>心理学角度，看到朋友分享成功喜悦时产生不开心的感觉，可能由以下几个方面的原因构成：</p>
+<ol>
+<li><strong>社会比较理论</strong>： 社会比较理论指出，人们倾向于将自己与他人进行比较，以评估自身的价值、能力和地位。当你看到朋友的成功，可能会自然而然地将自己的生活状况、成就与之对比。如果感觉自己在工作、学业、人际关系等方面不如朋友，这种比较可能会引发自卑感、挫败感或焦虑，从而导致对朋友成功消息的负面情绪反应。</li>
+<li><strong>嫉妒心理</strong>： 嫉妒是一种复杂的情绪，它源于对他人拥有自己渴望但尚未获得的资源或优势的强烈愿望。当朋友分享他们的成功时，你可能会体验到嫉妒，特别是如果他们的成就触及了你的核心价值观或长期目标。嫉妒可能导致你对朋友的成功感到不满，甚至产生怨恨，而非为他们感到开心。</li>
+<li><strong>自我价值威胁</strong>： 朋友的成功可能触发你对自己价值和能力的质疑。你可能会担忧自己是否足够优秀，是否做出了正确的选择，或者是否能够实现自己的人生目标。这种自我价值的威胁可能导致自我怀疑和不安，进而对朋友的成功消息产生抵触情绪。</li>
+<li><strong>失落感与孤独感</strong>： 当朋友沉浸在成功的喜悦中，你可能会感到被忽视或疏远，特别是如果你们曾经共享相似的生活轨迹或期待。他们的成功可能使你意识到你们之间的距离在拉大，或者担心自己无法参与他们的新生活阶段，由此产生失落感和孤独感。</li>
+<li><strong>无意识的竞争心理</strong>： 即使表面关系友好，朋友之间可能存在潜在的竞争意识，特别是在职业发展、学术成就、社交影响力等领域。当朋友取得显著成功时，这种竞争心理可能会被激发，使你感到自己处于劣势，从而对朋友的成功消息产生消极反应。</li>
+<li><strong>情绪共鸣的缺失</strong>： 心理学研究表明，人们的情绪体验往往具有传染性，即所谓的“情绪共鸣”。然而，个体差异、情绪状态以及人际关系等因素会影响这种共鸣的程度。如果你当前处于低落情绪状态，或者与朋友的情感连接较弱，可能难以产生对朋友喜悦的共鸣，反而更容易关注自身的负面情绪。</li>
+<li><strong>心理防御机制</strong>： 面对朋友的成功，你可能会启动心理防御机制，如否认、合理化或贬低他人成功的重要性，以保护自尊心免受伤害。这种防御过程中产生的负面思维可能导致你对朋友的成功消息产生反感，而不是为其感到高兴。</li>
+</ol>
+<p>综上所述，看到朋友在动态中分享成功喜悦时感到不开心，是多种心理因素交织作用的结果。这些因素包括但不限于社会比较、嫉妒心理、自我价值威胁、失落感、无意识的竞争心理、情绪共鸣的缺失以及心理防御机制等。了解这些心理机制有助于你识别自身情绪的来源，并采取适当的策略来调整心态，如培养同理心、设定个人目标、提升自我效能感、改善人际沟通等，以更健康的方式应对类似情境。如有必要，咨询专业心理咨询师可以帮助你更深入地探讨并处理这些情绪。</p>
+<p>从心理角度分析，当你在动态中看到朋友分享成功的喜悦，自己也感觉开心，可能有以下原因：</p>
+<ol>
+<li><strong>情感共鸣与共情</strong>： 人是社会性动物，具有很强的情感共鸣能力。当你看到朋友成功并表达喜悦时，你可能会自然而然地感受到他们的情绪，即产生共情。这种情绪共鸣使你能够体验到朋友的快乐，仿佛自己也亲身经历了那份成功。这种共享的喜悦可以增进亲密感，强化你们之间的友谊纽带。</li>
+<li><strong>正面情绪传染</strong>： 心理学研究发现，人们的情绪具有传染性，尤其是积极情绪。当你接触到朋友分享的成功喜悦时，这种积极情绪可能“传染”给你，使你也感到愉快。这种现象被称为“情绪感染”或“情绪传染”，是人类社会互动中的普遍现象。</li>
+<li><strong>社会认同与归属感</strong>： 看到朋友的成功，你可能会感到骄傲或满足，因为这在某种程度上反映了你所处社交圈子的整体实力或积极氛围。这种社会认同感增强了你的群体归属感，让你觉得自己是某个成功群体的一部分，从而产生积极的情绪反馈。</li>
+<li><strong>正面激励与希望</strong>： 朋友的成功可以作为对你自身的正面激励。他们的故事可能激发你追求自己的目标，增强你对未来的信心和希望。这种积极的心理暗示促使你在面对挑战时保持乐观态度，同时，朋友的成功也可能提供具体的策略或启示，帮助你规划自己的成功之路。</li>
+<li><strong>利他主义与亲社会行为</strong>： 从心理学角度看，人类具有天生的利他倾向和亲社会行为。看到朋友成功并感到开心，可能是这种利他动机的体现。你真心为朋友的幸福感到高兴，这种无私的快乐源于对他人的关爱和祝福，体现了你的善良和慷慨品质。</li>
+<li><strong>自我价值实现</strong>： 在某些情况下，朋友的成功可能直接或间接与你的支持、建议或帮助有关。这时，他们的喜悦也会带给你成就感和自我价值实现感，因为你为朋友的成功做出了贡献。这种感觉不仅让你为朋友感到开心，也为自己的付出得到回报而感到欣慰。</li>
+<li><strong>积极心理预期</strong>： 如果你与朋友的关系密切，他们的成功可能预示着你们共同经历的美好未来，如共享成功的果实、一起庆祝、获得更多合作机会等。这种对未来积极心理预期会让你对朋友的成功消息产生积极情绪反应。</li>
+</ol>
+<p>总之，从心理角度来看，看到朋友在动态中分享成功的喜悦并感到开心，主要是由于情感共鸣与共情、正面情绪传染、社会认同与归属感、正面激励与希望、利他主义与亲社会行为、自我价值实现以及积极心理预期等因素的综合作用。这些心理机制有助于增进友谊、提升个人情绪状态、激发积极行动，并强化社会联系。</p>
+<p>在动态中看到朋友发布失败或难过的消息，自己却感到偷偷开心，这种心理现象可以从以下几个角度进行分析：</p>
+<ol>
+<li><p><strong>幸灾乐祸（Schadenfreude）</strong>：<br>幸灾乐祸是一种复杂的人类情绪，指在他人遭遇不幸、失败或挫折时，个体体验到的一种暗自窃喜或愉悦感。这种现象在心理学中得到了广泛研究。尽管表面上看起来不符合道德规范和社会期望，但它是人类普遍存在的心理现象之一。可能的解释包括：一是通过比较，个体发现自己相对较好，从而增强了自我价值感；二是对他人过去优越感或傲慢行为的“报复”心理，认为其失败是对之前不平衡关系的某种纠正；三是对社会公平感的维护，认为失败是对过度成功或不公正待遇的一种自然平衡。</p>
+</li>
+<li><p><strong>社会比较与相对剥夺感</strong>：<br>社会比较理论指出，人们倾向于将自己与他人进行比较，以评估自身的位置和价值。当朋友遭遇失败，尤其是在你曾与其进行过比较的领域，你可能会感到自己相对优越，从而产生一种“相对剥夺感”的缓解。这种感觉可能导致你对朋友的失败消息产生一种隐秘的愉悦感。</p>
+</li>
+<li><p><strong>嫉妒心理的反转</strong>：<br>嫉妒通常发生在他人拥有我们渴望但尚未获得的资源或优势时。当朋友遭遇失败，尤其是那些你曾嫉妒过的方面，嫉妒心理可能转化为一种“庆幸”或“解气”的感觉。这种心理反转可能源于对自身处境的暂时安慰，或是对朋友优越地位被削弱的暗自欢喜。</p>
+</li>
+<li><p><strong>心理防御机制</strong>：<br>在面对他人失败时，个体可能会启动心理防御机制，如否认、合理化或贬低他人失败的意义，以保护自尊心免受伤害。这种防御过程中产生的负面思维可能导致你对朋友的失败消息产生愉悦感，而非同情或关心。</p>
+</li>
+<li><p><strong>负面情绪的转移</strong>：<br>如果你正处于压力大、情绪低落的状态，朋友的失败消息可能成为你转移自身负面情绪的出口。通过关注并“享受”朋友的不幸，你可以在一定程度上分散对自己的注意力，减轻自身的心理负担。</p>
+</li>
+<li><p><strong>反向认同与心理补偿</strong>：<br>在某些情况下，个体可能会通过认同朋友的失败来缓解自身对失败的恐惧或焦虑。通过将朋友的失败内化为自己的一部分，个体可以在心理上“预先体验”失败并从中找到应对策略，从而获得一种心理补偿感。</p>
+</li>
+</ol>
+<p>需要注意的是，虽然上述心理机制可以解释为何在特定情境下会对朋友的失败消息感到“偷偷开心”，但这并不意味着这种感受是健康的或应被鼓励的。它可能反映出个体内心的矛盾、焦虑或防御机制，需要通过自我反思、提升自我接纳、增强同理心以及改善人际关系等方式进行调整。在大多数情况下，对朋友的失败表示同情、支持和理解才是更为成熟和有益的应对方式。</p>
+<p>在动态中看到朋友发布失败或难过的消息，自己也感到难过，除了直接的共情共鸣情绪外，还有以下可能的心理原因：</p>
+<ol>
+<li><p><strong>亲密关系与互惠性关怀</strong>：<br>在亲密的友谊关系中，个体之间存在强烈的互惠性关怀。当你看到朋友遭遇困难，内心会产生想要帮助和支持他们的冲动。这种对朋友福祉的关注和责任感，加上无法立即提供有效帮助的无力感，可能导致你感到难过。你可能担忧朋友的现状，对未来可能面临的困难有所顾虑，这种关心和牵挂进一步加深了你的负面情绪体验。</p>
+</li>
+<li><p><strong>社会认同与群体情绪</strong>：<br>作为朋友群体的一员，你可能将朋友的成败在某种程度上视作自己所在群体的集体表现。朋友的失败可能引发你对整个群体前景的担忧，或者对群体形象受损的敏感。这种对群体认同的重视，使得你对朋友的困境感同身受，从而产生难过情绪。</p>
+</li>
+<li><p><strong>自我投射与焦虑</strong>：<br>看到朋友的失败，你可能会不自觉地将自己置于类似的情境中，思考如果自己遇到同样的问题会如何应对。这种自我投射过程可能唤起你对未知风险、自身弱点或潜在失败的焦虑感，进一步加剧了对朋友难过的共鸣。你可能担忧自己在未来也可能遭遇类似的挫折，这种对不确定性的恐惧可以解释你对朋友失败消息的难过反应。</p>
+</li>
+<li><p><strong>道德情感与公平感</strong>：<br>从道德情感的角度看，你可能认为朋友不应遭受这样的不幸，认为他们的失败是不公平的。这种对公正世界的期待与现实之间的冲突，激发了你的道德愤怒或悲伤，使你为朋友的遭遇感到难过。你可能认为朋友的努力没有得到应有的回报，这种对公正的渴望促使你对朋友的失败产生深刻的同情。</p>
+</li>
+<li><p><strong>丧失预期与心理适应</strong>：<br>如果朋友的失败打破了你对其美好未来的预期，你可能会感到失落或失望。这种心理上的适应过程需要时间，期间可能会伴随着难过等负面情绪。你可能需要重新调整对朋友生活轨迹的看法，以及对你们共同未来规划的预期，这个过程中产生的不确定性及对旧有期待的告别，都可能导致难过情绪的产生。</p>
+</li>
+<li><p><strong>同辈压力与竞争心理</strong>：<br>在某些情况下，尽管你对朋友的失败表示难过，但同时也可能感受到同辈压力或竞争心理的影响。你可能担心朋友的失败会影响到你们之间的关系平衡，或者担心自己在社交比较中的位置发生变化。这种微妙的心理压力可能导致你在对朋友表示同情的同时，内心深处也有一丝难以言表的复杂情绪，包括难过。</p>
+</li>
+</ol>
+<p>综上所述，除了直接的共情共鸣情绪外，对朋友失败消息感到难过还可能涉及亲密关系的责任感、社会认同感、自我投射的焦虑、道德情感的冲突、预期丧失的心理适应以及同辈压力与竞争心理等多种心理因素。这些复杂的心理过程相互交织，共同构成了你对朋友失败消息的深层情绪反应。</p>
+<h2 id="书籍推荐"><a href="#书籍推荐" class="headerlink" title="书籍推荐"></a>书籍推荐</h2><ol>
+<li><strong>《社会性动物》</strong> by Eliot Aronson 这本书被誉为“社会心理学的圣经”，详细阐述了社会比较、群体影响、自我概念、偏见与歧视等核心社会心理学原理，有助于理解你在面对朋友动态时可能出现的心理现象及其背后的社会心理机制。</li>
+<li><strong>《情绪智力》</strong> by Daniel Goleman 作者Goleman提出“情绪智力”这一概念，强调了识别、理解和管理自我及他人情绪的重要性。这本书提供了提升情绪智力的实用策略，有助于你在面对朋友成功或失败时更好地调节自身情绪反应，培养同理心和积极人际关系。</li>
+<li><strong>《共情的力量》</strong> by Roman Krznaric 该书深度探讨了共情的概念、类型和实践，强调了共情在建立深厚人际关系、促进社会和谐以及个人成长中的关键作用。阅读此书可以帮助你提升对朋友情绪的感知与理解能力，更好地应对朋友成功或失败带来的各种情绪体验。</li>
+<li><strong>《非零和年代：人类命运的逻辑》</strong> by Robert Wright 本书以进化论视角解读人类社会的发展，强调合作与共赢的重要性。理解非零和博弈的逻辑有助于你重新审视与朋友之间的关系，尤其是在面对他们的成功或失败时，培养更加积极、建设性的心态和行为。</li>
+<li><strong>《活出生命的力量》</strong> by Susan David 作者David是一位心理学家，她倡导情绪灵活性，即接纳并有效管理各种情绪的能力。这本书提供了实用工具和策略，帮助读者学会在面对生活中的起伏，包括朋友的成功与失败时，保持情绪平衡，实现个人成长。</li>
+<li><strong>《公正：该如何做是好？》</strong> by Michael J. Sandel 通过探讨一系列道德哲学问题，Sandel引导读者深入思考公正、公平、道德责任等议题。理解这些概念对于理解自己在面对朋友成功或失败时的道德情感反应，以及如何做出符合道德原则的回应至关重要。</li>
+<li><strong>《亲密关系》</strong> by David Myers &amp; Jean Twenge 本书全面介绍了亲密关系的心理学原理，包括友谊、爱情、婚姻等各个方面。理解亲密关系的形成、维持与破裂，以及其中涉及的心理机制，有助于你在面对朋友动态时，更理性、更深入地理解自己的情绪反应，并妥善处理与朋友间的关系。</li>
+</ol>
+<h1 id="朋友的喜好对自己的情绪影响"><a href="#朋友的喜好对自己的情绪影响" class="headerlink" title="朋友的喜好对自己的情绪影响"></a>朋友的喜好对自己的情绪影响</h1><table>
+<thead>
+<tr>
+<th></th>
+<th>自己高兴</th>
+<th>自己不高兴</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>朋友喜欢自己喜欢的内容</td>
+<td>共同兴趣</td>
+<td>私有兴趣不希望别人喜欢，自己的独特性被剥削</td>
+</tr>
+<tr>
+<td>朋友喜欢自己不喜欢的内容</td>
+<td>这个东西不好，或者曾经伤害过自己但却不一定对朋友不好</td>
+<td>变成异类</td>
+</tr>
+<tr>
+<td>朋友不喜欢自己喜欢的内容</td>
+<td>私有兴趣</td>
+<td>很正常</td>
+</tr>
+<tr>
+<td>朋友讨厌自己也讨厌的内容</td>
+<td>很正常，都讨厌</td>
+<td>不喜欢朋友的附和，共鸣过于一致反而失去深度交流</td>
+</tr>
+</tbody></table>
+<p>这个喜好话题的分类好像有点太细了，再细就有点魔怔了，这个就不展开讨论和分析了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
+                    
+                        <a href="/tags/%E6%80%9D%E8%80%83/"># 思考</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/04/12/%E7%BD%91%E6%A0%BC%E5%88%86%E5%89%B2%E7%A2%B0%E6%92%9E%E6%A3%80%E6%B5%8B/">网格分割碰撞检测</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
