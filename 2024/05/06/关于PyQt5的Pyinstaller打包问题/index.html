@@ -19,7 +19,7 @@
     <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
 
 
-<title>数字多媒体相关概念 | 阿岳的博客</title>
+<title>关于PyQt5的Pyinstaller打包问题 | 阿岳的博客</title>
 
 
 
@@ -214,7 +214,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">数字多媒体相关概念</h1>
+            <h1 class="post-title">关于PyQt5的Pyinstaller打包问题</h1>
             
                 <div class="post-meta">
                     
@@ -223,7 +223,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">四月 15, 2024&nbsp;&nbsp;17:26:51</a>
+                        Date: <a href="#">五月 6, 2024&nbsp;&nbsp;18:51:32</a>
                         </span>
                     
                     
@@ -232,32 +232,46 @@
         </header>
 
         <div class="post-content">
-            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>软考要考。</p>
-<p>图像的本质是二维数组</p>
-<p>音频的本质是一维数组</p>
-<p>说实话不仅仅只是软考要考，个人认为每一个熟练使用图片处理软件、音频、编曲软件的人来说这些东西都应该知道。</p>
-<h2 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h2><p>图像可以分为矢量图，svg类型的，和位图png、jpg类型的。这里只讨论位图。</p>
-<p>图像的本质就是像素矩阵。可以看成二维数组</p>
-<p>分辨率 m x n 就是二维数组的宽度和高度</p>
-<p>颜色深度：24位，表示二维数组里的每个元素所占用的空间都是24个比特位。</p>
-<h2 id="音频"><a href="#音频" class="headerlink" title="音频"></a>音频</h2><p>真实世界的音频可以看成一个波函数，有响度、频率的概念。</p>
-<p>但是一旦被数字化记录下来，就离散化了。</p>
-<p>就相当于把一个函数用一维数组表示了。所以就要采样，就像在函数中，x每隔0.1，打一个点，记录一下y值，追加到数组中。</p>
-<p>这里就出现了 <strong>采样率</strong> 和<strong>位深度</strong> 的概念</p>
-<h3 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h3><p>采样率：决定了在函数上打点的密集程度，越密集肯定越逼真。它实际上表示一秒钟内打了多少个点，通常来说是非常多的，可能有44.1 k 这么多。所以这个时候，采样率&#x3D;44.1 kHz</p>
-<h3 id="位深度"><a href="#位深度" class="headerlink" title="位深度"></a>位深度</h3><p>位深度（样本精度、量化位数）：决定了一位数组中每个元素的类型，比如是double类型还是float类型。这只是举个例子，实际上它决定的是数组中每个元素占用多少比特，每个元素有可能占用16个比特。</p>
-<p>它决定了音频的动态范围，也就是最大音量和最小音量之间的差异。（对比函数图像就知道肯定是和响度有关）</p>
-<p>一般是16或者24位。</p>
-<h4 id="思考问题"><a href="#思考问题" class="headerlink" title="思考问题"></a>思考问题</h4><p>如果在16位深度的情况下，把响度拉满，最终的音量响度大概能达到多大？</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于位深度为16位的音频，每个采样点可以表示的值的范围是从-32768到32767（包含两端的值）。位深度越高，可以表示的音量级别（即动态范围）也就越宽广。</span><br></pre></td></tr></table></figure>
+            <p>打包了之后发现报错，被查杀病毒了，先把Windows Defer 关了。</p>
+<p>打包语句：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --add-data <span class="string">&quot;assets;assets&quot;</span> main.py</span><br></pre></td></tr></table></figure>
 
-<p>16位音频的动态范围是96dB（每位约对应6dB）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在实际应用中，数字音频的&quot;响度&quot;不只是靠采样值的大小来决定，还受到编码、解码、播放设备等多个环节的影响。例如，高保真音响在播放相同的数字音频文件时，可能比小型便携音箱提供更大的音量和更丰富的动态范围体验。</span><br></pre></td></tr></table></figure>
+<p>但是没图标</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --icon=<span class="string">&quot;assets/icon.ico&quot;</span> --add-data <span class="string">&quot;assets;assets&quot;</span> main.py</span><br></pre></td></tr></table></figure>
+
+<p>还是不行，并且里面的小鱼图片依然没有</p>
+<p>pyinstaller 打包成mac只能给mac用，打包成windows只能给windows用。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15i4y1U7F7/?p=2">https://www.bilibili.com/video/BV15i4y1U7F7/?p=2</a></p>
+<h2 id="产出多文件的打包"><a href="#产出多文件的打包" class="headerlink" title="产出多文件的打包"></a>产出多文件的打包</h2><p>这个视频里建议使用python3.6.8，打包exe，版本太高了会出问题。</p>
+<p>配合虚拟环境进行打包</p>
+<p>看视频里记录一些东西：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller -D main.py</span><br></pre></td></tr></table></figure>
+
+<p>build是打包过程中，中间过程产出代码，没用的。</p>
+<p>dist才是最终成品</p>
+<p>-D会套一层文件夹，文件夹里有exe和一个<code>_internal</code> 。exe只有5MB。并且这个exe是必须依赖于<code>_internal</code> 文件夹的。不能分开把exe放在别的位置</p>
+<h2 id="产出单文件的打包"><a href="#产出单文件的打包" class="headerlink" title="产出单文件的打包"></a>产出单文件的打包</h2><p>-D改成-F就可以了</p>
+<p>但这个还是无法解决Qt里使用了图片的问题。</p>
+<p>产出单文件的时候要注意路径问题。要给项目一个全局变量叫 BASE_DIR 通过os拿到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br></pre></td></tr></table></figure>
+
+<p>例如可以新建一个static文件夹，里面的 <code>__init__.py</code> 里面放这个</p>
+<p>但这个视频里的方法也依然无法解决PyQt5图片不显示的问题。</p>
+<p>这个倒是解决了问题</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43444734/article/details/126542399">https://blog.csdn.net/weixin_43444734/article/details/126542399</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyrcc5 image.rcc -o assets.py</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h3><p>wav是不压缩的格式，它太大了，一个三分钟的音乐都有50MB~80MB。</p>
-<h3 id="小扩展"><a href="#小扩展" class="headerlink" title="小扩展"></a>小扩展</h3><p>扒谱通常可以使用到傅里叶变幻算法。</p>
+<p>还需要解决如何不让pyinstaller以系统解释器的第三方库环境打包，以项目虚拟环境的第三方库依赖环境打包</p>
+<p>其实就是在虚拟环境里安装一个pyinstaller，然后进入虚拟环境再使用pyinstaller。</p>
+<p>最终结果就是 50MB —-&gt; 40MB  也就仅仅少了10MB</p>
+<p>最终的打包指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --icon=./assets/icon.ico main.py -n cyber-life</span><br></pre></td></tr></table></figure>
+
+<p>会发现最终的成品是 <code>main.exe</code> 这里有一个现象</p>
+<p>如果是main.exe 在win11上，默认看起来还是原来的图标，但是在文件浏览器里缩放大小的时候可能会突然变成自定义的图标。</p>
+<p>但一旦改一个名字，就变成自己的图标了，无论如何缩放大小都不会出现原来的图标的情况。</p>
 
         </div>
 
@@ -291,9 +305,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E6%A6%82%E5%BF%B5%E8%BE%A8%E6%9E%90/"># 概念辨析</a>
+                        <a href="/tags/python/"># python</a>
                     
-                        <a href="/tags/%E6%95%B0%E5%AD%97%E5%AA%92%E4%BD%93/"># 数字媒体</a>
+                        <a href="/tags/pyinstaller/"># pyinstaller</a>
                     
                         
                 </span>
@@ -306,10 +320,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/05/06/%E5%85%B3%E4%BA%8EPyQt5%E7%9A%84Pyinstaller%E6%89%93%E5%8C%85%E9%97%AE%E9%A2%98/">关于PyQt5的Pyinstaller打包问题</a>
             
-            
-            <a class="next" rel="next" href="/2024/04/13/%E4%BB%96%E4%BA%BA%E7%9A%84%E6%88%90%E5%8A%9F%E4%B8%8E%E5%A4%B1%E8%B4%A5%E7%BB%99%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BF%83%E7%90%86%E5%BD%B1%E5%93%8D/">他人的成功与失败给自己的心理影响</a>
+            <a class="next" rel="next" href="/2024/04/15/%E6%95%B0%E5%AD%97%E5%A4%9A%E5%AA%92%E4%BD%93%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/">数字多媒体相关概念</a>
             
         </section>
 
