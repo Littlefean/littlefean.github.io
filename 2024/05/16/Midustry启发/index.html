@@ -19,7 +19,7 @@
     <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
 
 
-<title>关于PyQt5的Pyinstaller打包问题 | 阿岳的博客</title>
+<title>Midustry启发 | 阿岳的博客</title>
 
 
 
@@ -214,7 +214,7 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">关于PyQt5的Pyinstaller打包问题</h1>
+            <h1 class="post-title">Midustry启发</h1>
             
                 <div class="post-meta">
                     
@@ -223,7 +223,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">五月 6, 2024&nbsp;&nbsp;18:51:32</a>
+                        Date: <a href="#">五月 16, 2024&nbsp;&nbsp;7:37:46</a>
                         </span>
                     
                     
@@ -232,46 +232,36 @@
         </header>
 
         <div class="post-content">
-            <p>打包了之后发现报错，被查杀病毒了，先把Windows Defer 关了。</p>
-<p>打包语句：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --add-data <span class="string">&quot;assets;assets&quot;</span> main.py</span><br></pre></td></tr></table></figure>
-
-<p>但是没图标</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --icon=<span class="string">&quot;assets/icon.ico&quot;</span> --add-data <span class="string">&quot;assets;assets&quot;</span> main.py</span><br></pre></td></tr></table></figure>
-
-<p>还是不行，并且里面的小鱼图片依然没有</p>
-<p>pyinstaller 打包成mac只能给mac用，打包成windows只能给windows用。</p>
-<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV15i4y1U7F7/?p=2">https://www.bilibili.com/video/BV15i4y1U7F7/?p=2</a></p>
-<h2 id="产出多文件的打包"><a href="#产出多文件的打包" class="headerlink" title="产出多文件的打包"></a>产出多文件的打包</h2><p>这个视频里建议使用python3.6.8，打包exe，版本太高了会出问题。</p>
-<p>配合虚拟环境进行打包</p>
-<p>看视频里记录一些东西：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller -D main.py</span><br></pre></td></tr></table></figure>
-
-<p>build是打包过程中，中间过程产出代码，没用的。</p>
-<p>dist才是最终成品</p>
-<p>-D会套一层文件夹，文件夹里有exe和一个<code>_internal</code> 。exe只有5MB。并且这个exe是必须依赖于<code>_internal</code> 文件夹的。不能分开把exe放在别的位置</p>
-<h2 id="产出单文件的打包"><a href="#产出单文件的打包" class="headerlink" title="产出单文件的打包"></a>产出单文件的打包</h2><p>-D改成-F就可以了</p>
-<p>但这个还是无法解决Qt里使用了图片的问题。</p>
-<p>产出单文件的时候要注意路径问题。要给项目一个全局变量叫 BASE_DIR 通过os拿到</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br></pre></td></tr></table></figure>
-
-<p>例如可以新建一个static文件夹，里面的 <code>__init__.py</code> 里面放这个</p>
-<p>但这个视频里的方法也依然无法解决PyQt5图片不显示的问题。</p>
-<p>这个倒是解决了问题</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43444734/article/details/126542399">https://blog.csdn.net/weixin_43444734/article/details/126542399</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyrcc5 image.rcc -o assets.py</span><br></pre></td></tr></table></figure>
-
-
-
-<p>还需要解决如何不让pyinstaller以系统解释器的第三方库环境打包，以项目虚拟环境的第三方库依赖环境打包</p>
-<p>其实就是在虚拟环境里安装一个pyinstaller，然后进入虚拟环境再使用pyinstaller。</p>
-<p>最终结果就是 50MB —-&gt; 40MB  也就仅仅少了10MB</p>
-<p>最终的打包指令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pyinstaller --onefile --windowed --icon=./assets/icon.ico main.py -n cyber-life</span><br></pre></td></tr></table></figure>
-
-<p>会发现最终的成品是 <code>main.exe</code> 这里有一个现象</p>
-<p>如果是main.exe 在win11上，默认看起来还是原来的图标，但是在文件浏览器里缩放大小的时候可能会突然变成自定义的图标。</p>
-<p>但一旦改一个名字，就变成自己的图标了，无论如何缩放大小都不会出现原来的图标的情况。</p>
+            <h1 id="Midustry-启发"><a href="#Midustry-启发" class="headerlink" title="Midustry 启发"></a>Midustry 启发</h1><p>本文章主要内容为游戏《Midustry》像素工厂玩后感，所带来的思考和对现实世界的启发。</p>
+<h2 id="滚雪球式的发展"><a href="#滚雪球式的发展" class="headerlink" title="滚雪球式的发展"></a>滚雪球式的发展</h2><p>提高发电量，用小发电器的启动大一级的发电工厂，逐渐滚雪球式的发展，最终发展成裂变发电、爆炸物发电、瘤变发电，这时候就可以回收清理掉小的发电机，不再需要小发电机的启动维持电量，形成电量自闭环。但这样的“自闭环”可能会导致中间一旦打断或者中断，很难再重启。</p>
+<p>世界上的很多东西都可以用一种发展的思维来看待。良性循环。自己的能力树也是。</p>
+<p>但是如果套用在自身能力树的发展上，可能会出现问题，缺点如下：</p>
+<ol>
+<li>反人性：人总是喜欢用自己熟悉的方式解决问题，出于只想快速解决眼前的问题或者懒了</li>
+<li>时间和记忆成本：升级成更高级的技能需要付出很多精力和代价，如果消耗的精力和代价无法被最终长期下来高级技能节省下来的时间填补，则这个是个“亏本升级”</li>
+<li>技能也有时效性：技能不能看成工厂，技能具有时效性，会随着时间贬值，谁还会在2024年问有谁会用Flash？，也许在2077年，Vue框架已经成为一个老古董了，整个前端体系已经完全不一样了。有些时候最底层的思维和认知才能让人走的更远，比如计算机网络、数据结构这些基础知识。</li>
+</ol>
+<p>可能比较好的例子是：</p>
+<p>css -&gt; scss&#x2F;less -&gt; tailwindcss -&gt; 主题插件&#x2F;组件化 -&gt; wordpress</p>
+<p>但如果一路升级上来，把最后像拆掉启动时候的小发电机一样，把css等基础知识直接忘了，当突然有一天高级技能由于外部原因不再能使用了，全废了。</p>
+<h2 id="输入输出组成的产业链思维"><a href="#输入输出组成的产业链思维" class="headerlink" title="输入输出组成的产业链思维"></a>输入输出组成的产业链思维</h2><p>每一个建筑都有输入和输出，额外消耗电力、甚至还有副产品、副作用（爆炸）、副能量输出等。</p>
+<p>当要思考一个大型系统的时候或许可以用这种思维拆解成很多的输入和输出。然后每个小工厂之间拼接起来形成一个非常庞大的上下游产业链。或许这种思维可以用在经济学领域上，因为一个人的工资就是另外很多人的收入。</p>
+<p>或许可以结合元思维，用做一个chatGPT提示词加工链。</p>
+<p>套用到人身上的时候，可能会算是对人的一种物化，例如：“一个画家输入食物、输出作品”。也许这种思维正式HR和主管擅长的和喜欢的。他们经常要考虑用人的成本。</p>
+<p>如果说要解释为什么把这种输入输出思维套用在人身上可能会让人感到不舒服，可以用“荣格八维”解释。本来一个人主导功能是Ti，他最爽的就是构建内部的理性世界，现在硬是要将他这种理性思维应用在外部世界（Te），可能会有一点不舒服。当然也有可能是这个人Fi（个人道德观）比较强烈，会认为将人看成有输入和输出的机器是一种非常不道德和不人性的想法。</p>
+<h2 id="唯物主义与环境影响"><a href="#唯物主义与环境影响" class="headerlink" title="唯物主义与环境影响"></a>唯物主义与环境影响</h2><p>在一个宽阔的、富有各种矿产的资源上肯定很好开设各种各样的工厂和产业链。于是在拿到一个新的地图的时候，应该观察矿坑分布，根据矿坑分布反向推理自己应该如何摆放工厂的位置。</p>
+<p>实际上决定自己强弱能力的根本在于自身的资源环境。所以在现实环境中，想要让自己变强，要注意自己的学习环境，自己接触到的朋友是否能和自己同频、具有同样的自我提升意识、交流、或者能互相提供帮助。</p>
+<h2 id="资源调度与远程运输"><a href="#资源调度与远程运输" class="headerlink" title="资源调度与远程运输"></a>资源调度与远程运输</h2><p>在没有远程物资传输的情况下，上面的唯物主义与地理环境决定论会非常明显。但是有了远程运输能力就不一样了。</p>
+<p>在蓝色的星球上最能体现的是跨地区、使用发射器传输物品，这样可以快速占领其他地区。</p>
+<p>但在距离恒星近的那一颗黄色星球上，不能跨地区传输，但是能远距离使用载荷发射器、发射储物箱和液体、气体罐。甚至还能用无人机自动传送物品同一个地区上很远距离的物品。</p>
+<p>这种资源调度能力用在人与人之间的能力上，或许就是人们经常说的“人脉”。有些能力或许我们不需要掌握，我们可以让一个朋友掌握，然后维护好与这个朋友的关系，在需要的时候“调用”即可。</p>
+<p>但实际上不是想调用就能调用的，每个人都是一个独立的个体。几乎不太会有单向的利用关系，人和人之间都是相互利用或者存在交换。但很多时候维持这种交换所付出的成本和换来的价值不能匹配。这也是关系瓦解的开始。</p>
+<p>资源调度还可以套在自己的笔记系统上，有些时候可以想想如何“建造一个知识发射器”，提高调用自己旧有知识和记忆的效率。这个例子可以是本地搭建大语言模型，读取自己的笔记、然后进行调用。这一点还启发我们，能看电子书尽量看电子书，能做电子笔记就不要做纸质笔记（对于需要频繁调度的知识和技能）</p>
+<h2 id="高度复杂实现独立系统"><a href="#高度复杂实现独立系统" class="headerlink" title="高度复杂实现独立系统"></a>高度复杂实现独立系统</h2><p>可以看到单位随着从T1逐渐升级到T5，外观越来越庞大和复杂，功能也更多更强，需要的建造资源种类也是直线上升，但一旦造好了，就相当于拥有了一个无限子弹的可移动炮台。这就像注入的硅多了，这个产品本身就具有了一个独立系统了，可以自己生产无限的子弹，自己移动，自我疗愈。</p>
+<p>这给人现实世界中的启发就是，当一个人掌握足够多种类的技能，吸收了足够多的知识并内化成能力之后，或许可以成为一个超级个体。一个具有独立创作和生产销售、运营、研究开发能力的人。</p>
+<h2 id="有趣的细节设计"><a href="#有趣的细节设计" class="headerlink" title="有趣的细节设计"></a>有趣的细节设计</h2><p>靠近恒星的星球，单位普遍强，参数高，获取和靠近恒星，获取到的能量更强有关系。更重要的是水分少，以只能在火山喷口的地方建造冷凝器的方式获取水分，这个细节在过程体验中体现的淋漓尽致。</p>
+<p>两个行星科技树不同，画风截然不同。紫色更像是人类机械科技、黄色星球更像是一种外形生物。</p>
+<p>但埃克里尔星球上的气体设计可能不够科学，氮气居然被用作防御建筑“光辉”的弹药燃料了</p>
 
         </div>
 
@@ -305,9 +295,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/python/"># python</a>
+                        <a href="/tags/%E6%80%9D%E8%80%83/"># 思考</a>
                     
-                        <a href="/tags/pyinstaller/"># pyinstaller</a>
+                        <a href="/tags/%E6%B8%B8%E6%88%8F/"># 游戏</a>
                     
                         
                 </span>
@@ -320,10 +310,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/05/16/Midustry%E5%90%AF%E5%8F%91/">Midustry启发</a>
             
-            
-            <a class="next" rel="next" href="/2024/04/15/%E6%95%B0%E5%AD%97%E5%A4%9A%E5%AA%92%E4%BD%93%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/">数字多媒体相关概念</a>
+            <a class="next" rel="next" href="/2024/05/06/%E5%85%B3%E4%BA%8EPyQt5%E7%9A%84Pyinstaller%E6%89%93%E5%8C%85%E9%97%AE%E9%A2%98/">关于PyQt5的Pyinstaller打包问题</a>
             
         </section>
 
