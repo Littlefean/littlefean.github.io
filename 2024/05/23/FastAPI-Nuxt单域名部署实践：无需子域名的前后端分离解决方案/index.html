@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 23, 2024&nbsp;&nbsp;19:18:05</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="FastAPI-Nuxt单域名部署实践：无需子域名的前后端分离解决方案"><a href="#FastAPI-Nuxt单域名部署实践：无需子域名的前后端分离解决方案" class="headerlink" title="FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案"></a>FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案</h1><p>注：此博客写于2024年5月23日。FastAPI已经到<code>0.111.0</code> 版本了。</p>
+<h2 id="背景历史"><a href="#背景历史" class="headerlink" title="背景历史"></a>背景历史</h2><p>上一个接手网站的人不管了：Wordpress —重写–&gt; Vue</p>
+<p>发现Vue做SEO优化很麻烦：Vue —重构–&gt; Nuxt</p>
+<p>发现每次改商品数据还要重新上传服务器：Nuxt —增强–&gt; Nuxt + githubActions自动部署</p>
+<p>发现还是得做后端：Nuxt + githubActions自动部署 —加后端–&gt; Nuxt + githubActions + FastAPI</p>
+<h2 id="回顾纯前端"><a href="#回顾纯前端" class="headerlink" title="回顾纯前端"></a>回顾纯前端</h2><p>对于构建一个网站来说，最简单的网站肯定是纯静态网站。</p>
+<p>只要将HTML、CSS、JavaScript、图片等资源文件放在某一个服务器的文件夹里，在宝塔里配置好域名，Nginx配置好，就可以通过域名访问到网站。</p>
+<p>如果使用了Vue、React、Nuxt、Next等框架，就用 <code>yarn generate</code> <code>pnpm build</code> 等等的命令生成出来的dist或者output文件夹，将这些文件夹里的内容部署到服务器对应域名的文件夹里就可以了。</p>
+<p>但这个不能接后端，这只是纯前端。</p>
+<h2 id="回顾后端-前端-子域名反向代理法"><a href="#回顾后端-前端-子域名反向代理法" class="headerlink" title="回顾后端+前端 子域名反向代理法"></a>回顾后端+前端 子域名反向代理法</h2><p>如果接入后端，以FastAPI举例子，我们可以用FastAPI提供的API接口，然后用Nuxt渲染出前端页面。</p>
+<p>以前个人做法是整两个域名，一个是子域名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">example.com</span><br><span class="line">api.example.com</span><br></pre></td></tr></table></figure>
+
+<p>然后用SSH连接服务器，单独开一个screen，部署后端上去，单独开一个后端的接口，比如说8000。</p>
+<p>然后再在宝塔里开一个api.example.com的站点，设置反向代理，把8000端口的代理到api子域名上。</p>
+<p>然后Nuxt前端里就可以用fetch或者axios 请求 <code>api.example.com</code> 接口，获取数据，渲染出页面。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>本文提供一个使用FastAPI+Nuxt的方案，可以使用一个域名就把后端和前端都部署到一起。</p>
+<p>这个Nuxt应该可以换成React、Vue、Next，都行，只要保证是可以静态打包的就可以。</p>
+<p>所以重点不在前端了，重点在FastAPI。</p>
+<p>fastAPI很简单，只用 app.mount一句话，就能让某一个路由绑定一个前端文件夹了。</p>
+<p>然后我们规定 <code>/api</code> 开头的url全部都走我们自定义的路由函数，不要去访问前端文件夹。</p>
+<p>但是但是！！我们如果直接用 <code>/</code> 作为URL绑定那个前端文件夹，经过测试发现我们自定义的api就全被覆盖了。</p>
+<p>比如 GET:  <code>https://example.com/api/product/all</code></p>
+<p>他会绑定到前端静态文件里面去了，会认为有一个叫api的页面，等等等的。而不是一个返回json的后端接口。</p>
+<p>那不把前端绑在 <code>/</code> 上，把前端绑定在 <code>/website</code> 或者 <code>/static</code> 上不就可以了吗？</p>
+<p>但这样不好，我们访问的网站url前面就必须全部加上一个 <code>/website</code> 了，如果我们的前端代码里某些js加了当前url的判断，这样可能会出问题。</p>
+<p>所以不能用mount直接绑定。还少要写一个if判断。</p>
+<h2 id="FastAPI代码"><a href="#FastAPI代码" class="headerlink" title="FastAPI代码"></a>FastAPI代码</h2><p>fastAPI项目使用poetry管理。以前发过如何使用poetry的文章，这里不再重复。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">backend-fastapi</span><br><span class="line">	ms_backend_fastapi</span><br><span class="line">		certs  <span class="comment"># 存放ssl证书</span></span><br><span class="line">		routers  <span class="comment"># 路由层</span></span><br><span class="line">		utils  <span class="comment"># 工具层</span></span><br><span class="line">		__init__.py</span><br><span class="line">		__main__.py</span><br><span class="line"></span><br><span class="line">	.gitignore</span><br><span class="line">	pyproject.toml</span><br><span class="line">	README.md</span><br></pre></td></tr></table></figure>
+
+<p>整个项目结构是这样的。里面必须再套一个。符合模块化。并且里面要有双下划线夹住的init和main。</p>
+<p>并且里面这个文件夹不能是短横线了，因为要符合模块命名，改成下划线。前面之所以多个ms只是因为这个是项目名称的缩写。</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tool.poetry]</span></span><br><span class="line"><span class="attr">name</span> = <span class="string">&quot;ms-backend-fastapi&quot;</span></span><br><span class="line"><span class="attr">version</span> = <span class="string">&quot;0.1.0&quot;</span></span><br><span class="line">。。。后面的就省略了</span><br></pre></td></tr></table></figure>
+
+<p>toml里的name和那个内层文件夹一样，只是短横线和下划线的区别。</p>
+<p>然后就是<code>__main__.py</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">这个模板可以通用在其他fastAPI项目里</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> FastAPI, HTTPException</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> ms_backend_fastapi.utils.path_utils <span class="keyword">import</span> get_frontend_dir</span><br><span class="line"><span class="keyword">from</span> ms_backend_fastapi.routers <span class="keyword">import</span> routers</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="keyword">import</span> uvicorn</span><br><span class="line">    <span class="keyword">import</span> sys</span><br><span class="line">    local = <span class="string">&quot;-l&quot;</span> <span class="keyword">in</span> sys.argv</span><br><span class="line"></span><br><span class="line">    <span class="comment"># HTTPS运行</span></span><br><span class="line">    ssl_files = Path(__file__).parent / <span class="string">&quot;certs&quot;</span></span><br><span class="line">    app = FastAPI()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> router <span class="keyword">in</span> routers:</span><br><span class="line">        app.include_router(router)</span><br><span class="line">    port = <span class="number">25543</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;http://localhost:<span class="subst">&#123;port&#125;</span>&quot;</span>)</span><br><span class="line">    uvicorn.run(</span><br><span class="line">        app,</span><br><span class="line">        host=<span class="string">&quot;0.0.0.0&quot;</span>,</span><br><span class="line">        port=port,</span><br><span class="line">        <span class="comment"># pem文件</span></span><br><span class="line">        ssl_keyfile=<span class="literal">None</span> <span class="keyword">if</span> local <span class="keyword">else</span> (ssl_files / <span class="string">&quot;website.key&quot;</span>).as_posix(),</span><br><span class="line">        <span class="comment"># crt文件</span></span><br><span class="line">        ssl_certfile=<span class="literal">None</span></span><br><span class="line">        <span class="keyword">if</span> local</span><br><span class="line">        <span class="keyword">else</span> (ssl_files / <span class="string">&quot;website.pem&quot;</span>).as_posix(),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>记得certs文件夹里放ssl证书的key文件和pem文件。网站开https要用的。</strong></p>
+<p>之所以写一个 <code>-l</code> 是因为方便在本地测试，本地就不能用https了。</p>
+<p>utils里面有一个get_frontend_dir，这个其实就是动态判断前端打包了的文件夹的路径</p>
+<p><strong>这个前端文件夹一定不要套在这个fastAPI项目里面，会导致打包巨大！并且也违背了前后端分离开发的初衷了，本来前端有一个仓库，git push之后能自动触发github Actions流水线自动部署到服务器的。</strong></p>
+<p>所以get_frontend_dir这个就是一个动态判断当前是Windows还是Linux系统，如果是Linux系统，干脆写死一个绝对路径了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> lru_cache</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@lru_cache(<span class="params"><span class="number">1</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_frontend_dir</span>():</span><br><span class="line">    <span class="keyword">import</span> platform</span><br><span class="line">    os_name = platform.system()</span><br><span class="line">    <span class="keyword">if</span> os_name == <span class="string">&quot;Windows&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">r&quot;D:\啊吧啊吧什么东西什么东西\website\.output\public&quot;</span></span><br><span class="line">    <span class="keyword">elif</span> os_name == <span class="string">&quot;Linux&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">r&quot;/www/wwwroot/这里是你baota上的最终部署的那个网站文件夹&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> Exception(<span class="string">&quot;Unsupported system: &quot;</span> + os_name)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>拿到这个前端文件夹路径就是为了开放一个 <code>/</code> URL的 接口，提供静态文件，形成网页用的。</p>
+<p>这里再展开上面文件结构里的routers：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">routers</span><br><span class="line">	api</span><br><span class="line">		__init__.py</span><br><span class="line">		example.py  <span class="comment"># 随便举个例子</span></span><br><span class="line">		product.py  <span class="comment"># 和产品相关的增删改查接口</span></span><br><span class="line">		log.py  <span class="comment"># 和日志相关的增查接口</span></span><br><span class="line">	client</span><br><span class="line">		__init__.py</span><br><span class="line">		client_path.py</span><br><span class="line">		root.py</span><br></pre></td></tr></table></figure>
+
+<p><code>root.py</code> 部分的内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, HTTPException</span><br><span class="line"></span><br><span class="line">router = APIRouter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.get(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">read_root</span>():</span><br><span class="line">    <span class="comment"># 直接返回前端的主页内容，而不是重定向</span></span><br><span class="line">    index_path = Path(get_frontend_dir()) / <span class="string">&quot;index.html&quot;</span></span><br><span class="line">    <span class="keyword">if</span> index_path.exists():</span><br><span class="line">        <span class="keyword">return</span> FileResponse(index_path)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> HTTPException(status_code=<span class="number">404</span>, detail=<span class="string">&quot;Index file not found&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>client_path.py</code> 里面的内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">from</span> fastapi.responses <span class="keyword">import</span> FileResponse</span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter, HTTPException</span><br><span class="line"><span class="keyword">from</span> ms_backend_fastapi.utils.path_utils <span class="keyword">import</span> get_frontend_dir</span><br><span class="line"></span><br><span class="line">router = APIRouter()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.api_route(<span class="params"><span class="string">&quot;/&#123;path:path&#125;&quot;</span>, methods=[<span class="string">&quot;GET&quot;</span>], include_in_schema=<span class="literal">False</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">frontend_fallback</span>(<span class="params">path: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    此路由作为前端的回退路由，用于捕获除 &quot;/api/&quot; 开头以外的所有其他请求，</span></span><br><span class="line"><span class="string">    并尝试将它们导向静态文件。注意，这应该放在所有其他路由定义之后。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 如果请求的路径是API路径，能走到这里说明没找到，前面没有拦截住。</span></span><br><span class="line">    <span class="keyword">if</span> path.startswith(<span class="string">&quot;api&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="string">&quot;message&quot;</span>: <span class="string">f&quot;找不到该API接口 `<span class="subst">&#123;path&#125;</span>`&quot;</span>,</span><br><span class="line">            <span class="string">&quot;status_code&quot;</span>: <span class="number">404</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="comment"># 尝试从静态文件中提供请求的路径，处理嵌入资源（如CSS、JS等）</span></span><br><span class="line">    static_file_path = Path(get_frontend_dir()) / path</span><br><span class="line">    <span class="keyword">if</span> static_file_path.exists() <span class="keyword">and</span> static_file_path.is_file():</span><br><span class="line">        <span class="keyword">return</span> FileResponse(static_file_path)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 如果静态文件不存在，可以考虑返回404页面或者前端的错误处理页面</span></span><br><span class="line">        error_path = Path(get_frontend_dir()) / <span class="string">&quot;404.html&quot;</span></span><br><span class="line">        <span class="keyword">if</span> error_path.exists():</span><br><span class="line">            <span class="keyword">return</span> FileResponse(error_path)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> HTTPException(status_code=<span class="number">404</span>, detail=<span class="string">&quot;File not found&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，重点就在上面：遇到api开头的接口</p>
+<p>所以要先把api开头的接口写在前面拦截住。</p>
+<p>app会注册好几个router路由，因此上面写了一个循环语句。</p>
+<p>在routers文件夹里可以写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> .client <span class="keyword">import</span> client_path, root</span><br><span class="line"><span class="keyword">from</span> .api <span class="keyword">import</span> api_router</span><br><span class="line">routers = [</span><br><span class="line">    api_router,</span><br><span class="line">    <span class="comment"># ====================== 上面要拦截住，所以和API相关的一定要在前面</span></span><br><span class="line">    client_path.router,</span><br><span class="line">    root.router,</span><br><span class="line">]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>接下来就是<code>api/example.py</code> 里的内容了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"></span><br><span class="line">router = APIRouter(prefix=<span class="string">&quot;/example&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@router.get(<span class="params"><span class="string">&quot;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">example_api_endpoint</span>():</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">&quot;/example 被访问了&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.get(<span class="params"><span class="string">&quot;/&#123;example_id&#125;&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">example_api_endpoint_with_id</span>(<span class="params">example_id: <span class="built_in">int</span></span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">f&quot;含有 ID: <span class="subst">&#123;example_id&#125;</span>&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@router.post(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">example_api_endpoint_post</span>(<span class="params">example_data: <span class="built_in">dict</span></span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;message&quot;</span>: <span class="string">f&quot;post 请求数据: <span class="subst">&#123;example_data&#125;</span>&quot;</span>&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以这样写，但还要注意 要用 <code>https://example.com/api/example</code> 才能访问到上面第一个路由函数</p>
+<p>所以api文件夹里的<code>__init__.py</code> 文件里要这样写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> importlib</span><br><span class="line"><span class="keyword">from</span> pkgutil <span class="keyword">import</span> iter_modules</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> fastapi <span class="keyword">import</span> APIRouter</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> example, log</span><br><span class="line"></span><br><span class="line">api_router = APIRouter(prefix=<span class="string">&quot;/api&quot;</span>)</span><br><span class="line"><span class="comment"># 获取当前包的绝对路径</span></span><br><span class="line">package_dir = Path(__file__).resolve().parent</span><br><span class="line"></span><br><span class="line"><span class="comment"># 自动发现并注册所有router</span></span><br><span class="line"><span class="keyword">for</span> (_, module_name, _) <span class="keyword">in</span> iter_modules([<span class="built_in">str</span>(package_dir)]):</span><br><span class="line">    <span class="comment"># 排除掉__init__.py自身</span></span><br><span class="line">    <span class="keyword">if</span> module_name == <span class="string">&#x27;__init__&#x27;</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="comment"># 动态导入模块</span></span><br><span class="line">    module = importlib.import_module(<span class="string">f&quot;.<span class="subst">&#123;module_name&#125;</span>&quot;</span>, package=__package__)</span><br><span class="line">    <span class="comment"># 尝试从模块中获取router对象并注册</span></span><br><span class="line">    router = <span class="built_in">getattr</span>(module, <span class="string">&quot;router&quot;</span>, <span class="literal">None</span>)</span><br><span class="line">    <span class="keyword">if</span> router:</span><br><span class="line">        api_router.include_router(router)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;模块注册成功 <span class="subst">&#123;module_name&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;模块<span class="subst">&#123;module_name&#125;</span>中没有找到router对象&quot;</span>)</span><br><span class="line">        <span class="keyword">raise</span> ImportError(<span class="string">f&quot;模块<span class="subst">&#123;module_name&#125;</span>中没有找到router对象&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这样就能实现动态的导入，以后再开新的接口直接新建py文件就可以了！不用再去点开init文件里再import了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/fastAPI/"># fastAPI</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/05/23/PIXI%E7%BB%98%E5%9B%BE%E7%A0%94%E7%A9%B6/">PIXI绘图研究</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
