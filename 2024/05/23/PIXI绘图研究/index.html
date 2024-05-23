@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>PIXI绘图研究 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">PIXI绘图研究</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">五月 23, 2024&nbsp;&nbsp;16:06:13</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="研究一下PIXI"><a href="#研究一下PIXI" class="headerlink" title="研究一下PIXI"></a>研究一下PIXI</h1><p>先把最开始的初始代码堆上来，方便以后复制。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="variable constant_">PIXI</span> <span class="keyword">from</span> <span class="string">&quot;pixi.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; initDevtools &#125; <span class="keyword">from</span> <span class="string">&quot;@pixi/devtools&quot;</span>;</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> app = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Application</span>();</span><br><span class="line">  <span class="title function_">initDevtools</span>(&#123;</span><br><span class="line">    app,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">await</span> app.<span class="title function_">init</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: screen.<span class="property">width</span>,</span><br><span class="line">    <span class="attr">height</span>: screen.<span class="property">height</span>,</span><br><span class="line">    <span class="attr">resolution</span>: <span class="variable language_">window</span>.<span class="property">devicePixelRatio</span> || <span class="number">1</span>, <span class="comment">// 使用设备像素比</span></span><br><span class="line">    <span class="attr">antialias</span>: <span class="literal">true</span>, <span class="comment">// 抗锯齿</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> graphics = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>()</span><br><span class="line">    .<span class="title function_">rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>)</span><br><span class="line">    .<span class="title function_">fill</span>(<span class="number">0xff0000</span>)</span><br><span class="line">    .<span class="title function_">rect</span>(<span class="number">400</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>)</span><br><span class="line">    .<span class="title function_">fill</span>(<span class="number">0x00ff00</span>);</span><br><span class="line">  graphics.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">  graphics.<span class="property">pivot</span>.<span class="title function_">set</span>(<span class="number">100</span>, <span class="number">0</span>);</span><br><span class="line">  </span><br><span class="line">  app.<span class="property">stage</span>.<span class="title function_">addChild</span>(graphics);</span><br><span class="line">  app.<span class="property">stage</span>.<span class="property">eventMode</span> = <span class="string">&quot;static&quot;</span>;</span><br><span class="line">  <span class="comment">// 在舞台上绘制网格</span></span><br><span class="line">  <span class="keyword">const</span> grid = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    grid.<span class="title function_">moveTo</span>(<span class="number">0</span>, i * <span class="number">100</span>);</span><br><span class="line">    grid.<span class="title function_">lineTo</span>(<span class="number">1000</span>, i * <span class="number">100</span>);</span><br><span class="line">    grid.<span class="title function_">moveTo</span>(i * <span class="number">100</span>, <span class="number">0</span>);</span><br><span class="line">    grid.<span class="title function_">lineTo</span>(i * <span class="number">100</span>, <span class="number">1000</span>);</span><br><span class="line">    grid.<span class="title function_">stroke</span>(&#123; <span class="attr">width</span>: <span class="number">1</span>, <span class="attr">color</span>: <span class="number">0x2b2b2b</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  app.<span class="property">stage</span>.<span class="title function_">addChild</span>(grid);</span><br><span class="line"></span><br><span class="line">  app.<span class="property">ticker</span>.<span class="title function_">add</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    graphics.<span class="property">rotation</span> += <span class="number">0.1</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// app.start();</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;PIXI Version:&quot;</span>, <span class="variable constant_">PIXI</span>.<span class="property">VERSION</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(app);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(app.<span class="property">canvas</span>);</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>当时写的时候把</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(app.<span class="property">canvas</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这句给丢了，怪不得啥画面都没有。</p>
+<p>现在专门看</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> graphics = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>()</span><br><span class="line">  .<span class="title function_">rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>)</span><br><span class="line">  .<span class="title function_">fill</span>(<span class="number">0xff0000</span>)</span><br><span class="line">  .<span class="title function_">rect</span>(<span class="number">400</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">100</span>)</span><br><span class="line">  .<span class="title function_">fill</span>(<span class="number">0x00ff00</span>);</span><br><span class="line">graphics.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">graphics.<span class="property">pivot</span>.<span class="title function_">set</span>(<span class="number">100</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这个部分，</p>
+<p>一个图形实例 <code>graphics</code> ，可以看成是一个无限大的玻璃板，它最终被放在舞台上。</p>
+<p>上面的操作其实可以这样理解：</p>
+<p>这个巨大的玻璃板也有 <code>右x下y</code> 的坐标轴。前面四行代码就是根据这个玻璃板的坐标轴，在玻璃板上画了两个不同颜色的矩形。</p>
+<p>然后就是一个移动玻璃板 <code>position.set</code> 、和设置玻璃板旋转中心点 <code>pivot.set</code> 的操作。</p>
+<p>实际上如果没有这两步操作，巨大玻璃板的坐标轴和stage舞台的坐标轴是完全重合的。</p>
+<p>这两部操作代码出现的时候，应该先看pivot，再看position。</p>
+<p>pivot是设置了旋转中心点，同时也是设置了与父元素进行对齐的地方。pivot设置的点会和父元素的中心点重叠。</p>
+<p>然后，在重叠的基础上，position就会让元素与父元素之间产生相对位移。</p>
+<h2 id="在玻璃板上画不同的图形"><a href="#在玻璃板上画不同的图形" class="headerlink" title="在玻璃板上画不同的图形"></a>在玻璃板上画不同的图形</h2><p>画矩形的时候，是 <code>x, y, w, h</code> 坐标点是先找到的左上角的点。</p>
+<p>画圆形的时候，<code>x, y, r</code> 坐标点是圆心点。</p>
+<h2 id="记录绘制炮塔"><a href="#记录绘制炮塔" class="headerlink" title="记录绘制炮塔"></a>记录绘制炮塔</h2><p>这个完全没有用到spirit，只用了容器和图形。</p>
+<p>容器就像非叶子节点，图形就像叶子节点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="variable constant_">PIXI</span> <span class="keyword">from</span> <span class="string">&quot;pixi.js&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; initDevtools &#125; <span class="keyword">from</span> <span class="string">&quot;@pixi/devtools&quot;</span>;</span><br><span class="line"></span><br><span class="line">(<span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello, World!&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> app = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Application</span>();</span><br><span class="line">  <span class="title function_">initDevtools</span>(&#123;</span><br><span class="line">    app,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">await</span> app.<span class="title function_">init</span>(&#123;</span><br><span class="line">    <span class="attr">width</span>: screen.<span class="property">width</span>,</span><br><span class="line">    <span class="attr">height</span>: screen.<span class="property">height</span>,</span><br><span class="line">    <span class="attr">resolution</span>: <span class="variable language_">window</span>.<span class="property">devicePixelRatio</span> || <span class="number">1</span>, <span class="comment">// 使用设备像素比</span></span><br><span class="line">    <span class="attr">antialias</span>: <span class="literal">true</span>, <span class="comment">// 抗锯齿</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">let</span> tick = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// const graphics = new PIXI.Graphics().circle(0, 0, 100).fill(0xff0000);</span></span><br><span class="line">  <span class="comment">// graphics.position.set(300, 300);</span></span><br><span class="line">  <span class="comment">// app.stage.addChild(graphics);</span></span><br><span class="line">  <span class="keyword">let</span> b = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">let</span> barrels = [];</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">const</span> cannon = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Container</span>();</span><br><span class="line">    cannon.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">300</span>, <span class="number">300</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> circle = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>().<span class="title function_">circle</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>).<span class="title function_">fill</span>(<span class="number">0x1e1e1e</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> barrelGroup = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Container</span>();</span><br><span class="line">    <span class="keyword">const</span> barrelGroupRect = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>()</span><br><span class="line">      .<span class="title function_">rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">300</span>, <span class="number">100</span>)</span><br><span class="line">      .<span class="title function_">stroke</span>(<span class="number">0x000000</span>);</span><br><span class="line">    barrelGroupRect.<span class="property">pivot</span>.<span class="title function_">set</span>(<span class="number">50</span>, <span class="number">50</span>);</span><br><span class="line">    barrelGroup.<span class="title function_">addChild</span>(barrelGroupRect);</span><br><span class="line">    b = barrelGroup;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = -<span class="number">2</span>; i &lt;= <span class="number">2</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">const</span> barrel = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>().<span class="title function_">rect</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">50</span>, <span class="number">20</span>).<span class="title function_">fill</span>(<span class="number">0x3c3c3c</span>);</span><br><span class="line">      barrel.<span class="property">pivot</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line">      barrel.<span class="property">position</span>.<span class="title function_">set</span>(<span class="number">0</span>, <span class="number">35</span> * i);</span><br><span class="line">      barrelGroup.<span class="title function_">addChild</span>(barrel);</span><br><span class="line">      barrels.<span class="title function_">push</span>(barrel);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这两个顺序不能乱，</span></span><br><span class="line">    cannon.<span class="title function_">addChild</span>(circle); <span class="comment">// 先画圆圈，炮塔墩子</span></span><br><span class="line">    cannon.<span class="title function_">addChild</span>(barrelGroup); <span class="comment">// 再画武器，盖在上面</span></span><br><span class="line"></span><br><span class="line">    app.<span class="property">stage</span>.<span class="title function_">addChild</span>(cannon);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 在舞台上绘制网格</span></span><br><span class="line">    <span class="keyword">const</span> grid = <span class="keyword">new</span> <span class="variable constant_">PIXI</span>.<span class="title class_">Graphics</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">      grid.<span class="title function_">moveTo</span>(<span class="number">0</span>, i * <span class="number">100</span>);</span><br><span class="line">      grid.<span class="title function_">lineTo</span>(<span class="number">1000</span>, i * <span class="number">100</span>);</span><br><span class="line">      grid.<span class="title function_">moveTo</span>(i * <span class="number">100</span>, <span class="number">0</span>);</span><br><span class="line">      grid.<span class="title function_">lineTo</span>(i * <span class="number">100</span>, <span class="number">1000</span>);</span><br><span class="line">      grid.<span class="title function_">stroke</span>(&#123; <span class="attr">width</span>: <span class="number">1</span>, <span class="attr">color</span>: <span class="number">0x2b2b2b</span> &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    app.<span class="property">stage</span>.<span class="title function_">addChild</span>(grid);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  app.<span class="property">ticker</span>.<span class="title function_">add</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    tick++;</span><br><span class="line">    barrels.<span class="title function_">forEach</span>(<span class="function">(<span class="params">barrel, index</span>) =&gt;</span> &#123;</span><br><span class="line">      barrel.<span class="property">position</span>.<span class="property">x</span> = <span class="number">5</span> * (<span class="title class_">Math</span>.<span class="title function_">sin</span>(tick / <span class="number">2</span> + index) * <span class="number">2</span> + <span class="number">2</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// graphics.rotation += 0.1;</span></span><br><span class="line">    b.<span class="property">rotation</span> += <span class="number">0.01</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// app.start();</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;PIXI Version:&quot;</span>, <span class="variable constant_">PIXI</span>.<span class="property">VERSION</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(app);</span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(app.<span class="property">canvas</span>);</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>现在的问题可能是如何把数据层和渲染层拆成两部分。</p>
+<p>最终还是太累了，暂时先不搞了</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/PIXI/"># PIXI</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/05/16/Midustry%E5%90%AF%E5%8F%91/">Midustry启发</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
