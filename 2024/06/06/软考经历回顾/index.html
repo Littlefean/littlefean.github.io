@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>软考经历回顾 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">软考经历回顾</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 6, 2024&nbsp;&nbsp;16:23:30</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="软考经历回顾"><a href="#软考经历回顾" class="headerlink" title="软考经历回顾"></a>软考经历回顾</h1><h2 id="基础信息"><a href="#基础信息" class="headerlink" title="基础信息"></a>基础信息</h2><p>好像三月份网上报名，五月底 5-26 考试。</p>
+<p>报名项：（中级 软件设计师）</p>
+<p>有一个专门准备这种考试的公司，专门在距离市中心挺远的地方开了个场地，打车去。可能每个城市都不太一样。</p>
+<h2 id="各种细节回顾"><a href="#各种细节回顾" class="headerlink" title="各种细节回顾"></a>各种细节回顾</h2><h3 id="时间方面"><a href="#时间方面" class="headerlink" title="时间方面"></a>时间方面</h3><p>本以为还分上下午，但实际上直接上午四个小时考完了（上午8点半到中午12点半）。时间非常充足，提前半个小时交卷了。</p>
+<h3 id="考试方式"><a href="#考试方式" class="headerlink" title="考试方式"></a>考试方式</h3><p>以为是纸质考试，实际上和计算机二级、蓝桥杯一样，用那边的电脑考试。</p>
+<p>电脑没关注系统信息，反正直接是一个全屏的考试系统界面，Alt+Tab键切换窗口被屏蔽了。考试系统界面上没有时间，但会有一个做题进度条和剩余时间进度条。</p>
+<p>开考前要先登录系统，还很贴心的给了个测试输入法的框。但又很神奇，居然不用调整就是双拼，而且似乎是自己熟悉的微软双拼。也许上一个考试的人和我用了同样一个双拼方案，很巧。</p>
+<p>一半多的人缺考。一个考场里的人挺少的。</p>
+<p>考试系统界面里面还自带一个计算器，挺好。中途有个计算机组成原理的题算了算。最后交卷前还算了算大概分数，大题应该是能超过45分的（选择题和大题都超过45分才算过）。</p>
+<p>二选一的选做大题的逻辑是只要填了某一个大题里的输入框内容，另一个大题就自动不让填了，只要一切另一个大题就会弹窗警告说要清除当前大题的内容。</p>
+<h3 id="考试内容"><a href="#考试内容" class="headerlink" title="考试内容"></a>考试内容</h3><p>大题考了一个霍夫曼树，其实纯粹就是代码挖空填空题，感觉这东西AI能直接秒答，一点一点看代码还看了半个多小时，实际上空都巨简单，只是看其他部分的代码很花时间，没准不用看其他地方也能根据上下两行猜出来，感觉软考整这种算法题模式有点无聊了。</p>
+<p>填空题输入框里输入中括号的时候很迷，有时候是一个微软雅黑的英文中括号，有时候是一个类似TimesNewRomance字体的英文细中括号，很奇怪。</p>
+<h2 id="考试的反作弊机制："><a href="#考试的反作弊机制：" class="headerlink" title="考试的反作弊机制："></a>考试的反作弊机制：</h2><p>不同科目的人被安排在同样的考场里交错排列。每个电脑座位之间都有塑料泡沫隔板竖起来，但余光还是会看到前排斜着的人的屏幕，但一个考场的人似乎都被安排了不同的科目。做完了之后起身离开的时候看到其他人的屏幕里在画图，可以确定完全不是一个科目的，有的可能是高级，还要写论文，键盘声音密集。</p>
+<p>进入考场电子设备都放在外面一个矩阵多口挂袋里了，进入之前全身扫描金属。</p>
+<p>但凡有人上厕所，监考员就会看着那个人远去并用对讲机说：“4考场有个男生去厕所了”。</p>
+<p>笔是自带的，草稿纸不能自带，兜里带了两个折起来的A4纸最终还是放在了外面，白带了。不能用准考证背面打草稿。草稿纸可以申请，也是A4纸，主要是很多数据结构的选择题用到了。在草稿纸还没申请之前，差点就偷偷想用准考证背面打草稿了。</p>
+<p>草稿纸在考完之后要归还，并且上面要写好个人身份信息，监考员会检查内容。应该是防止有人用草稿纸传递答案，和把题目记好了带到厕所里给其他人作弊用。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从内倾思维的角度想：结果不重要，过程重要，在过程中可以学到很多东西，完善知识体系。</p>
+<p>从外倾思维的角度想：结果很重要，对某些单位的员工可以涨工资，评职称，不知道公司是不是会因为这个申请到奖金。</p>
+<p>收获：计算机网络和计算机组成原理又复习了一下（其实没完全复习完）、设计模式、各种软件开发模型、著作权等法律意识、操作系统、一些多媒体知识（音频看成离散的波、一维数组）。</p>
+<p>收获最大的就是设计模式、其次是软件开发模型。其他的复习收获零零碎碎比较小。</p>
+<p>从外倾直觉角度想：</p>
+<p>或许可以结合螺旋模型、LLM等，给INTP们设计一种以Ne为驱动的个人项目软件开发模型（xs）</p>
+<p>或许可以结合LLM、各种提示词、将对话串接起来形成流水线、设计一种以LLM为基础的软件开发模型。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%80%83%E8%AF%95/"># 考试</a>
+                    
+                        <a href="/tags/%E8%BD%AF%E8%80%83/"># 软考</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/06/06/%E5%9C%A8Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%BF%90%E8%A1%8C%E7%88%AC%E8%99%AB%E5%A4%B1%E8%B4%A5/">在Linux服务器上运行爬虫失败</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>

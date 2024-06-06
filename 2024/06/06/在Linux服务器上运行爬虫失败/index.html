@@ -19,7 +19,7 @@
     <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
 
 
-<title>《类型与原型》心理学笔记 | 阿岳的博客</title>
+<title>在Linux服务器上运行爬虫失败 | 阿岳的博客</title>
 
 
 
@@ -145,11 +145,76 @@
                 <div class="container">
     
     
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">《类型与原型》心理学笔记</h1>
+            <h1 class="post-title">在Linux服务器上运行爬虫失败</h1>
             
                 <div class="post-meta">
                     
@@ -158,7 +223,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">六月 6, 2024&nbsp;&nbsp;16:14:37</a>
+                        Date: <a href="#">六月 6, 2024&nbsp;&nbsp;16:22:26</a>
                         </span>
                     
                     
@@ -167,29 +232,43 @@
         </header>
 
         <div class="post-content">
-            <p>Ni：关注内在客体。</p>
-<p>主体是自己，客体是物，或者除了自己以外的其他人。</p>
-<p>外在客体和内在客体是什么？</p>
-<p>外在客体就是现实生活中可以摸到感知到的各种东西，水空气，箱子</p>
-<p>主体：对客体有认识和实践能力的人</p>
-<p>内在客体：自己的记忆、意识，亲人去世了但还活在自己的心里。印象、记忆、幻象的总和。</p>
-<p>内在客体被认为是活得，荣格强调内在客体和外在客体相同重要，但不被主流社会接受，主流社会崇尚科学和理性，太过注重内在客体会被认为是一种精神病</p>
-<p>Si：外部的刺激引发了内部的感觉</p>
-<p>Ni：外部的刺激引发了内部的意象，意象是没有验证的，是一种预演和模拟，或者说从集体无意识中捕捉到了某些意象</p>
-<p>Si人和Ni人有及其丰富的内心世界。无法向外部展示</p>
-<p>Ni人的那种“独”和Ti人的那种独，不太一样，Ti人独在于逻辑体系过于庞大，表达很花时间，并且别人也不一定能接受。</p>
-<p>Ni人的独是不能说，一说就信息失真了，它是可以洞察到意识背后的全部过程，可以和Se的清晰度不相上下</p>
-<p>Ne人的争论是刻板印象，Ne人的争论辩论实际是为了榨取可能性，他们会觉得讨论出来不同的观点和视角很有趣，而Ti人是真的想要说明自己是正确的。</p>
-<p>Te：心理能量流动到外在客体</p>
-<p>Ti：心理能量流动到内在主体</p>
-<p>记录一些心理学记录</p>
-<p>最近看了约翰彼比的《类型与原型》，<br>up主骨哥，和刷刷。了解了荣格八维下的心理能量流动。<br>荣格学派更像是研究正常人的心理学，而弗洛伊德的精神分析学派更像是研究不太正常的人。两个学派之间的冲突也有点意思。<br>原来之前了解到的被广泛流传的四次二分法的MBTI是被简化了的表层的模型，充满了娱乐化和刻板印象。</p>
-<p>了解到了Se Si Ni Ne Te Ti Fi Fe的定义和区别，以及八功能模型和心理阴影，构成主体的脊柱轴和帮助他人或被帮助的双臂轴。</p>
-<p>对直觉和集体潜意识有了更详细的理解。Ni相关的描述经常有冥想，顿悟，愿景，元思维模式，对集体潜意识的挖掘和发现，对意义的探寻。其实Ni并没有那么有逻辑性，有逻辑性的是Ti。</p>
-<p>关于Ni里描述的“内在客体”的概念有点意思，它是主体对其他客体在自己内心，大脑中，记忆，幻想的总和。Ni主导的人会把外在的人“扫描”一份，在自己的大脑中形成一份，可以和这个人对话，进而预判外界的人和事物，对可能发生的事情有预见性。当亲人或者异性朋友离开了自己，这个人经常会在自己的潜意识或者梦里出现，甚至会和自己对话。</p>
-<p>但令我感到好奇的是人类祖先的记忆和思维模式是如何通过基因遗传下来，在每个人的大脑中形成神经元的连接结构，最终埋藏在每个人的潜意识里的。这个太复杂了，可能涉及脑科学，并且据说人的思维在底层最终是量子态的，只要人开始观察自己的思维活动的时候，被观察的思维本身就已因为有观察者的存在而坍缩了。</p>
-<p>现在感觉自己经常用到的功能是Ne而不是Ni，因为Ne的发散性思维让自己经常在睡觉的时候，洗澡的时候产生各种各样的灵感和想法，将灵感实现并做成整活视频发布。</p>
-<p>Ne倾向于发现新的可能性，是广度优先搜索，Ni是深度优先搜索，挖掘事情背后的意义并顿悟。在如今崇尚科学的时代，Ni过于主导的人可能被视为算命的，宗教主，甚至精神病。但为了让理论有实用性和落地实践，Ni的使用和“冥想”，宏大愿景，元思维等联系上了。</p>
+            <p>在Linux服务器上运行selenium 爬虫</p>
+<p>这个爬虫库基于java，所以先安装java</p>
+<p>（CentOS8）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install java-11-openjdk-devel</span><br></pre></td></tr></table></figure>
+
+<p>如果不知道是不是安装了java，可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line">javac -version</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在Linux服务器上下载谷歌浏览器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>查看是否安装完毕</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">google-chrome --version</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://npm.taobao.org/mirrors/chromedriver/96.0.4664.45/chromedriver_linux64.zip </span><br></pre></td></tr></table></figure>
+
+<p>突然发现上面连不上了，临时忽略一下证书，用这个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://npm.taobao.org/mirrors/chromedriver/96.0.4664.45/chromedriver_linux64.zip</span><br></pre></td></tr></table></figure>
+
+<p>还是不行，到官方下载界面下载吧还是</p>
+<p><a target="_blank" rel="noopener" href="https://chromedriver.storage.googleapis.com/index.html">chromedriver.storage.googleapis.com&#x2F;index.html</a></p>
+<p>然后会发现一大堆的版本，找到了一个96的</p>
+<p><a target="_blank" rel="noopener" href="https://chromedriver.storage.googleapis.com/index.html?path=96.0.4664.45/">chromedriver.storage.googleapis.com&#x2F;index.html?path&#x3D;96.0.4664.45&#x2F;</a></p>
+<p>点进去发现有mac的linux的win的。选linux的。</p>
+<p>把下载的zip上传到服务器上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip chromedriver_linux64.zip</span><br></pre></td></tr></table></figure>
+
+<p>然后解压。这个当前位置最好还是一个好位置，熟悉的路径位置。</p>
+<p>新建一个driver文件夹，然后把这个chromedriver二进制文件放进去，看起来更清晰一些</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 driver/chromedriver</span><br></pre></td></tr></table></figure>
+
+<p>然后给这个二进制文件一个比较好的权限。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43706537/article/details/121513551">linux下部署selenium爬虫程序_谷歌爬虫工具支持linux吗-CSDN博客</a></p>
 
         </div>
 
@@ -223,9 +302,15 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                        <a href="/tags/python/"># python</a>
                     
-                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
+                        <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"># 服务器</a>
+                    
+                        <a href="/tags/linux/"># linux</a>
+                    
+                        <a href="/tags/%E7%88%AC%E8%99%AB/"># 爬虫</a>
+                    
+                        <a href="/tags/selenium/"># selenium</a>
                     
                         
                 </span>
@@ -238,10 +323,10 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/06/06/%E5%9C%A8Linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E8%BF%90%E8%A1%8C%E7%88%AC%E8%99%AB%E5%A4%B1%E8%B4%A5/">在Linux服务器上运行爬虫失败</a>
+                <a class="prev" rel="prev" href="/2024/06/06/%E8%BD%AF%E8%80%83%E7%BB%8F%E5%8E%86%E5%9B%9E%E9%A1%BE/">软考经历回顾</a>
             
             
-            <a class="next" rel="next" href="/2024/05/23/FastAPI-Nuxt%E5%8D%95%E5%9F%9F%E5%90%8D%E9%83%A8%E7%BD%B2%E5%AE%9E%E8%B7%B5%EF%BC%9A%E6%97%A0%E9%9C%80%E5%AD%90%E5%9F%9F%E5%90%8D%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案</a>
+            <a class="next" rel="next" href="/2024/06/06/%E3%80%8A%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E3%80%8B%E5%BF%83%E7%90%86%E5%AD%A6%E7%AC%94%E8%AE%B0/">《类型与原型》心理学笔记</a>
             
         </section>
 
