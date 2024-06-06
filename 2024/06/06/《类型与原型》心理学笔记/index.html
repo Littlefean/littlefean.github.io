@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>《类型与原型》心理学笔记 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《类型与原型》心理学笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 6, 2024&nbsp;&nbsp;16:14:37</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Ni：关注内在客体。</p>
+<p>主体是自己，客体是物，或者除了自己以外的其他人。</p>
+<p>外在客体和内在客体是什么？</p>
+<p>外在客体就是现实生活中可以摸到感知到的各种东西，水空气，箱子</p>
+<p>主体：对客体有认识和实践能力的人</p>
+<p>内在客体：自己的记忆、意识，亲人去世了但还活在自己的心里。印象、记忆、幻象的总和。</p>
+<p>内在客体被认为是活得，荣格强调内在客体和外在客体相同重要，但不被主流社会接受，主流社会崇尚科学和理性，太过注重内在客体会被认为是一种精神病</p>
+<p>Si：外部的刺激引发了内部的感觉</p>
+<p>Ni：外部的刺激引发了内部的意象，意象是没有验证的，是一种预演和模拟，或者说从集体无意识中捕捉到了某些意象</p>
+<p>Si人和Ni人有及其丰富的内心世界。无法向外部展示</p>
+<p>Ni人的那种“独”和Ti人的那种独，不太一样，Ti人独在于逻辑体系过于庞大，表达很花时间，并且别人也不一定能接受。</p>
+<p>Ni人的独是不能说，一说就信息失真了，它是可以洞察到意识背后的全部过程，可以和Se的清晰度不相上下</p>
+<p>Ne人的争论是刻板印象，Ne人的争论辩论实际是为了榨取可能性，他们会觉得讨论出来不同的观点和视角很有趣，而Ti人是真的想要说明自己是正确的。</p>
+<p>Te：心理能量流动到外在客体</p>
+<p>Ti：心理能量流动到内在主体</p>
+<p>记录一些心理学记录</p>
+<p>最近看了约翰彼比的《类型与原型》，<br>up主骨哥，和刷刷。了解了荣格八维下的心理能量流动。<br>荣格学派更像是研究正常人的心理学，而弗洛伊德的精神分析学派更像是研究不太正常的人。两个学派之间的冲突也有点意思。<br>原来之前了解到的被广泛流传的四次二分法的MBTI是被简化了的表层的模型，充满了娱乐化和刻板印象。</p>
+<p>了解到了Se Si Ni Ne Te Ti Fi Fe的定义和区别，以及八功能模型和心理阴影，构成主体的脊柱轴和帮助他人或被帮助的双臂轴。</p>
+<p>对直觉和集体潜意识有了更详细的理解。Ni相关的描述经常有冥想，顿悟，愿景，元思维模式，对集体潜意识的挖掘和发现，对意义的探寻。其实Ni并没有那么有逻辑性，有逻辑性的是Ti。</p>
+<p>关于Ni里描述的“内在客体”的概念有点意思，它是主体对其他客体在自己内心，大脑中，记忆，幻想的总和。Ni主导的人会把外在的人“扫描”一份，在自己的大脑中形成一份，可以和这个人对话，进而预判外界的人和事物，对可能发生的事情有预见性。当亲人或者异性朋友离开了自己，这个人经常会在自己的潜意识或者梦里出现，甚至会和自己对话。</p>
+<p>但令我感到好奇的是人类祖先的记忆和思维模式是如何通过基因遗传下来，在每个人的大脑中形成神经元的连接结构，最终埋藏在每个人的潜意识里的。这个太复杂了，可能涉及脑科学，并且据说人的思维在底层最终是量子态的，只要人开始观察自己的思维活动的时候，被观察的思维本身就已因为有观察者的存在而坍缩了。</p>
+<p>现在感觉自己经常用到的功能是Ne而不是Ni，因为Ne的发散性思维让自己经常在睡觉的时候，洗澡的时候产生各种各样的灵感和想法，将灵感实现并做成整活视频发布。</p>
+<p>Ne倾向于发现新的可能性，是广度优先搜索，Ni是深度优先搜索，挖掘事情背后的意义并顿悟。在如今崇尚科学的时代，Ni过于主导的人可能被视为算命的，宗教主，甚至精神病。但为了让理论有实用性和落地实践，Ni的使用和“冥想”，宏大愿景，元思维等联系上了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        <a href="/tags/%E5%BF%83%E7%90%86%E5%AD%A6/"># 心理学</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/05/23/FastAPI-Nuxt%E5%8D%95%E5%9F%9F%E5%90%8D%E9%83%A8%E7%BD%B2%E5%AE%9E%E8%B7%B5%EF%BC%9A%E6%97%A0%E9%9C%80%E5%AD%90%E5%9F%9F%E5%90%8D%E7%9A%84%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">FastAPI+Nuxt单域名部署实践：无需子域名的前后端分离解决方案</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
