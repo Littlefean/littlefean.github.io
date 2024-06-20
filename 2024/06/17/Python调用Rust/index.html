@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>Python调用Rust | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Python调用Rust</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 17, 2024&nbsp;&nbsp;16:35:08</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Python调用Rust研究"><a href="#Python调用Rust研究" class="headerlink" title="Python调用Rust研究"></a>Python调用Rust研究</h1><h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>有使用maturin</p>
+<p>将rust编译成so&#x2F;dll文件，并在python中调用so&#x2F;dll文件</p>
+<h2 id="使用maturin"><a href="#使用maturin" class="headerlink" title="使用maturin"></a>使用maturin</h2><p>先创建python项目的虚拟环境</p>
+<p>激活项目虚拟环境</p>
+<p>在虚拟环境里装maturin</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install maturin</span><br></pre></td></tr></table></figure>
+
+<p>使用它初始化python项目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maturin init</span><br></pre></td></tr></table></figure>
+
+<p>然后开始编写rust，可以在它的基础上进行更改</p>
+<p>然后运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">maturin develop</span><br></pre></td></tr></table></figure>
+
+<p>然后python这里就能调用了</p>
+<h2 id="直接让rust编译成二进制文件"><a href="#直接让rust编译成二进制文件" class="headerlink" title="直接让rust编译成二进制文件"></a>直接让rust编译成二进制文件</h2><p><a target="_blank" rel="noopener" href="http://www.codebaoku.com/it-rust/it-rust-116121038.html">PyO3: Python 调用 Rust 代码 - 编程宝库 (codebaoku.com)</a></p>
+<p>这个经过测试可以实现windows上，python调用rust编译成的dll，将dll改名成pyd。</p>
+<p>但一定要保证最终 #[pymodule] 修饰的那个函数的名字，和最终python里import的名字保持一样</p>
+<p>还要用windows11本身的cmd黑色窗口来运行，用rustRover里面的编译指令可能会出问题。</p>
+<p>注意：打包成so文件的，必须要用linux环境运行，并且打包出来的so文件前面会多一个lib三个字符，需要去掉。</p>
+<h2 id="新问题："><a href="#新问题：" class="headerlink" title="新问题："></a>新问题：</h2><p>rust这里代码量多了如何组织？分别打包成多个不同的模块，还是集成在一起？</p>
+<p>rust这里写的类型在python那里用的时候有什么局限性？（int变成i32会有大小限制）</p>
+<p>这种变成二进制文件的引用调用中间会不会有速度损耗？相比纯python编写的逻辑，性能提升了多少？</p>
+<p>除了调用函数以外，还有没有其他的东西？比如从rust这里拿到一个类，提供一个类让python这里去用（很麻烦）</p>
+<h2 id="类型局限性"><a href="#类型局限性" class="headerlink" title="类型局限性"></a>类型局限性</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File &quot;D:\Projects\Project-Test\python-rust-so\main.py&quot;, line 12, in &lt;module&gt;</span><br><span class="line">    main()</span><br><span class="line">  File &quot;D:\Projects\Project-Test\python-rust-so\main.py&quot;, line 7, in main</span><br><span class="line">    print(rust_rover_test.sum_as_string(100000000000000000000000000000000000000000, 1000_0000_0000_0000))</span><br><span class="line">          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</span><br><span class="line">OverflowError: int too big to convert</span><br></pre></td></tr></table></figure>
+
+<p>在python端传入太大的数字会崩掉。</p>
+<p>pyo3的官方文档</p>
+<p><a target="_blank" rel="noopener" href="https://pyo3.rs/v0.21.2/?spm=5176.28103460.0.0.297c3da2bbeHBA">Introduction - PyO3 user guide</a></p>
+<p>发现一个警告：最开始的模块绑定所有函数的代码是这样的：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[pymodule]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">rust_rover_test</span>(_py: Python, m: &amp;PyModule) <span class="punctuation">-&gt;</span> PyResult&lt;()&gt; &#123;</span><br><span class="line">    m.<span class="title function_ invoke__">add_wrapped</span>(wrap_pyfunction!(sum_as_string))?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_wrapped</span>(wrap_pyfunction!(sum_i32))?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后来发现原来是API过时了，变了，参数应该改成</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[pymodule]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">rust_rover_test</span>(m: &amp;Bound&lt;<span class="symbol">&#x27;_</span>, PyModule&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;()&gt; &#123;</span><br><span class="line">    <span class="comment">// m.add_wrapped(wrap_pyfunction!(sum_as_string))?;</span></span><br><span class="line">    <span class="comment">// m.add_wrapped(wrap_pyfunction!(sum_i32))?;</span></span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_as_string, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_i32, m)?)?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个是在pyo3官网上看到的</p>
+<h2 id="对数据类型的对接探索"><a href="#对数据类型的对接探索" class="headerlink" title="对数据类型的对接探索"></a>对数据类型的对接探索</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::&#123;HashMap, HashSet&#125;;</span><br><span class="line"><span class="comment">// lib.rs</span></span><br><span class="line"><span class="keyword">use</span> pyo3::prelude::*;</span><br><span class="line"><span class="keyword">use</span> pyo3::wrap_pyfunction;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_as_string</span>(a: <span class="type">usize</span>, b: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">String</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>((a + b).<span class="title function_ invoke__">to_string</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_i32</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a + b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_f32</span>(a: <span class="type">f32</span>, b: <span class="type">f32</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">f32</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a + b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将两个列表合并成一个列表的函数</span></span><br><span class="line"><span class="comment">/// 这说明 Vec&lt;i32&gt; 类型可以被转换为 Python 列表 List[int]</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">merge_lists</span>(a: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;, b: <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a.<span class="title function_ invoke__">iter</span>().<span class="title function_ invoke__">chain</span>(b.<span class="title function_ invoke__">iter</span>()).<span class="title function_ invoke__">cloned</span>().<span class="title function_ invoke__">collect</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将两个元组合并成一个元组的函数</span></span><br><span class="line"><span class="comment">/// 这说明 (i32, i32) 类型可以被转换为 Python 元组 Tuple[int, int]</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">merge_tuples</span>(a: (<span class="type">i32</span>, <span class="type">i32</span>), b: (<span class="type">i32</span>, <span class="type">i32</span>)) <span class="punctuation">-&gt;</span> PyResult&lt;(<span class="type">i32</span>, <span class="type">i32</span>)&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>((a.<span class="number">0</span> + b.<span class="number">0</span>, a.<span class="number">1</span> + b.<span class="number">1</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将两个字典合并成一个字典的函数</span></span><br><span class="line"><span class="comment">/// 这说明 HashMap&lt;String, i32&gt; 类型可以被转换为 Python 字典 Dict[str, int]</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">merge_dicts</span>(a: HashMap&lt;<span class="type">String</span>, <span class="type">i32</span>&gt;, b: HashMap&lt;<span class="type">String</span>, <span class="type">i32</span>&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;HashMap&lt;<span class="type">String</span>, <span class="type">i32</span>&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">result</span> = a;</span><br><span class="line">    <span class="keyword">for</span> (k, v) <span class="keyword">in</span> b &#123;</span><br><span class="line">        result.<span class="title function_ invoke__">insert</span>(k, v);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(result)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将两个集合合并成一个集合的函数</span></span><br><span class="line"><span class="comment">/// 这说明 HashSet&lt;i32&gt; 类型可以被转换为 Python 集合 Set[int]</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">merge_sets</span>(a: HashSet&lt;<span class="type">i32</span>&gt;, b: HashSet&lt;<span class="type">i32</span>&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;HashSet&lt;<span class="type">i32</span>&gt;&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a.<span class="title function_ invoke__">union</span>(&amp;b).<span class="title function_ invoke__">cloned</span>().<span class="title function_ invoke__">collect</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pymodule]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">rust_rover_test</span>(m: &amp;Bound&lt;<span class="symbol">&#x27;_</span>, PyModule&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;()&gt; &#123;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_as_string, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_i32, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_f32, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(merge_lists, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(merge_tuples, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(merge_dicts, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(merge_sets, m)?)?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="对组合数据类型的摸索"><a href="#对组合数据类型的摸索" class="headerlink" title="对组合数据类型的摸索"></a>对组合数据类型的摸索</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::&#123;HashMap, HashSet&#125;;</span><br><span class="line"><span class="comment">// lib.rs</span></span><br><span class="line"><span class="keyword">use</span> pyo3::prelude::*;</span><br><span class="line"><span class="keyword">use</span> pyo3::wrap_pyfunction;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_as_string</span>(a: <span class="type">usize</span>, b: <span class="type">usize</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">String</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>((a + b).<span class="title function_ invoke__">to_string</span>())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_i32</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a + b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">sum_f32</span>(a: <span class="type">f32</span>, b: <span class="type">f32</span>) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">f32</span>&gt; &#123;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(a + b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将二维数组（矩阵）所有的值相加并返回</span></span><br><span class="line"><span class="comment">/// 输入：二维数组（矩阵）</span></span><br><span class="line"><span class="comment">/// 输出：所有元素之和</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">matrix_sum</span>(matrix: <span class="type">Vec</span>&lt;<span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;<span class="type">i32</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">sum</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> <span class="variable">row</span> <span class="keyword">in</span> matrix &#123;</span><br><span class="line">        <span class="keyword">for</span> <span class="variable">num</span> <span class="keyword">in</span> row &#123;</span><br><span class="line">            sum += num;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(sum)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将字典列表 Dict[int, List[int]] 转换为 HashMap&lt;int, HashSet&lt;int&gt;&gt;</span></span><br><span class="line"><span class="comment">/// 输入：字典列表</span></span><br><span class="line"><span class="comment">/// 输出：HashMap&lt;int, HashSet&lt;int&gt;&gt;</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">dict_to_hashmap</span>(dict_list: <span class="type">Vec</span>&lt;HashMap&lt;<span class="type">i32</span>, <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;&gt;&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;HashMap&lt;<span class="type">i32</span>, HashSet&lt;<span class="type">i32</span>&gt;&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">hashmap</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    <span class="keyword">for</span> <span class="title class_">mut</span> dict <span class="keyword">in</span> dict_list &#123;</span><br><span class="line">        <span class="keyword">for</span> (key, value) <span class="keyword">in</span> dict.<span class="title function_ invoke__">drain</span>() &#123;</span><br><span class="line">            hashmap.<span class="title function_ invoke__">entry</span>(key).<span class="title function_ invoke__">or_insert_with</span>(HashSet::new).<span class="title function_ invoke__">extend</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(hashmap)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#[pymodule]</span></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">rust_rover_test</span>(m: &amp;Bound&lt;<span class="symbol">&#x27;_</span>, PyModule&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;()&gt; &#123;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_as_string, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_i32, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(sum_f32, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(matrix_sum, m)?)?;</span><br><span class="line">    m.<span class="title function_ invoke__">add_function</span>(wrap_pyfunction!(dict_to_hashmap, m)?)?;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上，类型转换官网上有一个表格：</p>
+<p><a target="_blank" rel="noopener" href="https://pyo3.rs/v0.21.2/conversions/tables">Rust 类型到 Python 类型的映射 - PyO3 用户指南 — Mapping of Rust types to Python types - PyO3 user guide</a></p>
+<p>实际上运行的时候，python参数会转换成rust参数，然后在rust代码中运行。这个是有一点点转换成本的。但是rust的高性能会极大的弥补这成本。</p>
+<h2 id="代码组织问题"><a href="#代码组织问题" class="headerlink" title="代码组织问题"></a>代码组织问题</h2><p>直接把src&#x2F;lib.rs 当成main文件，只写一个注册函数的总函数。其他的引入。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::collections::&#123;HashMap, HashSet&#125;;</span><br><span class="line"><span class="keyword">use</span> pyo3::&#123;pyfunction, PyResult&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// 将字典列表 Dict[int, List[int]] 转换为 HashMap&lt;int, HashSet&lt;int&gt;&gt;</span></span><br><span class="line"><span class="comment">/// 输入：字典列表</span></span><br><span class="line"><span class="comment">/// 输出：HashMap&lt;int, HashSet&lt;int&gt;&gt;</span></span><br><span class="line"><span class="meta">#[pyfunction]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">dict_to_hashmap</span>(dict_list: <span class="type">Vec</span>&lt;HashMap&lt;<span class="type">i32</span>, <span class="type">Vec</span>&lt;<span class="type">i32</span>&gt;&gt;&gt;) <span class="punctuation">-&gt;</span> PyResult&lt;HashMap&lt;<span class="type">i32</span>, HashSet&lt;<span class="type">i32</span>&gt;&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">mut </span><span class="variable">hashmap</span> = HashMap::<span class="title function_ invoke__">new</span>();</span><br><span class="line">    <span class="keyword">for</span> <span class="title class_">mut</span> dict <span class="keyword">in</span> dict_list &#123;</span><br><span class="line">        <span class="keyword">for</span> (key, value) <span class="keyword">in</span> dict.<span class="title function_ invoke__">drain</span>() &#123;</span><br><span class="line">            hashmap.<span class="title function_ invoke__">entry</span>(key).<span class="title function_ invoke__">or_insert_with</span>(HashSet::new).<span class="title function_ invoke__">extend</span>(value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(hashmap)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如这个函数，前面就要注意加上pub关键字。</p>
+<p>然后lib.rs里面，直接引入</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入的内容</span></span><br><span class="line"><span class="keyword">mod</span> dict_functions;</span><br><span class="line"><span class="keyword">use</span> dict_functions::dict_to_hashmap;</span><br></pre></td></tr></table></figure>
+
+<p>直接调用就可以了。比较好的是，这个函数的rust里的三斜杠注释文档会能被python这里提取识别到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(rust_rover_test.dict_to_hashmap.__doc__)</span><br></pre></td></tr></table></figure>
+
+<p>即使有了pyi文件，pyi文件里写的python文档注释，是给pycharm看的，鼠标悬浮在函数上显示用的，但实际上 <code>__doc__</code> 和help函数，调用的是rust里面的文档注释和函数参数名。</p>
+<p>但是在python调用端，如何像这样含有很多点调用，看起来有组织结构？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = DictUtils.dict_to_hashmap(&#123;...&#125;)</span><br><span class="line">res = GameBoardUtils.transform_board([...])</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>写了一个五子棋判断输赢的代码，看rust比python快多少</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> randint</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> perf_counter</span><br><span class="line"><span class="keyword">import</span> rust_rover_test</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_random_board</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    生成随机落子的15*15棋盘</span></span><br><span class="line"><span class="string">    0表示空格，1表示黑子，2表示白子</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> [[randint(<span class="number">0</span>, <span class="number">2</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">15</span>)] <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">15</span>)]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    boards = [generate_random_board() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10_0000</span>)]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Start testing...&quot;</span>)</span><br><span class="line">    t1 = perf_counter()</span><br><span class="line">    res = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">    <span class="keyword">for</span> board <span class="keyword">in</span> boards:</span><br><span class="line">        <span class="comment"># winner = rust_rover_test.get_score(board)</span></span><br><span class="line">        winner = check_winner(board)</span><br><span class="line">        res[winner] += <span class="number">1</span></span><br><span class="line">    t2 = perf_counter()</span><br><span class="line">    <span class="built_in">print</span>(res)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Time used: <span class="subst">&#123;t2 - t1:<span class="number">.6</span>f&#125;</span>s&quot;</span>)</span><br><span class="line"></span><br><span class="line">    res = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 对比两个函数的运行时间</span></span><br><span class="line">    t1 = perf_counter()</span><br><span class="line">    <span class="keyword">for</span> board <span class="keyword">in</span> boards:</span><br><span class="line">        winner = rust_rover_test.get_score(board)</span><br><span class="line">        <span class="comment"># winner = check_winner(board)</span></span><br><span class="line">        res[winner] += <span class="number">1</span></span><br><span class="line">    t2 = perf_counter()</span><br><span class="line">    <span class="built_in">print</span>(res)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Time used: <span class="subst">&#123;t2 - t1:<span class="number">.6</span>f&#125;</span>s&quot;</span>)</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试代码是这样的。</p>
+<p>具体检测原理的代码就不写了，因为是直接拿AI写的，懒得自己写了。但AI写的两个代码跑的结果居然不一样。不去纠结这个细节了。</p>
+<p>测试结果显示这样的代码，rust比python快四倍。python用0.166秒，rust用0.4817秒</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E7%AB%AF/"># 后端</a>
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        <a href="/tags/rust/"># rust</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/06/16/%E4%B8%80%E6%AC%A1%E5%AF%B9%E7%94%9F%E6%B0%94%E6%83%85%E7%BB%AA%E7%9A%84%E5%89%96%E6%9E%90/">一次对生气情绪的剖析</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
