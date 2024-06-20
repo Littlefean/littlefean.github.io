@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>《金字塔原理》-写作逻辑的思考 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">《金字塔原理》-写作逻辑的思考</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">六月 20, 2024&nbsp;&nbsp;11:41:06</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="发散性思维与金字塔原理的对立性"><a href="#发散性思维与金字塔原理的对立性" class="headerlink" title="发散性思维与金字塔原理的对立性"></a>发散性思维与金字塔原理的对立性</h2><p>结论先行，这可能和很多人的思维习惯相反，人们说话和思考的时候通常是“因为A，所以可能B”。这种思维是发散性的、探索性的。</p>
+<p>但结论先行是“结论B，是因为A”。这种思维是收束的。</p>
+<p>结论和结论形成节点，构建成一个庞大金字塔，看起来有点像权力的象征，如果核心论点和立场是让人产生不适的，可能会激起别人想要“批判性思考、挑战权威”的欲望。之所以产生不适，是因为结论先行可能会让人认为是在教人做事，让自己的思想强行灌输给别人。</p>
+<p>如果要对这个金字塔进行“摧毁”，就需要从事实论据、分论点、最终到核心论点的自下而上的“推翻”。</p>
+<p>虽然发散性思维和金字塔原理相背，但发散性思维可以在构建金字塔的初期快速捕捉并想到各种可能性，构建金字塔的各种基石。</p>
+<h2 id="金字塔原理与荣格心理学"><a href="#金字塔原理与荣格心理学" class="headerlink" title="金字塔原理与荣格心理学"></a>金字塔原理与荣格心理学</h2><p>Ni人可能直接洞察到某个结论，并用行动去<strong>证实</strong>它。</p>
+<p>Ne人可能用发散性思维联想两个事物产生灵感，并开始做实验<strong>验证可行性</strong>。</p>
+<p>Ni人可能会从上往下的构建金字塔，先提出结论和主题思想、<strong>预判</strong>到受众可能产生的疑问，在脑海中模拟与受众的对答、进而向下扩展金字塔。</p>
+<p>Ne人可能更适合自底向上构建金字塔，先<strong>头脑风暴</strong>式的想到所有能想到的点，利用逻辑、MECE原则找关系，聚类，将同层节点提取出一个要点并作为上一层的节点。</p>
+<h2 id="金字塔原理与逻辑学"><a href="#金字塔原理与逻辑学" class="headerlink" title="金字塔原理与逻辑学"></a>金字塔原理与逻辑学</h2><p>金字塔的向下构建是：“演绎推理”，向上构建是：“归纳推理”</p>
+<p>演绎推理三段论：</p>
+<ol>
+<li>大前提：所有人都会死</li>
+<li>小前提：苏格拉底是一个人</li>
+<li>结论：苏格拉底会死</li>
+</ol>
+<p>如果大前提和小前提都正确，那么结论也必须正确</p>
+<ol>
+<li>大前提：繁衍是动物的本能</li>
+<li>小前提：人类属于动物</li>
+<li>结论：你必须生孩子</li>
+</ol>
+<p>在这个例子中，结论超出了<strong>前提所能支持的范围</strong>，因此，这是一个无效的演绎推理。正确的结论是：“人类具有繁衍的本能”</p>
+<p>人类能够反思自己的本能，并根据各种其他因素（如个人意愿、社会规范、道德考虑等）来选择是否以及如何行动。因此，即便我们确认人类有繁衍的本能，这也并不意味着每个人都必须或应该按照这一本能行事。并且这个推论忽略了其他的事实：在环境恶劣的情况下，动物甚至会采取同类相食、暂停繁殖的方法来维持种群的延续。更准确的大前提可能是：“繁衍是动物的本能，但在某些特殊环境下，动物可能会调整其行为以适应生存需求，这可能包括暂时放弃繁殖。”</p>
+<p>演绎推理是从一般到特殊，归纳推理是从特殊到一般。</p>
+<p>归纳推理得出的结论不绝对，具有概率性。可靠性取决于样本的全面性，结论可能需要随着新证据的出现而修正</p>
+<h2 id="金字塔原理和软件开发的联系"><a href="#金字塔原理和软件开发的联系" class="headerlink" title="金字塔原理和软件开发的联系"></a>金字塔原理和软件开发的联系</h2><p>构建类的继承树和《金字塔原理》非常像，尤其是自底向上的构建过程。逐渐引入新的类，逐渐讲类与类之间的共性部分进行抽取，构建继承树。</p>
+<p>逻辑树的兄弟节点之间的关系：MECE原则：相互独立、相互排斥、完全穷尽、没有遗漏，这和“高内聚，低耦合”非常契合。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                    
+                        <a href="/tags/%E6%80%9D%E8%80%83/"># 思考</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/06/17/Python%E8%B0%83%E7%94%A8Rust/">Python调用Rust</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
