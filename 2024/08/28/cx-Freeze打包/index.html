@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>cx_Freeze打包 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">cx_Freeze打包</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">八月 28, 2024&nbsp;&nbsp;21:06:06</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>该文章写于 2024-8-28</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&quot;myApp&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;1.0&quot;</span>,</span><br><span class="line">    description=<span class="string">&quot;a simple app&quot;</span>,</span><br><span class="line">    executables=[Executable(<span class="string">&quot;main.py&quot;</span>)],  <span class="comment"># 项目程序的入口</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>项目根目录下创建一个文件 setup.py 并写入上述内容。</p>
+<p>激活虚拟环境</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\.venv\Scripts\activate</span><br></pre></td></tr></table></figure>
+
+<p>在虚拟环境中安装这个库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install cx-Freeze</span><br></pre></td></tr></table></figure>
+
+<p>执行命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py build</span><br></pre></td></tr></table></figure>
+
+
+
+<p>经测试，使用了第三方库的可以打包完成，接下来就开始测试pyQt5了</p>
+<p>由于gui不需要输出控制台，所以还要修改 setup.py </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</span><br><span class="line"></span><br><span class="line">base = <span class="literal">None</span></span><br><span class="line"><span class="keyword">if</span> sys.platform == <span class="string">&quot;win32&quot;</span>:</span><br><span class="line">    base = <span class="string">&quot;Win32GUI&quot;</span>  <span class="comment"># 如果是GUI应用程序，使用Win32GUI</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&quot;myApp&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;1.0&quot;</span>,</span><br><span class="line">    description=<span class="string">&quot;a simple app&quot;</span>,</span><br><span class="line">    executables=[Executable(<span class="string">&quot;main.py&quot;</span>, base=base)],  <span class="comment"># 项目程序的入口</span></span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>加上icon，就修改小括号里加参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Executable(<span class="string">&quot;main.py&quot;</span>, base=base, icon=<span class="string">&quot;./assets/favicon.ico&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="打包pdm项目"><a href="#打包pdm项目" class="headerlink" title="打包pdm项目"></a>打包pdm项目</h2><p>fittencode给的答案</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> cx_Freeze <span class="keyword">import</span> setup, Executable</span><br><span class="line"></span><br><span class="line"><span class="comment"># 依赖项可以从 pdm.lock 文件中读取</span></span><br><span class="line"><span class="comment"># with open(&quot;pdm.lock&quot;, &quot;r&quot;) as f:</span></span><br><span class="line"><span class="comment">#     lines = f.readlines()</span></span><br><span class="line"><span class="comment">#     dependencies = [line.strip() for line in lines if &quot;name = &quot; in line]</span></span><br><span class="line"></span><br><span class="line">build_exe_options = &#123;</span><br><span class="line">    <span class="string">&quot;packages&quot;</span>: [<span class="string">&quot;project_graph&quot;</span>],</span><br><span class="line">    <span class="string">&quot;includes&quot;</span>: [<span class="string">&quot;appdirs&quot;</span>, <span class="string">&quot;PyQt5&quot;</span>],</span><br><span class="line">    <span class="string">&quot;include_files&quot;</span>: [],  <span class="comment"># 如果有其他资源文件，可以在这里添加</span></span><br><span class="line">    <span class="string">&quot;excludes&quot;</span>: [],</span><br><span class="line">    <span class="string">&quot;zip_include_packages&quot;</span>: [],</span><br><span class="line">    <span class="string">&quot;zip_exclude_packages&quot;</span>: []</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">base = <span class="literal">None</span></span><br><span class="line"><span class="keyword">if</span> sys.platform == <span class="string">&quot;win32&quot;</span>:</span><br><span class="line">    base = <span class="string">&quot;Win32GUI&quot;</span>  <span class="comment"># 如果是GUI应用，使用Win32GUI</span></span><br><span class="line"></span><br><span class="line">executables = [</span><br><span class="line">    Executable(</span><br><span class="line">        <span class="string">&quot;src/project_graph/__main__.py&quot;</span>,</span><br><span class="line">        base=base,</span><br><span class="line">        target_name=<span class="string">&quot;project_graph&quot;</span>,</span><br><span class="line">        icon=<span class="string">&quot;src/project_graph/assets/favicon.ico&quot;</span>  <span class="comment"># 如果有图标文件，可以在这里指定</span></span><br><span class="line">    )</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&quot;project_graph&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;0.1.0&quot;</span>,</span><br><span class="line">    description=<span class="string">&quot;Project Graph&quot;</span>,</span><br><span class="line">    options=&#123;<span class="string">&quot;build_exe&quot;</span>: build_exe_options&#125;,</span><br><span class="line">    executables=executables</span><br><span class="line">)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>但实际上不太行，会报错</p>
+<p>对于pdm这个项目，需要使用这个包：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/frostming/pdm-packer">https://github.com/frostming/pdm-packer</a></p>
+<p>但实际上用这个专门打包的还是报错了</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/python/"># python</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/08/25/%E3%80%8A%E8%A2%AB%E8%AE%A8%E5%8E%8C%E7%9A%84%E5%8B%87%E6%B0%94%E3%80%8B%E4%BA%8C%E5%88%B7%E5%8F%8D%E6%80%9D%EF%BC%9A%E4%BB%8E%E5%92%8C%E8%B0%90%E4%BA%A4%E6%B5%81%E5%88%B0%E6%B7%B1%E5%BA%A6%E6%89%B9%E5%88%A4%E7%9A%84%E6%8E%A2%E7%B4%A2/">《被讨厌的勇气》二刷反思：从和谐交流到深度批判的探索</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
