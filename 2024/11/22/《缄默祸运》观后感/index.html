@@ -19,7 +19,7 @@
     <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
 
 
-<title>tauri项目在windows上的开发踩坑 | 阿岳的博客</title>
+<title>《缄默祸运》观后感 | 阿岳的博客</title>
 
 
 
@@ -145,76 +145,11 @@
                 <div class="container">
     
     
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
-
-<script>
-    var tocbot_timer;
-    var DEPTH_MAX = 6; // 为 6 时展开所有
-    var tocbot_default_config = {
-        tocSelector: '.tocbot-list',
-        contentSelector: '.post-content',
-        headingSelector: 'h1, h2, h3, h4, h5',
-        orderedList: false,
-        scrollSmooth: true,
-        onClick: extend_click,
-    };
-
-    function extend_click() {
-        clearTimeout(tocbot_timer);
-        tocbot_timer = setTimeout(function() {
-            tocbot.refresh(obj_merge(tocbot_default_config, {
-                hasInnerContainers: true
-            }));
-        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
-    }
-
-    document.ready(function() {
-        tocbot.init(obj_merge(tocbot_default_config, {
-            collapseDepth: 1
-        }));
-    });
-
-    function expand_toc() {
-        var b = document.querySelector('.tocbot-toc-expand');
-        var expanded = b.getAttribute('data-expanded');
-        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
-        tocbot.refresh(obj_merge(tocbot_default_config, {
-            collapseDepth: expanded ? 1 : DEPTH_MAX
-        }));
-        b.innerText = expanded ? 'Expand all' : 'Collapse all';
-    }
-
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function obj_merge(target, source) {
-        for (var item in source) {
-            if (source.hasOwnProperty(item)) {
-                target[item] = source[item];
-            }
-        }
-        return target;
-    }
-</script>
-    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">tauri项目在windows上的开发踩坑</h1>
+            <h1 class="post-title">《缄默祸运》观后感</h1>
             
                 <div class="post-meta">
                     
@@ -223,7 +158,7 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">九月 28, 2024&nbsp;&nbsp;8:03:21</a>
+                        Date: <a href="#">十一月 22, 2024&nbsp;&nbsp;0:01:40</a>
                         </span>
                     
                     
@@ -232,24 +167,17 @@
         </header>
 
         <div class="post-content">
-            <h1 id="tauri项目在windows上的开发踩坑"><a href="#tauri项目在windows上的开发踩坑" class="headerlink" title="tauri项目在windows上的开发踩坑"></a>tauri项目在windows上的开发踩坑</h1><p>rustup有两个工具链，一个是gnu，一个是msvc，要切换成msvc。</p>
-<p>gnu不行，详见</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/tauri-apps/tauri/issues/8210</span><br></pre></td></tr></table></figure>
-
-<p>然而换成msvc之后运行启动项目还是报错了，还要下载 C++build tools</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://visualstudio.microsoft.com/visual-cpp-build-tools/</span><br></pre></td></tr></table></figure>
-
-<p>下载了之后会下载一个</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vs_BuildTools.exe</span><br></pre></td></tr></table></figure>
-
-<p>这个东西。双击打开，下载里面的东西就可以了</p>
-<p>东西还是太大了，改成D盘得了。</p>
-<p>全盘搜索 link.exe，会发现有四个，其中一个link.exe 在这个路径下。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.41.34120\bin\Hostx64\x64</span><br></pre></td></tr></table></figure>
-
-<p>之所以有四个是因为 <code>Hostx??\x??</code> 问号的地方有可能是86也有可能是64，两两组合就成了四个。</p>
-<p>然后把link.exe所在的路径添加到环境变量。</p>
-<p>然后就能启动成功了</p>
+            <p>今天看了一个游戏《缄默祸运》，被评为年度最佳剧情的游戏，一个up主“中国boy超级大猩猩”全程录屏并解说的视频。</p>
+<p>剧情讲述的是五个人在一个太空飞船上，极端的情况下的悲剧故事，非常深入的体现了封闭压力环境下的人性阴暗面。</p>
+<p>剧情使用了插叙，来回跳转时间线，这个手法对我来说很新，但也非常消耗记忆力。经常忘了现在是什么时候了。可能正是因为这样才能营造出事情逐渐浮出水面的感觉，进而营造出一种震撼感。</p>
+<p>曾经只看过星际穿越、地心引力、三体II的黑暗战役，关于讲述太空飞船上人与人之间的相处和矛盾情形，这个是我目前看到过最黑暗的。其中还有很多类似于《寂静岭》式的内心深处的意象画面风格，以及“视频画面损坏般的”富有创意和独特的转场效果。</p>
+<p>很难想象人在封闭再加上各种绝望的、物资逐渐消耗殆尽的环境中会产生怎样精神失常的幻觉和不理智的想法。</p>
+<p>有评论提到副驾驶吉米不是纯坏，而是不停的逃避责任的小人，把篓子越捅越大，搞砸了一切。最终连唯一维持20年休眠舱也留给那个全身烧伤，左腿被他锯下来吃肉的主驾驶。只因自己不想承担被拯救后舆论的压力而自己选择自杀。结局也是非常的出乎意料但又非常合理。</p>
+<p>唯一一个女性船员所说的话中，也包含了非常多人们容易被忽略的暗示内容细节，“你总是顾全大局，但我更关注屏幕上的那个黑色像素点”、“休息室为什么没有锁”，画面中经常一闪而过的“照顾好它”，可能也代指她，也可能是肚子里的婴儿。</p>
+<p>非常有意思的一点是，玩家第一人称视角会经常从主驾驶和副驾驶两者之间来回切换。当up主在玩到副驾驶吉米后面的躲避“蜈蚣马”走廊的幻象场景中，说了一句“终于摆脱了吧”，这时弹幕有人说：“也许吉米内心也就是这样想的”，吉米自始至终就一直在逃避责任。这可能是这个游戏设计的非常厉害的一点，把意象环境，和玩家当时的紧张体验和当时剧情中人物本身的内心活动紧密的连接在了一起。</p>
+<p>当然up的猜测可能还会更加的黑暗，他的猜测是船长因为没有行动能力和说话、等自理能力，被吉米每天割下来一点肉分给其他的船员吃，然后假装照顾他或者照顾他只是为了让他的肉能再长一长。不过仔细一想这个逻辑也并不太成立，假如有食物，高中生物课的生态部分食物链就启示我们更高效的补给食物方式肯定是直接吃食物。</p>
+<p>船长全身绷带那样躺着，真的是忍受到了巨大的生理神经层面的折磨和精神上的折磨。在今年9月做手术的头三天中，我自己就体会到了双臂不能活动，生活不能自理的难受感，更不要提船长全身被绷带缠满不能活动，并且也不能说话的难受了。这让我不禁思考他该是如何大小便和吃饭的，他的皮肤全身都烧没了，全身都在疼痛。怪不得那个唯一照顾他的女性船员总是感到反胃，还需要玩家来操作，估计是大小便不方便了，这么一想似乎也合理了。</p>
+<p>总之，这是一个很令人印象深刻的剧情。</p>
 
         </div>
 
@@ -283,9 +211,9 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                        <a href="/tags/%E7%A7%91%E5%B9%BB/"># 科幻</a>
                     
-                        <a href="/tags/rust/"># rust</a>
+                        <a href="/tags/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/"># 游戏设计</a>
                     
                         
                 </span>
@@ -298,10 +226,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2024/11/22/%E3%80%8A%E7%BC%84%E9%BB%98%E7%A5%B8%E8%BF%90%E3%80%8B%E8%A7%82%E5%90%8E%E6%84%9F/">《缄默祸运》观后感</a>
             
-            
-            <a class="next" rel="next" href="/2024/08/28/cx-Freeze%E6%89%93%E5%8C%85/">cx_Freeze打包</a>
+            <a class="next" rel="next" href="/2024/09/28/tauri%E9%A1%B9%E7%9B%AE%E5%9C%A8windows%E4%B8%8A%E7%9A%84%E5%BC%80%E5%8F%91%E8%B8%A9%E5%9D%91/">tauri项目在windows上的开发踩坑</a>
             
         </section>
 
