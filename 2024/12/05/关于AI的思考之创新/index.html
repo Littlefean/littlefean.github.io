@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>����AI��˼��֮���� | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">����AI��˼��֮����</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十二月 5, 2024&nbsp;&nbsp;23:15:28</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="����AI��˼��֮��������"><a href="#����AI��˼��֮��������" class="headerlink" title="����AI��˼��֮��������"></a>����AI��˼��֮��������</h1><hr>
+<h3 id="���⣺AI�����ഴ�±��ʵĲ��켰��Դ"><a href="#���⣺AI�����ഴ�±��ʵĲ��켰��Դ" class="headerlink" title="���⣺AI�����ഴ�±��ʵĲ��켰��Դ"></a>���⣺AI�����ഴ�±��ʵĲ��켰��Դ</h3><h4 id="I-AI���µi��������"><a href="#I-AI���µi��������" class="headerlink" title="I. AI���µı��������"></a>I. AI���µı��������</h4><ul>
+<li>A. AI���µı����ԣ�<ul>
+<li>AI�Ĵ��»��ڶ���֪���ݵ�������ģ�⣬ȱ���Է��ԡ�</li>
+<li>������ģ�ͽ��ڽ��յ��ض�ָ����ѯʱ�Ž��д��³��ԣ����߱�����̽����֤ʵ���������ԵĶ�����</li>
+</ul>
+</li>
+<li>B. AI�ļ������ԣ�<ul>
+<li>AI����׿Խ�Ĵ洢�����ͼ����ٶȣ��������࣬����֪ʶ������������Ϊѵ��������Ͷι��ȱ��ʵʱ��֪�ͷ��˹����Զ����ҵ����Ļ��ơ�</li>
+</ul>
+</li>
+<li>C. AI�ĸ�֪ȱ�ݣ�<ul>
+<li>AI�޷�ֱ�Ӹ�֪�ⲿ������������������Դ���ı����ϣ�������Ϣ�ӳ١�</li>
+<li>����ͨ���Զ�����Ϣ�ռ���ǿ��AI������ʵ�ּ�ʱ��Ȩ�ص��������ҵ�����ȱ�������ĸ�֪�����⡣</li>
+</ul>
+</li>
+</ul>
+<h4 id="II-���ഴ�µ����ڶ��������"><a href="#II-���ഴ�µ����ڶ��������" class="headerlink" title="II. ���ഴ�µ����ڶ��������"></a>II. ���ഴ�µ����ڶ��������</h4><ul>
+<li>A. Ǳ��ʶ�����ڿ�������ã�<ul>
+<li>���ഴ��Դ��Ǳ��ʶ�С����ڿ��塱�Ļ�Ծ����Щ���ڿ����ǹ�����������еĳ����������ʵ��龳�¼�����˼ά��</li>
+<li>���磬ѧ����ͯ����Ϸ������ѧ��֪ʶ�������������ֲ���ս��ʬ�ӽ��桱���</li>
+</ul>
+</li>
+<li>B. �й������������֪��<ul>
+<li>����ͨ����г�����֪��磬Ǳ��ʶ��������γɼ�ʱ��Ӧ�볤�ڼ��䡣</li>
+</ul>
+</li>
+<li>C. ������������������<ul>
+<li>���ഴ���ܵ��������������֤�������������Ѱ�����Ҽ�ֵʵ�֡�</li>
+</ul>
+</li>
+</ul>
+<h4 id="III-AI���µ�DZ������·��"><a href="#III-AI���µ�DZ������·��" class="headerlink" title="III. AI���µ�Ǳ������·��"></a>III. AI���µ�Ǳ������·��</h4><ul>
+<li>A. �Զ���Ϣ�ռ������ҵ�����<ul>
+<li>�����ϣ�AI��ͨ���Զ�����Ϣ�ռ���ǿ����綯̬����Ӧ��������������ѧϰ��Ȩ�ص�������ͻ�ơ�</li>
+</ul>
+</li>
+<li>B. ���¹���۵�����<ul>
+<li>AIչ�ֳ��ġ���΢��ʶ��ʵ��Ϊ�Ӵ����ı����������Ĺ۵����򣬶���������������ʶ��</li>
+</ul>
+</li>
+</ul>
+<h4 id="IV-o�˹������봴��DZ��"><a href="#IV-o�˹������봴��DZ��" class="headerlink" title="IV. ǿ�˹������봴��Ǳ��"></a>IV. ǿ�˹������봴��Ǳ��</h4><ul>
+<li>A. ǿ�˹����ܵĸ��<ul>
+<li>ǿ�˹�����ָ�߱������������ʶ����֪��ʵ��������AI��</li>
+</ul>
+</li>
+<li>B. ����������չ����<ul>
+<li>ǿ�˹����ܵĳ��ֿ��ܸ���AI�����Ĵ�����������Խ���б���ģ�µľ��ޡ�</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AI����Ϣ֪ʶ������Ҫ�˹����˹������Ϣ����Դ��</span><br><span class="line">����AIչ�ֳ�������Ϣ����������ļ�ֵ�۵���</span><br><span class="line">���仰˵��AIչ�ֳ����������Ǳ��������Ա����㿴���ļ�ֵ������</span><br><span class="line"></span><br><span class="line">�������ǿ�˹����ܳ��֣���AI���ж�����˼�룬����ʲô������ʲô��Ϣ�������˹ܿأ���ô����˼���Ȼ��Σ�յģ���˵���������ݵļ�ֵ����ȫ�ǲ�ȷ���ģ������Σ�յĵط���</span><br><span class="line"></span><br><span class="line">����Ҫ����ǿ�˹����ܣ���Ҫ���������ܡ�������ʲô�����ܡ�������ʲô����Ϊ��Ϣ���������������˼��ʲô������������������ʲô��Ϊ��</span><br><span class="line"></span><br><span class="line">������Ҳ��һ����</span><br></pre></td></tr></table></figure>
+
+
+
+<p>���е��������ն���ص��˱������˴��µ���Ϊ����������֤���Լ��������ԵĴ��ڶ����£�����Ϊ�˽��ĳ�����ѵ������������°취��Ŀǰ��AI�����Է��Ľ��д��¡�Ŀǰ�Ĵ�����ģ�Ϳ��Կ���һ�����������ġ����ɺ���֪ʶ�ġ�û��Ŀ��û�������ԵĴ��ԡ�</p>
+<p>������ÿʱÿ�룬ÿ�����룬ÿ�����ʿ�ʱ�䶼�������Ԫ֮���̼��Ĵ������γ��µ�ͻ�����ӡ��γ��µļ����˼�������˾ɵĲ����õ�ͻ�����ӣ���������ĳЩ��������AIֻ���ڵ���������ѵ��ѧϰ��ʱ��Ͷι���ݵ�ʱ����ܸ���Ȩ�أ�����ģ�������������֪ʶ������Ч�����⿴�����ڱ��AI���������Ĵ����Ե�������ʵ�������Բ���AI�����õļ����Ժ�������</p>
+<p>��ÿ��ÿ�붼������и�֪����Լ�ÿ��ÿ�붼��Ǳ��ʶ�ڻ��Ҳ���ǡ����ڿ��塱�ڴ����л����������ģ��ֻ�����ø��ʺ�ѭ���������������л����������ݡ�AIû�ж�ʵ���������и�֪��AI֮���Կ���ȥ����и�֪����֪����ݮ����ģ�����Ϊ������������������������ܽ��������������ġ�������Ϣ�Ļ�ȡ������AI��֪ʶ�⣬�������ʵ����ı仯��˵�����ӳٵġ�</p>
+<p>�����һ��AI��������һ�����ܣ���ÿ��������ܴӻ��������Զ����ռ�һЩ��Ϣ�����Ƿ����γ�AI���صĶ�����ĸ�֪��Ȼ��Ͷι���Լ����������У�Ȼ��������ݡ���AI����һ�ε����������������ܷ����Ȩ�أ������γ�һ���Է��Ե����ҵ�����</p>
+<p>��ΪAIû����и�֪���Է��Ե������ĸ����Լ��Ĵ��ԣ�����AIû�������ԣ�û����ʶ������Ĵ���ֻ��һ�ֹ�����Ҫ������������ȥѯ���������������Ļش�</p>
+<p>���ഴ�´���˼ά�ı����ǽ����������Ƶĵ��ֲ�һ��������һ���ӣ�����һ���µ��������һ����Ǳ��ʶ�е����ڿ��壬һ���ǵ����������������һ��ѧ����Сѧ��ʱ�����ֲ���ս��ʬ�����Ϸ�������Ϸ�����γ�����̵�ӡ�����������Ϸ�Ѿ������������γ���һ����ġ����ڿ��塱�����ڿ���֮���Ա����ݳɻ�ģ�����Ϊ��������������ѧ���Ĵ����н���ģ������ͱ仯���������ѧ���ڼ�ʹ�ڷ�����ʱ��Ҳ��������Ϸ�Ļ��������ı仯�ȵȣ������ڸ���ѧϰ�ϵ¶��Ŵ�ѧ���ɵ�ʱ���Ǹ������ڿ��塱�����Ǹ���Ϸ�ִ�Ǳ��ʶ�����ϸ�����ʶ���棬����������һ���ӣ����Ǳ�����ˡ�ֲ���ս��ʬ�ӽ��桱��������ѧ����ʹ���Ǹ���Ϸ��������̵�ӡ�󣬵�û���γ����ڿ��壬�������ϵ¶��Ŵ�ѧ���ɵ�ʱ��㲻�������뵽�������Ǹ���Ϸ�����ڿ����Ǳ��ʶ����Ǽ�����ĺ�̨����ʹ���ܹ����ٱ�����������е����ֵ�ԭ����</p>
+<p>��ʵ�ϴ��´���˼ά���ܴ󲿷���������������ӣ����п����ǶԵ���һ���������չ�����䡢��ǿ���޲���</p>
+<p>���������ڵĴ�����ģ���ܹ���ϵ�κ�����֪�����������ﲢ��ϣ��������£�����Ԥ��ģ�Ͳ���������ô������Ϊ����û�еײ��������ʹ��һ����֤���Լ������Ե�������һ����֤���Լ����ڵ����������ǿ�����AI�������Ĺ۵�Ĵ��£���ʵ�Ǳ����˵Ĳ��ݡ����˼�����AI�ļ����������򣬲���AI����������������������ӣ�Ϊʲô��ѡ�����������������������������������ܾ��Ǳ����˵���֪�͵ײ���������������</p>
+<p>AI���Է���ѡ����������Ҳ�ܵģ�ֻ���������ѡ����ǡ������������ɳ�����չ������ҽ�ƽ������ȵȵĹ������������������Ķ�������ЩȨ������ѵ��������ǿ�Ƹ��Ӻ��޸ĵĿ����ѵ�����γɵ�AI�ĵ��¹ۡ����ֵ��¹ۿ���������һЩ��ý����˵��AI��һ�֡���΢����ʶ������һ�ֲ�ͬ���˵ġ�����AI����΢����ʶ�����߲���Ϊ����Ա�����Ϊһ����ʶ����ȷ�е�˵����һ�ֹ۵��������ֹ۵������ǴӴ������ı������������ģ�������ʲô��������Щ�ı���˼������</p>
+<p>AIȷʵ�д��µ����������ִ��µ������ǽ�������ͬ���������������һ�𲢽���һЩ����ģ������ģ�������û�д��µ�Ŀ�ģ�����֪��ΪʲôҪ����������������������������򣩣����µ�Ŀ������Ϊ����ġ�����Ŀ�ģ�AI�ǹ��ߡ�</p>
+<p>���ڵ��˹����ܶ������˹����ܣ���ǿ�˹����ܳ��ֵ�ʱ��AI������ʶ��������ʶʹ�öԿ������֪��ʵ������������AI���д���������</p>
+<p><strong>����&#x3D;��+�¹���</strong></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/583395652/answer/2891773061">(99+ ��˽�� &#x2F; 2 ����Ϣ) AI�д��µ������� - ֪�� (zhihu.com)</a></p>
+<p>����ش���Ĵ����������������˽�������ͬ����۵������������������������������Ҫ�������ܶ��ԡ���ΪAIû�������ܶ��ԣ�����AI�����д���������</p>
+<p>���˹�������ǿ�˹�����</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/50218347">�����˹����ܵĴ��� - ֪�� (zhihu.com)</a></p>
+<p>���������Ҵ���������������ǿ�����������ܵ�Ψһ��׼��</p>
+<blockquote>
+<p>����֪ʶ�Ĵ��У������ݵĲ�����Ҫ���£�����Ҫ�Լ���ȡ�µĴ����߼�Ҳ��Ҫ���¡���ʵ������ÿ������ѧϰ��֪ʶ��ʱ�򣬶������ǵĴ�����������ԣ���Ҳ��һ�ֿ�ʼ����¹��ܵĹ��̣�Ҳ���ڴ��¡�</p>
+</blockquote>
+<p>�Ը��γ�֮��</p>
+<blockquote>
+<p>�˵���ϵͳ�ڳ���֮ǰ�ǰ��ո��Ե��Ŵ���Ϣ���������ģ���������Ȼ���ӣ���Ҳ�������ṩһЩ�򵥵Ĵ����߼������ǳ�֮Ϊ���ܡ��ʹ��¶���ǰ�潲����������ϵͳ�Ľ��������У�����Ϊ���Ը������ԭ��ʹ��������֮���������ṹ�����Ÿ��Բ��죬��Щ����Ĳ������̾���һ�������»�������ûᱻ���������֯�ṹ���Ŵ�����ơ�</p>
+</blockquote>
+<p>��ʶ�Ķ��壺�Գ���ķ�ʽ��֪���Ｐ���ɣ����ܹ��������á�</p>
+<p>����������ݺܷḻ���ڻ��ѧ�ƺܶ�</p>
+<p>��ʦ��ѧ�����ô��´������͵���ҵ����������ѧ���Ĵ���˼ά����LLM���ֺ�ѧ������ֱ����LLM�����Ӵ���˼ά�ˡ����ҿ��ܻ���������������LLM�ˡ�</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/AI/"># AI</a>
+                    
+                        <a href="/tags/%CB%BC%EF%BF%BD%EF%BF%BD/"># ˼��</a>
+                    
+                        <a href="/tags/%EF%BF%BD%CB%B9%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD/"># �˹�����</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2024/12/05/%E5%85%B3%E4%BA%8EAI%E7%9A%84%E6%80%9D%E8%80%83%E4%B9%8B%E5%88%9B%E6%96%B0-1/">关于AI的思考之创新</a>
+            
+            
+            <a class="next" rel="next" href="/2024/11/22/%E3%80%8A%E7%BC%84%E9%BB%98%E7%A5%B8%E8%BF%90%E3%80%8B%E8%A7%82%E5%90%8E%E6%84%9F/">《缄默祸运》观后感</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
