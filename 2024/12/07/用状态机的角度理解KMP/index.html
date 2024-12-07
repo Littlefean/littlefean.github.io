@@ -19,7 +19,7 @@
     <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
 
 
-<title>《地球大炮》摘抄 | 阿岳的博客</title>
+<title>用状态机的角度理解KMP | 阿岳的博客</title>
 
 
 
@@ -145,76 +145,11 @@
                 <div class="container">
     
     
-        <div class="post-toc">
-    <div class="tocbot-list">
-    </div>
-    <div class="tocbot-list-menu">
-        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
-        <a onclick="go_top()">Back to top</a>
-        <a onclick="go_bottom()">Go to bottom</a>
-    </div>
-</div>
-
-<script>
-    var tocbot_timer;
-    var DEPTH_MAX = 6; // 为 6 时展开所有
-    var tocbot_default_config = {
-        tocSelector: '.tocbot-list',
-        contentSelector: '.post-content',
-        headingSelector: 'h1, h2, h3, h4, h5',
-        orderedList: false,
-        scrollSmooth: true,
-        onClick: extend_click,
-    };
-
-    function extend_click() {
-        clearTimeout(tocbot_timer);
-        tocbot_timer = setTimeout(function() {
-            tocbot.refresh(obj_merge(tocbot_default_config, {
-                hasInnerContainers: true
-            }));
-        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
-    }
-
-    document.ready(function() {
-        tocbot.init(obj_merge(tocbot_default_config, {
-            collapseDepth: 1
-        }));
-    });
-
-    function expand_toc() {
-        var b = document.querySelector('.tocbot-toc-expand');
-        var expanded = b.getAttribute('data-expanded');
-        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
-        tocbot.refresh(obj_merge(tocbot_default_config, {
-            collapseDepth: expanded ? 1 : DEPTH_MAX
-        }));
-        b.innerText = expanded ? 'Expand all' : 'Collapse all';
-    }
-
-    function go_top() {
-        window.scrollTo(0, 0);
-    }
-
-    function go_bottom() {
-        window.scrollTo(0, document.body.scrollHeight);
-    }
-
-    function obj_merge(target, source) {
-        for (var item in source) {
-            if (source.hasOwnProperty(item)) {
-                target[item] = source[item];
-            }
-        }
-        return target;
-    }
-</script>
-    
 
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">《地球大炮》摘抄</h1>
+            <h1 class="post-title">用状态机的角度理解KMP</h1>
             
                 <div class="post-meta">
                     
@@ -223,30 +158,51 @@
 
                     
                         <span class="post-time">
-                        Date: <a href="#">八月 16, 2020&nbsp;&nbsp;2:32:55</a>
+                        Date: <a href="#">十二月 7, 2024&nbsp;&nbsp;23:04:21</a>
                         </span>
                     
-                    
-                        <span class="post-category">
-                    Category:
-                            
-                                <a href="/categories/%E7%A7%91%E5%B9%BB/">科幻</a>
-                            
-                        </span>
                     
                 </div>
             
         </header>
 
         <div class="post-content">
-            <h1 id="《地球大炮》摘抄"><a href="#《地球大炮》摘抄" class="headerlink" title="《地球大炮》摘抄"></a>《地球大炮》摘抄</h1><hr>
-<p>“谁也不知道未来是什么样，再说像我有什么不好，总要有爱做梦的那一类人。”</p>
-<p>“如果40年后那项技术还没出现，也一定要让我苏醒一次，我想再看看你和孩子，千万不要让这一别成为永别。”</p>
-<p>“长城和金字塔都是完全失败的超级工程，前者没能抵挡住北方骑马民族的入侵，后者也没能使其中的法老木乃伊复活，但时间使这些都无关紧要，只有凝结于其上的人类精神永远光彩照人！”</p>
-<p>“找到我的孙女了吗？”</p>
-<p>“没有，我们缺少在地核中进行远距离探测的技术，那是一个广阔的区域，，谁也不知道铁镍流把她带到哪里去了。”</p>
-<p>“能不能把我们看到的这些用中微子发向地心？”</p>
-<p>“一直都在这么做呢，相信她会看到的。”</p>
+            <p>今天我们用状态机的思维来理解KMP。</p>
+<p>KMP的关键我总结了一句话就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">“当发生错配时，如何 最大化 的利用之前匹配好的字符串，将它们的一部分作为新的前缀继续参与匹配”</span><br></pre></td></tr></table></figure>
+
+<p>我们后面会详细用例子解释这句话。</p>
+<p>状态机可以看成一个能不停的，不断的一次一次输入字符的机器，并显随着每一次的输入，自身的状态会实时变化。</p>
+<p>状态机完全由模式串决定，模式串就像滔滔流水流过状态机，状态机和模式串完全没有关系。</p>
+<p>比如有一个很长的匹配串，然后有一个模式串ABABAC，为了得到状态机的内部结构，我们可以完全不看匹配串。直接由模式串得到唯一确定的状态机。（至于是怎么得到的，我们后面讲）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ABABAC</span><br></pre></td></tr></table></figure>
+
+<p>这个状态机里有六个状态，他表示匹配进度，当状态标志为0的时候表示当前匹配进度为0，也就是一个字符都没有匹配上。当状态标志为3的时候就表示<strong>此时此刻</strong>已经有<strong>连续的</strong>三个字符说对了（并且这连续的三个字符是从头部开始算的），如果状态标志为6，就是<strong>此时此刻</strong>已经有<strong>连续的</strong>六个字符<strong>都</strong>说对了，匹配完成了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">跟着例子走一遍</span><br></pre></td></tr></table></figure>
+
+<p>由此我们可以推出，当不断的有新的字符输入状态机的时候，如果说对了，状态标志就增加1，如果说错了，状态标志就会减少，可能会减少1，有可能直接减少到0，也有可能原地不动没有变化，也就是减少0。</p>
+<p>关键在于减少的情况很不确定，减少具体意味着什么，我们应该让状态机减小多少，这是这个算法的关键。</p>
+<p>减小就意味着发生了错配，我们刚刚开头说了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">“当发生错配时，如何 最大化 的利用之前匹配好的字符串，将它们的一部分作为新的前缀继续参与匹配”</span><br></pre></td></tr></table></figure>
+
+<p>如果没有这句话，我们的直觉可能是，如果匹配错误了，直接把状态拨到0重新开始匹配不就可以了吗？</p>
+<p>然而这个直觉错了，他会导致我们漏掉东西！</p>
+<p>举一个简单的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">了解了解B站</span><br></pre></td></tr></table></figure>
+
+<p>匹配串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">了解了解了解B站</span><br></pre></td></tr></table></figure>
+
+<p>所以了和B错配的时候不应该回到最前面，就漏了一个“了解”作为前缀。</p>
+<p>所以要怎么构建这个状态机的内部结构呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">手动构建一次</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
 
         </div>
 
@@ -280,9 +236,7 @@
                 <span class="tag">
                     
                     
-                        <a href="/tags/%E7%A7%91%E5%B9%BB/"># 科幻</a>
-                    
-                        <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"># 读书笔记</a>
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
                     
                         
                 </span>
@@ -295,10 +249,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2020/08/21/JavaScript%E6%A8%A1%E6%8B%9F%E4%B8%80%E7%BB%B4%E5%BA%B7%E5%A8%81%E5%AE%87%E5%AE%99/">JavaScript模拟一维康威宇宙</a>
             
-            
-            <a class="next" rel="next" href="/2020/08/16/%E3%80%8A%E5%B1%B1%E3%80%8B%E6%91%98%E6%8A%84/">《山》摘抄</a>
+            <a class="next" rel="next" href="/2024/11/22/%E3%80%8A%E7%BC%84%E9%BB%98%E7%A5%B8%E8%BF%90%E3%80%8B%E8%A7%82%E5%90%8E%E6%84%9F/">《缄默祸运》观后感</a>
             
         </section>
 
