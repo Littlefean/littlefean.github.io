@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Littlefean">
+
+
+    <meta name="subtitle" content="知识记录">
+
+
+    <meta name="description" content="阿岳的个人博客，记录知识、积累技术、形成沉淀，包括读书笔记，编程学习">
+
+
+    <meta name="keywords" content="阿岳的博客, 阿岳的个人博客, 知识记录, 读书笔记, 编程学习">
+
+
+<title>windows下用tauri框架打包安卓环境配置 | 阿岳的博客</title>
+
+
+
+    <link rel="icon" href="/favicon1.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Dark"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· Light"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">阿岳的博客</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">阿岳的博客</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">分类</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于作者</a>
+                
+                    <a class="menu-item" href="/links">友情链接</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.travellings.cn/go.html">开往</a>
+                
+                    <a class="menu-item" target="_blank" rel="noopener" href="https://www.littlefean.com">我的小宇宙</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    var tocbot_timer;
+    var DEPTH_MAX = 6; // 为 6 时展开所有
+    var tocbot_default_config = {
+        tocSelector: '.tocbot-list',
+        contentSelector: '.post-content',
+        headingSelector: 'h1, h2, h3, h4, h5',
+        orderedList: false,
+        scrollSmooth: true,
+        onClick: extend_click,
+    };
+
+    function extend_click() {
+        clearTimeout(tocbot_timer);
+        tocbot_timer = setTimeout(function() {
+            tocbot.refresh(obj_merge(tocbot_default_config, {
+                hasInnerContainers: true
+            }));
+        }, 420); // 这个值是由 tocbot 源码里定义的 scrollSmoothDuration 得来的
+    }
+
+    document.ready(function() {
+        tocbot.init(obj_merge(tocbot_default_config, {
+            collapseDepth: 1
+        }));
+    });
+
+    function expand_toc() {
+        var b = document.querySelector('.tocbot-toc-expand');
+        var expanded = b.getAttribute('data-expanded');
+        expanded ? b.removeAttribute('data-expanded') : b.setAttribute('data-expanded', true);
+        tocbot.refresh(obj_merge(tocbot_default_config, {
+            collapseDepth: expanded ? 1 : DEPTH_MAX
+        }));
+        b.innerText = expanded ? 'Expand all' : 'Collapse all';
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function obj_merge(target, source) {
+        for (var item in source) {
+            if (source.hasOwnProperty(item)) {
+                target[item] = source[item];
+            }
+        }
+        return target;
+    }
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">windows下用tauri框架打包安卓环境配置</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Littlefean</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">十二月 8, 2024&nbsp;&nbsp;14:36:12</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>终端运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm tauri android build</span><br></pre></td></tr></table></figure>
+
+<p>出现报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Have you installed the Android SDK? The `ANDROID_HOME` environment variable isn&#x27;t set, and is required: environment variable not found: environment variable not found</span><br><span class="line">    Error Have you installed the Android SDK? The `ANDROID_HOME` environment variable isn&#x27;t set, and is required: environment variable not found: environment variable not found</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">不用android Studio，只用SDK就可以了</span><br><span class="line">——ZTY</span><br></pre></td></tr></table></figure>
+
+<p>需要下载适用于Windows的Command-line tools。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://developer.android.com/studio?hl=zh-cn#command-tools</span><br></pre></td></tr></table></figure>
+
+<p>往下翻，上面全都是AndroidStudio的东西。</p>
+<p>然后下面有一个：“仅限命令行工具”</p>
+<p>然后点windows的，下载。</p>
+<p>解压下载的ZIP文件到一个你想要存放SDK的位置，例如 <code>D:\Program Files\android-sdk</code></p>
+<p>现在变成这样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Program Files\android-sdk\cmdline-tools</span><br></pre></td></tr></table></figure>
+
+<p>然后到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Program Files\android-sdk\cmdline-tools\bin</span><br></pre></td></tr></table></figure>
+
+<p>这个目录下，打开powershell，可以看到有sdkmanager.bat</p>
+<p>然后运行以下命令来更新SDK管理器并安装所需的组件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.\sdkmanager --sdk_root=D:\android-sdk --update</span><br><span class="line">.\sdkmanager --sdk_root=D:\android-sdk &quot;platform-tools&quot; &quot;platforms;android-33&quot; &quot;build-tools;33.0.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p>但这一步可能会出现java版本不够的问题，还要去安装一下新的java版本。</p>
+<p>这里我们选择了API级别33作为示例，但你可以根据需要选择其他版本。<code>platform-tools</code> 包含了adb和其他工具，<code>platforms;android-33</code> 是目标安卓平台，而 <code>build-tools;33.0.0</code> 则是构建工具。</p>
+<h3 id="3-设置环境变量"><a href="#3-设置环境变量" class="headerlink" title="3. 设置环境变量"></a>3. 设置环境变量</h3><p>为了使系统能够识别安卓SDK的位置，你需要设置 <code>ANDROID_HOME</code> 和 <code>PATH</code> 环境变量。</p>
+<ul>
+<li>打开“控制面板” -&gt; “系统和安全” -&gt; “系统” -&gt; “高级系统设置”。</li>
+<li>点击“环境变量”按钮。</li>
+<li>在“系统变量”部分点击“新建”来创建 <code>ANDROID_HOME</code> 变量，并将其值设为你的SDK路径，例如 <code>D:\Program Files\android-sdk</code>。</li>
+<li>编辑Path变量，添加两个新条目：<ul>
+<li><code>%ANDROID_HOME%\platform-tools</code></li>
+<li><code>%ANDROID_HOME%\cmdline-tools\bin</code></li>
+</ul>
+</li>
+</ul>
+<p>确保这些路径正确无误，并且指向你解压的SDK文件夹。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注：这里实际运行了之前的Powershell的指令后，发现D盘根目录下有多了个android-sdk，和我自己创建的不是一个位置了，算了，干脆就D盘根目录那个得了</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-验证安装"><a href="#4-验证安装" class="headerlink" title="4. 验证安装"></a>4. 验证安装</h3><p>重新启动命令提示符或PowerShell以应用新的环境变量，然后输入以下命令来验证是否成功设置了SDK：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb version</span><br></pre></td></tr></table></figure>
+
+<p>如果显示了ADB的版本信息，说明环境变量设置正确，SDK已经成功安装。</p>
+<h3 id="5-尝试再次构建"><a href="#5-尝试再次构建" class="headerlink" title="5. 尝试再次构建"></a>5. 尝试再次构建</h3><p>返回到你的Tauri项目目录，并再次尝试运行构建命令：</p>
+<p>powershell深色版本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm tauri android build</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果又发现，还要安装NDK</p>
+<p>以下是报错信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Have you installed the NDK? The `NDK_HOME` environment variable isn&#x27;t set, and is required: environment variable not found: environment variable not found</span><br><span class="line">    Error Have you installed the NDK? The `NDK_HOME` environment variable isn&#x27;t set, and is required: environment variable not found: environment variable not found</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>什么是NDK？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NDK（Native Development Kit）是安卓开发者工具集的一部分，允许你在安卓应用中编写原生代码（C或C++）。NDK主要用于以下几种情况：</span><br><span class="line">性能关键的应用：对于需要高性能计算的任务，如图形处理、音频/视频编码解码、物理模拟等，使用C/C++可以提供更高效的执行。</span><br><span class="line">复用现有的C/C++库：如果你已经有一个用C/C++编写的库，并希望在安卓应用中使用它，NDK可以帮助你将这些库集成到安卓项目中。</span><br><span class="line">硬件访问：某些情况下，直接访问硬件特性（如传感器、相机等）可能需要使用NDK。</span><br></pre></td></tr></table></figure>
+
+<p>可以通过 <code>sdkmanager</code> 来安装NDK，或者手动下载并安装。</p>
+<p>如果是通过sdkmanager安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\sdkmanager --sdk_root=D:\android-sdk &quot;ndk;25.2.9519653&quot;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们选择了版本 <code>25.2.9519653</code> 作为示例，但你可以根据需要选择其他版本。你可以通过 <code>.\sdkmanager --sdk_root=D:\android-sdk --list</code> 查看可用的NDK版本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://developer.android.com/ndk/downloads?spm=5176.28103460.0.0.297c5d27aPFGKR&amp;hl=zh-cn</span><br></pre></td></tr></table></figure>
+
+<p>在这里下载NDK</p>
+<p>下载完成后，解压到一个你想要存放NDK的位置，例如 <code>D:\android-ndk</code>。</p>
+<h4 id="2-设置-NDK-HOME-环境变量"><a href="#2-设置-NDK-HOME-环境变量" class="headerlink" title="2. 设置 NDK_HOME 环境变量"></a>2. 设置 <code>NDK_HOME</code> 环境变量</h4><p>为了让系统能够找到NDK，你需要设置 <code>NDK_HOME</code> 环境变量。</p>
+<ol>
+<li><strong>打开环境变量设置</strong>：<ul>
+<li>按 <code>Win + R</code> 打开“运行”对话框，输入 <code>sysdm.cpl</code> 并按回车。</li>
+<li>在“系统属性”窗口中，点击“高级”选项卡，然后点击“环境变量”按钮。</li>
+</ul>
+</li>
+<li>**设置 <code>NDK_HOME</code>**：<ul>
+<li>在“系统变量”部分，点击“新建”按钮。</li>
+<li>输入变量名为 <code>NDK_HOME</code>。</li>
+<li>输入变量值为NDK的路径，例如 <code>D:\android-sdk\ndk\25.2.9519653</code> 或 <code>D:\android-ndk</code>（如果你手动下载并解压）。</li>
+<li>点击“确定”。</li>
+</ul>
+</li>
+<li>**更新 <code>Path</code>**：<ul>
+<li>在“系统变量”部分，找到并选择 <code>Path</code> 变量，然后点击“编辑”按钮。</li>
+<li>点击“新建”，然后输入 <code>%NDK_HOME%\toolchains\llvm\prebuilt\windows-x86_64\bin</code>。</li>
+<li>点击“确定”保存更改。</li>
+</ul>
+</li>
+<li><strong>应用更改</strong>：<ul>
+<li>点击“确定”关闭所有窗口，使环境变量生效。</li>
+</ul>
+</li>
+</ol>
+<p>至此，可以运行打包命令了。</p>
+<p>但打包命令运行后还会报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">D:\Projects\Project-Tools\project-graph&gt;pnpm tauri android build</span><br><span class="line"></span><br><span class="line">&gt; project-graph@0.1.0 tauri D:\Projects\Project-Tools\project-graph</span><br><span class="line">&gt; tauri &quot;android&quot; &quot;build&quot;</span><br><span class="line"></span><br><span class="line">    Running beforeBuildCommand `pnpm build`</span><br><span class="line"></span><br><span class="line">&gt; project-graph@0.1.0 build D:\Projects\Project-Tools\project-graph</span><br><span class="line">&gt; tsc &amp;&amp; vite build</span><br><span class="line"></span><br><span class="line">vite v6.0.3 building for production...</span><br><span class="line">08:11:44 [generouted] scanned 14 routes in 10 ms</span><br><span class="line">✓ 1838 modules transformed.</span><br><span class="line">dist/index.html                               0.54 kB │ gzip:   0.34 kB</span><br><span class="line">dist/assets/icon-Dk6gBW_T.png                18.41 kB</span><br><span class="line">dist/assets/MiSans-Medium-BI47lJDT.woff2  4,928.04 kB</span><br><span class="line">dist/assets/MiSans-Bold-BoL4u17n.woff2    5,067.65 kB</span><br><span class="line">dist/assets/index-PCSmR35J.css               25.05 kB │ gzip:   4.92 kB</span><br><span class="line">dist/assets/zh-TW-BeZ0zjlT.js                 3.31 kB │ gzip:   3.16 kB</span><br><span class="line">dist/assets/zh-CN-DN8c-byM.js                 4.78 kB │ gzip:   4.75 kB</span><br><span class="line">dist/assets/en-CpaVvmDx.js                    9.99 kB │ gzip:   4.06 kB</span><br><span class="line">dist/assets/index-CmMmwWGG.js               768.42 kB │ gzip: 231.42 kB</span><br><span class="line"></span><br><span class="line">(!) Some chunks are larger than 500 kB after minification. Consider:</span><br><span class="line">- Using dynamic import() to code-split the application</span><br><span class="line">- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks</span><br><span class="line">- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.</span><br><span class="line">✓ built in 7.30s</span><br><span class="line">  Downloaded android_system_properties v0.1.5</span><br><span class="line">  Downloaded android-tzdata v0.1.1</span><br><span class="line">  Downloaded cesu8 v1.1.0</span><br><span class="line">  Downloaded combine v4.6.7</span><br><span class="line">  Downloaded tao-macros v0.1.3</span><br><span class="line">  Downloaded linux-raw-sys v0.4.14</span><br><span class="line">  Downloaded proc-macro-crate v3.2.0</span><br><span class="line">  Downloaded iana-time-zone v0.1.61</span><br><span class="line">  Downloaded num_enum v0.7.3</span><br><span class="line">  Downloaded jni-sys v0.3.0</span><br><span class="line">  Downloaded is-wsl v0.4.0</span><br><span class="line">  Downloaded pathdiff v0.2.2</span><br><span class="line">  Downloaded num_enum_derive v0.7.3</span><br><span class="line">  Downloaded errno v0.3.9</span><br><span class="line">  Downloaded jni v0.21.1</span><br><span class="line">  Downloaded ndk-sys v0.6.0+11769913</span><br><span class="line">  Downloaded ndk v0.9.0</span><br><span class="line">  Downloaded signal-hook-registry v1.4.2</span><br><span class="line">  Downloaded rustix v0.38.40</span><br><span class="line">  Downloaded windows-targets v0.42.2</span><br><span class="line">  Downloaded is-docker v0.2.0</span><br><span class="line">  Downloaded ndk-context v0.1.1</span><br><span class="line">  Downloaded windows-sys v0.45.0</span><br><span class="line">  Downloaded 23 crates (5.6 MB) in 7.42s (largest was `windows-sys` at 2.6 MB)</span><br><span class="line">   Compiling serde v1.0.215</span><br><span class="line">   Compiling libc v0.2.164</span><br><span class="line">   Compiling cfg-if v1.0.0</span><br><span class="line">   Compiling toml_edit v0.22.22</span><br><span class="line">   Compiling stable_deref_trait v1.2.0</span><br><span class="line">   Compiling smallvec v1.13.2</span><br><span class="line">   Compiling once_cell v1.20.2</span><br><span class="line">   Compiling zerofrom v0.1.4</span><br><span class="line">   Compiling itoa v1.0.11</span><br><span class="line">   Compiling memchr v2.7.4</span><br><span class="line">   Compiling writeable v0.5.5</span><br><span class="line">   Compiling siphasher v0.3.11</span><br><span class="line">   Compiling litemap v0.7.3</span><br><span class="line">   Compiling fnv v1.0.7</span><br><span class="line">   Compiling icu_locid_transform_data v1.5.0</span><br><span class="line">   Compiling log v0.4.22</span><br><span class="line">   Compiling icu_properties_data v1.5.0</span><br><span class="line">   Compiling percent-encoding v2.3.1</span><br><span class="line">error[E0463]: can&#x27;t find crate for `core`</span><br><span class="line">  |</span><br><span class="line">  = note: the `aarch64-linux-android` target may not be installed</span><br><span class="line">  = help: consider downloading the target with `rustup target add aarch64-linux-android`</span><br><span class="line"></span><br><span class="line">For more information about this error, try `rustc --explain E0463`.</span><br><span class="line">error: could not compile `cfg-if` (lib) due to 1 previous error</span><br><span class="line">warning: build failed, waiting for other jobs to finish...</span><br><span class="line">error: could not compile `smallvec` (lib) due to 1 previous error</span><br><span class="line">error[E0463]: can&#x27;t find crate for `std`</span><br><span class="line">  |</span><br><span class="line">  = note: the `aarch64-linux-android` target may not be installed</span><br><span class="line">  = help: consider downloading the target with `rustup target add aarch64-linux-android`</span><br><span class="line"></span><br><span class="line">error: could not compile `stable_deref_trait` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `once_cell` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `itoa` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `zerofrom` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `memchr` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `writeable` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `siphasher` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `litemap` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `fnv` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `icu_locid_transform_data` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `log` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `icu_properties_data` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `percent-encoding` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `serde` (lib) due to 1 previous error</span><br><span class="line">`Failed to run `cargo build`: command [&quot;cargo&quot;, &quot;build&quot;, &quot;--package&quot;, &quot;project-graph&quot;, &quot;--manifest-path&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\Cargo.toml&quot;, &quot;--target&quot;, &quot;aarch64-linux-android&quot;, &quot;--features&quot;, &quot;tauri/custom-protocol tauri/rustls-tls&quot;, &quot;--lib&quot;, &quot;--release&quot;] exited with code 101</span><br><span class="line">    Error `Failed to run `cargo build`: command [&quot;cargo&quot;, &quot;build&quot;, &quot;--package&quot;, &quot;project-graph&quot;, &quot;--manifest-path&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\Cargo.toml&quot;, &quot;--target&quot;, &quot;aarch64-linux-android&quot;, &quot;--features&quot;, &quot;tauri/custom-protocol tauri/rustls-tls&quot;, &quot;--lib&quot;, &quot;--release&quot;] exited with code 101</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>解决方法是：</p>
+<p><strong>添加 <code>aarch64-linux-android</code> 目标</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add aarch64-linux-android</span><br></pre></td></tr></table></figure>
+
+<p>build了一下发现 <code>tauri.conf.json</code> 里的版本不能是 0.0.0-dev，起码是0.0.1</p>
+<p>改了一下又报错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">warning: `project-graph` (lib) generated 3 warnings (run `cargo fix --lib -p project-graph` to apply 2 suggestions)</span><br><span class="line">    Finished `release` profile [optimized] target(s) in 1m 35s</span><br><span class="line">    Info symlinking lib &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\target\\aarch64-linux-android\\release\\libproject_graph_lib.so&quot; in jniLibs dir &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\app/src/main/jniLibs/arm64-v8a&quot;</span><br><span class="line">Failed to create a symbolic link from &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\target\\aarch64-linux-android\\release\\libproject_graph_lib.so&quot; to file &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\app/src/main/jniLibs/arm64-v8a\\libproject_graph_lib.so&quot; (file clobbering enabled):</span><br><span class="line">Creation symbolic link is not allowed for this system.</span><br><span class="line"></span><br><span class="line">For Windows 10 or newer:</span><br><span class="line">You should use developer mode.</span><br><span class="line">See https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development</span><br><span class="line"></span><br><span class="line">For Window 8.1 or older:</span><br><span class="line">You need `SeCreateSymbolicLinkPrivilege` security policy.</span><br><span class="line">See https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links</span><br><span class="line">    Error Failed to create a symbolic link from &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\target\\aarch64-linux-android\\release\\libproject_graph_lib.so&quot; to file &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\app/src/main/jniLibs/arm64-v8a\\libproject_graph_lib.so&quot; (file clobbering enabled):</span><br><span class="line">Creation symbolic link is not allowed for this system.</span><br><span class="line"></span><br><span class="line">For Windows 10 or newer:</span><br><span class="line">You should use developer mode.</span><br><span class="line">See https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development</span><br><span class="line"></span><br><span class="line">For Window 8.1 or older:</span><br><span class="line">You need `SeCreateSymbolicLinkPrivilege` security policy.</span><br><span class="line">See https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>按照提示打开网站</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development</span><br></pre></td></tr></table></figure>
+
+<p>原来说是win10及以上要在设置里打开开发者模式</p>
+<p>然后再试一次，发现构建的时间挺长，等了大概快6分钟了，终于……报错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">FAILURE: Build failed with an exception.</span><br><span class="line"></span><br><span class="line">* What went wrong:</span><br><span class="line">A problem occurred configuring project &#x27;:buildSrc&#x27;.</span><br><span class="line">&gt; Could not resolve all artifacts for configuration &#x27;:buildSrc:classpath&#x27;.</span><br><span class="line">   &gt; Could not resolve org.gradle.kotlin:gradle-kotlin-dsl-plugins:4.4.0.</span><br><span class="line">     Required by:</span><br><span class="line">         project :buildSrc &gt; org.gradle.kotlin.kotlin-dsl:org.gradle.kotlin.kotlin-dsl.gradle.plugin:4.4.0</span><br><span class="line">      &gt; Could not resolve org.gradle.kotlin:gradle-kotlin-dsl-plugins:4.4.0.</span><br><span class="line">         &gt; Could not get resource &#x27;https://plugins.gradle.org/m2/org/gradle/kotlin/gradle-kotlin-dsl-plugins/4.4.0/gradle-kotlin-dsl-plugins-4.4.0.pom&#x27;.</span><br><span class="line">            &gt; Could not GET &#x27;https://plugins.gradle.org/m2/org/gradle/kotlin/gradle-kotlin-dsl-plugins/4.4.0/gradle-kotlin-dsl-plugins-4.4.0.pom&#x27;.</span><br><span class="line">               &gt; Read timed out</span><br><span class="line"></span><br><span class="line">* Try:</span><br><span class="line">&gt; Run with --stacktrace option to get the stack trace.</span><br><span class="line">&gt; Run with --info or --debug option to get more log output.</span><br><span class="line">&gt; Run with --scan to get full insights.</span><br><span class="line">&gt; Get more help at https://help.gradle.org.</span><br><span class="line"></span><br><span class="line">BUILD FAILED in 7m 14s</span><br><span class="line">Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line">    Error Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>看样子好像是下载某个东西发送GET请求超时了？</p>
+<p>首先，确保你的网络连接稳定，并且可以访问外部资源。你可以尝试在浏览器中打开 <code>https://plugins.gradle.org/m2/org/gradle/kotlin/gradle-kotlin-dsl-plugins/4.4.0/gradle-kotlin-dsl-plugins-4.4.0.pom</code>，看看是否能够正常加载。</p>
+<p>试了一下发现可以加载，一瞬间就下载了一个东西。</p>
+<p>等了20分钟，太漫长了，又报错了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Kotlin does not yet support 22 JDK target, falling back to Kotlin JVM_21 JVM target</span><br><span class="line">Kotlin does not yet support 22 JDK target, falling back to Kotlin JVM_21 JVM target</span><br><span class="line">w: Inconsistent JVM-target compatibility detected for tasks &#x27;compileJava&#x27; (22) and &#x27;compileKotlin&#x27; (21).</span><br><span class="line">This will become an error in Gradle 8.0.</span><br><span class="line">Consider using JVM Toolchain: https://kotl.in/gradle/jvm/toolchain</span><br><span class="line">Learn more about JVM-target validation: https://kotl.in/gradle/jvm/target-validation</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FAILURE: Build failed with an exception.</span><br><span class="line"></span><br><span class="line">* Where:</span><br><span class="line">Build file &#x27;D:\Projects\Project-Tools\project-graph\src-tauri\gen\android\app\build.gradle.kts&#x27; line: 37</span><br><span class="line"></span><br><span class="line">* What went wrong:</span><br><span class="line">null cannot be cast to non-null type kotlin.String</span><br><span class="line"></span><br><span class="line">* Try:</span><br><span class="line">&gt; Run with --stacktrace option to get the stack trace.</span><br><span class="line">&gt; Run with --info or --debug option to get more log output.</span><br><span class="line">&gt; Run with --scan to get full insights.</span><br><span class="line">&gt; Get more help at https://help.gradle.org.</span><br><span class="line"></span><br><span class="line">BUILD FAILED in 20m 2s</span><br><span class="line">Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line">    Error Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>发现<strong>Kotlin 和 Java 版本不一致</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">src-tauri\gen\android\app\build.gradle.kts</span><br></pre></td></tr></table></figure>
+
+<p>又不一样了，下载java11版本。</p>
+<p>不对，17版本，于是又下了个jdk17，并把javaHome环境变量切换一下。</p>
+<p>然后再打包一下，又报错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">w: file:///D:/Rust/cargo_home/registry/src/index.crates.io-6f17d22bba15001f/tauri-2.1.1/mobile/android/src/main/java/app/tauri/plugin/PluginMethodData.kt:11:23 Parameter &#x27;methodDecorator&#x27; is never used</span><br><span class="line">error[E0463]: can&#x27;t find crate for `core`</span><br><span class="line">  |DLE</span><br><span class="line">  = note: the `armv7-linux-androideabi` target may not be installed</span><br><span class="line">  = help: consider downloading the target with `rustup target add armv7-linux-androideabi`</span><br><span class="line"></span><br><span class="line">For more information about this error, try `rustc --explain E0463`.</span><br><span class="line">error: could not compile `cfg-if` (lib) due to 1 previous error</span><br><span class="line">warning: build failed, waiting for other jobs to finish...</span><br><span class="line">error: could not compile `smallvec` (lib) due to 1 previous error</span><br><span class="line">error[E0463]: can&#x27;t find crate for `std`</span><br><span class="line">  |DLE</span><br><span class="line">  = note: the `armv7-linux-androideabi` target may not be installed</span><br><span class="line">  = help: consider downloading the target with `rustup target add armv7-linux-androideabi`</span><br><span class="line"></span><br><span class="line">error: could not compile `stable_deref_trait` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `once_cell` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `zerofrom` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `itoa` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `writeable` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `litemap` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `memchr` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `siphasher` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `icu_locid_transform_data` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `fnv` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `log` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `icu_properties_data` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `write16` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `percent-encoding` (lib) due to 1 previous error</span><br><span class="line">error: could not compile `libc` (lib) due to 1 previous error</span><br><span class="line">`Failed to run `cargo build`: command [&quot;cargo&quot;, &quot;build&quot;, &quot;--package&quot;, &quot;project-graph&quot;, &quot;--manifest-path&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\Cargo.toml&quot;, &quot;--target&quot;, &quot;armv7-linux-androideabi&quot;, &quot;--features&quot;, &quot;tauri/custom-protocol tauri/rustls-tls tauri/custom-protocol tauri/rustls-tls&quot;, &quot;--lib&quot;, &quot;--release&quot;] exited with code 101</span><br><span class="line">    Error `Failed to run `cargo build`: command [&quot;cargo&quot;, &quot;build&quot;, &quot;--package&quot;, &quot;project-graph&quot;, &quot;--manifest-path&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\Cargo.toml&quot;, &quot;--target&quot;, &quot;armv7-linux-androideabi&quot;, &quot;--features&quot;, &quot;tauri/custom-protocol tauri/rustls-tls tauri/custom-protocol tauri/rustls-tls&quot;, &quot;--lib&quot;, &quot;--release&quot;] exited with code 101 IDLE</span><br><span class="line">?ELIFECYCLE? Command failed with exit code 1.</span><br><span class="line"></span><br><span class="line">FAILURE: Build failed with an exception.</span><br><span class="line"></span><br><span class="line">* What went wrong:</span><br><span class="line">Execution failed for task &#x27;:app:rustBuildArmRelease&#x27;.</span><br><span class="line">&gt; Process &#x27;command &#x27;pnpm.cmd&#x27;&#x27; finished with non-zero exit value 1</span><br><span class="line"></span><br><span class="line">* Try:</span><br><span class="line">&gt; Run with --stacktrace option to get the stack trace.</span><br><span class="line">&gt; Run with --info or --debug option to get more log output.</span><br><span class="line">&gt; Run with --scan to get full insights.</span><br><span class="line">&gt; Get more help at https://help.gradle.org.</span><br><span class="line"></span><br><span class="line">BUILD FAILED in 3m 20s</span><br><span class="line">Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line">    Error Failed to assemble APK: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1: command [&quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android\\gradlew.bat&quot;, &quot;--project-dir&quot;, &quot;D:\\Projects\\Project-Tools\\project-graph\\src-tauri\\gen/android&quot;] exited with code 1</span><br><span class="line"> ELIFECYCLE  Command failed with exit code 1.</span><br></pre></td></tr></table></figure>
+
+<p>原来还要再装一个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add armv7-linux-androideabi</span><br></pre></td></tr></table></figure>
+
+<p>这一步安装好像等待时间挺长，等了20分钟好像</p>
+<p>装了一下发现还有 <code>i686-linux-android</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add i686-linux-android</span><br></pre></td></tr></table></figure>
+
+<p>还有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustup target add x86_64-linux-android</span><br></pre></td></tr></table></figure>
+
+<p>好像没了</p>
+<p>但又报错了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">* What went wrong:</span><br><span class="line">Execution failed for task &#x27;:app:validateSigningUniversalRelease&#x27;.</span><br><span class="line">&gt; Keystore file &#x27;D:\Projects\Project-Tools\project-graph\src-tauri\gen\android\app\D:ProjectsProject-Toolsproject-graphkeystore.jks&#x27; not found for signing config &#x27;release&#x27;.</span><br></pre></td></tr></table></figure>
+
+<p>在windows下jks文件似乎应该放在 <code>\src-tauri\gen\android\app\</code> 目录下才行</p>
+<p>放对位置就没问题了，终于可以打包了。从早晨6点折腾到下午两点了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Littlefean</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>仅个人观点，buddy up!</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%89%8D%E7%AB%AF/"># 前端</a>
+                    
+                        <a href="/tags/app/"># app</a>
+                    
+                        <a href="/tags/%E5%AE%89%E5%8D%93/"># 安卓</a>
+                    
+                        <a href="/tags/tauri/"># tauri</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2024/12/07/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/">微信小程序开发记录</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© Littlefean | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+
+</html>
